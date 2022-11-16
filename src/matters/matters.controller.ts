@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CreateMatter } from './dto/creatematter.dto';
 import { MattersProvider } from './matters.service';
 
@@ -19,6 +27,11 @@ export class MattersController {
   @Post()
   createMatter(@Body() matterData: CreateMatter) {
     return this.matterProvider.createMatter(matterData);
+  }
+
+  @Patch('/:id')
+  updateMatter(@Param('id') matterId: number, @Body() matterData) {
+    return this.matterProvider.updateMatter(matterId, matterData);
   }
 
   @Delete('/:id')
