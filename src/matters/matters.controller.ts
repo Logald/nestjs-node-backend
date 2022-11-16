@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { CreateMatter } from './dto/creatematter.dto';
 import { MattersProvider } from './matters.service';
 
@@ -19,5 +19,10 @@ export class MattersController {
   @Post()
   createMatter(@Body() matterData: CreateMatter) {
     return this.matterProvider.createMatter(matterData);
+  }
+
+  @Delete('/:id')
+  deleteMatter(@Param('id') matterId: number) {
+    return this.matterProvider.deleteMatter(matterId);
   }
 }
