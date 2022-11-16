@@ -29,4 +29,11 @@ export class TurnsProvider {
     const tempTurn = this.turnService.create(turnData);
     return await this.turnService.save(tempTurn);
   }
+
+  async deleteTurn(turnId: number) {
+    const turnFound = await this.turnService.delete(turnId);
+    if (turnFound.affected == 0)
+      return new HttpException('Turn not found', HttpStatus.NOT_FOUND);
+    return turnFound;
+  }
 }
