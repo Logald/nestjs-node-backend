@@ -8,6 +8,10 @@ import { Turn } from './turn.entity';
 export class TurnsProvider {
   constructor(@InjectRepository(Turn) private turnService: Repository<Turn>) {}
 
+  async getTurns() {
+    return await this.turnService.find();
+  }
+
   async createTurn(turnData: CreateTurn) {
     const turnFound = await this.turnService.findOne({
       where: { name: turnData.name },
