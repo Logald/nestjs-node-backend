@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CreateTurn } from './dto/createTurn.dto';
 import { TurnsProvider } from './turns.service';
 
@@ -9,6 +9,11 @@ export class TurnsController {
   @Get()
   getTurns() {
     return this.turnsProvider.getTurns();
+  }
+
+  @Get('/:id')
+  getTurn(@Param('id') turnId: number) {
+    return this.turnsProvider.getTurn(turnId);
   }
 
   @Post()
