@@ -14,6 +14,15 @@ export class MattersProvider {
     return await this.matterService.find();
   }
 
+  async getMatter(matterId: number) {
+    const matter = await this.matterService.findOne({
+      where: { id: matterId },
+    });
+    if (!matter)
+      return new HttpException('Matter not found', HttpStatus.NOT_FOUND);
+    return matter;
+  }
+
   async createMatter(matterData: CreateMatter) {
     const matterFound = this.matterService.findOne({
       where: { name: matterData.name },
