@@ -24,11 +24,20 @@ export class MattersProvider {
   }
 
   async createMatter(matterData: CreateMatter) {
-    const matterFound = this.matterService.findOne({
+    const matterFound = await this.matterService.findOne({
       where: { name: matterData.name },
     });
     if (matterFound) return new HttpException('Matter found', HttpStatus.FOUND);
     const tempMatter = this.matterService.create(matterData);
     return await this.matterService.save(tempMatter);
+  }
+
+  async deleteMatter(matterId: number) {
+    const matter = await this.matterService.findOne({
+      where: { id: matterId },
+    });
+    if (!matter)
+      return new HttpException('Matter not found', HttpStatus.NOT_FOUND);
+    return this.matterService.delete(matterId);
   }
 }
