@@ -32,6 +32,22 @@ export class MattersProvider {
     return await this.matterService.save(tempMatter);
   }
 
+  async updateMatter(matterId: number, matterData: Partial<CreateMatter>) {
+    const matter = await this.matterService.findOne({
+      where: { id: matterId },
+    });
+    if (!matter)
+      return new HttpException('Matter not found', HttpStatus.NOT_FOUND);
+    if ('name' in matterData) {
+      const matterMatchName = await this.matterService.findOne({
+        where: { name: matterData.name },
+      });
+      if (matterMatchName)
+        return new HttpException('Bad matter name', HttpStatus.NOT_ACCEPTABLE);
+    }
+    return this.matterService.update(matterId, matterData);
+  }
+
   async deleteMatter(matterId: number) {
     const matter = await this.matterService.findOne({
       where: { id: matterId },
