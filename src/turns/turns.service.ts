@@ -30,6 +30,22 @@ export class TurnsProvider {
     return await this.turnService.save(tempTurn);
   }
 
+  async updateTurn(turnId: number, turnData: Partial<CreateTurn>) {
+    const turnFound = await this.turnService.findOne({
+      where: { id: turnId },
+    });
+    if (!turnFound)
+      return new HttpException('Turn not found', HttpStatus.NOT_FOUND);
+    if ('name' in turnData) {
+      const turnMatchName = await this.turnService.findOne({
+        where: { name: turnData.name },
+      });
+      if (turnMatchName)
+        return new HttpException('Bad turn name', HttpStatus.NOT_ACCEPTABLE);
+    }
+    return await this.turnService.update(turnId, turnData);
+  }
+
   async deleteTurn(turnId: number) {
     const turnFound = await this.turnService.delete(turnId);
     if (turnFound.affected == 0)
