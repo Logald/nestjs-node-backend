@@ -10,6 +10,10 @@ export class MattersProvider {
     @InjectRepository(Matter) private matterService: Repository<Matter>,
   ) {}
 
+  async getMatters() {
+    return await this.matterService.find();
+  }
+
   async createMatter(matterData: CreateMatter) {
     const matterFound = this.matterService.findOne({
       where: { name: matterData.name },
