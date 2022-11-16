@@ -6,6 +6,6 @@ export class Matter {
   id: number;
   @Column({ type: 'varchar', unique: true })
   name: string;
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   description: string;
 }
