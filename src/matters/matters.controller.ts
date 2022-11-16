@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CreateMatter } from './dto/creatematter.dto';
 import { MattersProvider } from './matters.service';
 
@@ -9,6 +9,11 @@ export class MattersController {
   @Get()
   getMatters() {
     return this.matterProvider.getMatters();
+  }
+
+  @Get('/:id')
+  getMatter(@Param('id') matterId: number) {
+    return this.matterProvider.getMatter(matterId);
   }
 
   @Post()
