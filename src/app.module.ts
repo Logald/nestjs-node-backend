@@ -15,6 +15,7 @@ import { MattersModule } from './matters/matters.module';
       password: process.env['MYSQL_PASSWORD'] || '',
       database: process.env['MYSQL_DATABASE'] || 'prueba',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: process.env['NODE_ENV'] == 'development' ? true : false,
     }),
   ],
   controllers: [],
