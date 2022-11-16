@@ -2,10 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MattersModule } from './matters/matters.module';
+import { TurnsModule } from './turns/turns.module';
 
 @Module({
   imports: [
     MattersModule,
+    TurnsModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',

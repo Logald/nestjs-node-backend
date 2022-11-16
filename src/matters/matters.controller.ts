@@ -7,7 +7,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { CreateMatter } from './dto/creatematter.dto';
+import { CreateMatter } from './dto/createMatter.dto';
 import { MattersProvider } from './matters.service';
 
 @Controller('matters')
