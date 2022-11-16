@@ -49,11 +49,9 @@ export class MattersProvider {
   }
 
   async deleteMatter(matterId: number) {
-    const matter = await this.matterService.findOne({
-      where: { id: matterId },
-    });
-    if (!matter)
+    const matterFound = await this.matterService.delete(matterId);
+    if (matterFound.affected == 0)
       return new HttpException('Matter not found', HttpStatus.NOT_FOUND);
-    return this.matterService.delete(matterId);
+    return matterFound;
   }
 }
