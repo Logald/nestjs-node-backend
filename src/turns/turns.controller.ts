@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CreateTurn } from './dto/createTurn.dto';
 import { TurnsProvider } from './turns.service';
 
@@ -19,6 +27,11 @@ export class TurnsController {
   @Post()
   createTurn(@Body() turnData: CreateTurn) {
     return this.turnsProvider.createTurn(turnData);
+  }
+
+  @Patch('/:id')
+  updateTurn(@Param('id') turnId: number, @Body() turnData) {
+    return this.turnsProvider.updateTurn(turnId, turnData);
   }
 
   @Delete('/:id')
