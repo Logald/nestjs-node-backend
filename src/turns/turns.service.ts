@@ -12,6 +12,15 @@ export class TurnsProvider {
     return await this.turnService.find();
   }
 
+  async getTurn(turnId: number) {
+    const turnFound = await this.turnService.findOne({
+      where: { id: turnId },
+    });
+    if (!turnFound)
+      return new HttpException('Turn not found', HttpStatus.NOT_FOUND);
+    return turnFound;
+  }
+
   async createTurn(turnData: CreateTurn) {
     const turnFound = await this.turnService.findOne({
       where: { name: turnData.name },
