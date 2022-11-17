@@ -55,6 +55,23 @@ export class GroupsProvider {
     return await this.groupService.save(tempGroup);
   }
 
+  async updateGroup(
+    groupId: number,
+    groupData: Partial<Omit<Group, 'id' | 'turn'>>,
+  ) {
+    if ('turnId' in groupData) {
+      const turnFound = await this.turnService.findOne({
+        where: { id: groupData.turnId },
+      });
+      if (!turnFound)
+        return new HttpException('Turn not found', HttpStatus.NOT_ACCEPTABLE);
+    }
+    const updatedGroup = await this.groupService.update(groupId, groupData);
+    if (updatedGroup.affected == 0)
+      return new HttpException('Group not found', HttpStatus.NOT_FOUND);
+    return updatedGroup;
+  }
+
   async deleteGroup(groupId: number) {
     const deletedData = await this.groupService.delete(groupId);
     if (deletedData.affected == 0)
