@@ -35,6 +35,11 @@ export class GroupsController {
     return this.groupsProvider.getGroupsWithTurn();
   }
 
+  @Get('/turn/active')
+  getActiveGroupsWithTurn() {
+    return this.groupsProvider.getActiveGroupsWithTurn();
+  }
+
   @Get('/turn/inactive')
   getInactiveGroupsWithTurn() {
     return this.groupsProvider.getInactiveGroupsWithTurn();
