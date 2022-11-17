@@ -21,6 +21,11 @@ export class GroupsController {
     return this.groupsProvider.getGroup(groupId);
   }
 
+  @Get('/turn/:id')
+  getGroupWithTurn(@Param('id') groupId: number) {
+    return this.groupsProvider.getGroupWithTurn(groupId);
+  }
+
   @Post()
   createGroup(@Body() groupDate: CreateGroup) {
     return this.groupsProvider.createGroup(groupDate);
