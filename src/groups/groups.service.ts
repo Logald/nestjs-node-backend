@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Turn } from 'src/turns/turn.entity';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { CreateGroup } from './dto/createGroup.dto';
 import { Group } from './group.entity';
 
@@ -28,11 +28,24 @@ export class GroupsProvider {
     return await this.groupService.find({ relations: ['turn'] });
   }
 
-  async getInactiveGroupsWithTurnid(turnId: number) {
+  async findGroupWithTurnid(
+    turnId: number,
+    findOptions: FindManyOptions<Group>,
+  ) {
     const turnFound = await this.turnService.findOne({ where: { id: turnId } });
     if (!turnFound)
       return new HttpException('Turn not found', HttpStatus.NOT_ACCEPTABLE);
-    return await this.groupService.find({
+    return await this.groupService.find(findOptions);
+  }
+
+  async getActiveGroupsWithTurnid(turnId: number) {
+    return await this.findGroupWithTurnid(turnId, {
+      where: { turnId, active: true },
+    });
+  }
+
+  async getInactiveGroupsWithTurnid(turnId: number) {
+    return await this.findGroupWithTurnid(turnId, {
       where: { turnId, active: false },
     });
   }
