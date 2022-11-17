@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { timeStamp } from 'console';
 import { Turn } from 'src/turns/turn.entity';
 import { FindOneOptions, Repository } from 'typeorm';
 import { CreateGroup } from './dto/createGroup.dto';
