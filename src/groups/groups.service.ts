@@ -28,7 +28,7 @@ export class GroupsProvider {
     return await this.groupService.find({ relations: ['turn'] });
   }
 
-  async findGroupWithTurnid(
+  async findGroupsWithTurnid(
     turnId: number,
     findOptions: FindManyOptions<Group>,
   ) {
@@ -39,20 +39,27 @@ export class GroupsProvider {
   }
 
   async getGroupsWithTurnid(turnId: number) {
-    return await this.findGroupWithTurnid(turnId, {
+    return await this.findGroupsWithTurnid(turnId, {
       where: { turnId },
     });
   }
 
   async getActiveGroupsWithTurnid(turnId: number) {
-    return await this.findGroupWithTurnid(turnId, {
+    return await this.findGroupsWithTurnid(turnId, {
       where: { turnId, active: true },
     });
   }
 
   async getInactiveGroupsWithTurnid(turnId: number) {
-    return await this.findGroupWithTurnid(turnId, {
+    return await this.findGroupsWithTurnid(turnId, {
       where: { turnId, active: false },
+    });
+  }
+
+  async getInactiveGroupsWithTurn() {
+    return await this.groupService.find({
+      where: { active: false },
+      relations: ['turn'],
     });
   }
 
