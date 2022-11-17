@@ -11,6 +11,11 @@ export class GroupsController {
     return this.groupsProvider.getGroups();
   }
 
+  @Get('/turn')
+  getGroupsWithTurn() {
+    return this.groupsProvider.getGroupsWithTurn();
+  }
+
   @Get('/:id')
   getGroup(@Param('id') groupId: number) {
     return this.groupsProvider.getGroup(groupId);
