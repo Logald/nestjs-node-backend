@@ -38,6 +38,12 @@ export class GroupsProvider {
     return await this.groupService.find(findOptions);
   }
 
+  async getGroupsWithTurnid(turnId: number) {
+    return await this.findGroupWithTurnid(turnId, {
+      where: { turnId },
+    });
+  }
+
   async getActiveGroupsWithTurnid(turnId: number) {
     return await this.findGroupWithTurnid(turnId, {
       where: { turnId, active: true },
