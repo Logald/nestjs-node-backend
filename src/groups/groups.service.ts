@@ -28,6 +28,15 @@ export class GroupsProvider {
     return await this.groupService.find({ relations: ['turn'] });
   }
 
+  async getInactiveGroupsWithTurnid(turnId: number) {
+    const turnFound = await this.turnService.findOne({ where: { id: turnId } });
+    if (!turnFound)
+      return new HttpException('Turn not found', HttpStatus.NOT_ACCEPTABLE);
+    return await this.groupService.find({
+      where: { turnId, active: false },
+    });
+  }
+
   private async findGroup(groupId: number, findOptions: FindOneOptions<Group>) {
     const groupFound = await this.groupService.findOne(findOptions);
     if (!groupFound)
