@@ -54,4 +54,11 @@ export class GroupsProvider {
     const tempGroup = this.groupService.create(groupData);
     return await this.groupService.save(tempGroup);
   }
+
+  async deleteGroup(groupId: number) {
+    const deletedData = await this.groupService.delete(groupId);
+    if (deletedData.affected == 0)
+      return new HttpException('Group not found', HttpStatus.NOT_FOUND);
+    return deletedData;
+  }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { CreateGroup } from './dto/createGroup.dto';
 import { GroupsProvider } from './groups.service';
 
@@ -29,5 +29,10 @@ export class GroupsController {
   @Post()
   createGroup(@Body() groupDate: CreateGroup) {
     return this.groupsProvider.createGroup(groupDate);
+  }
+
+  @Delete('/:id')
+  deleteGroup(@Param('id') groupId: number) {
+    return this.groupsProvider.deleteGroup(groupId);
   }
 }
