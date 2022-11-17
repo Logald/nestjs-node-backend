@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CreateGroup } from './dto/createGroup.dto';
 import { GroupsProvider } from './groups.service';
 
@@ -9,6 +9,11 @@ export class GroupsController {
   @Get()
   getGroups() {
     return this.groupsProvider.getGroups();
+  }
+
+  @Get('/:id')
+  getGroup(@Param('id') groupId: number) {
+    return this.groupsProvider.getGroup(groupId);
   }
 
   @Post()

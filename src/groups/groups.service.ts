@@ -16,6 +16,15 @@ export class GroupsProvider {
     return await this.groupService.find();
   }
 
+  async getGroup(groupId: number) {
+    const groupFound = await this.groupService.findOne({
+      where: { id: groupId },
+    });
+    if (!groupFound)
+      return new HttpException('Group not found', HttpStatus.NOT_FOUND);
+    return groupFound;
+  }
+
   async createGroup(groupData: CreateGroup) {
     const turnFound = await this.turnService.findOne({
       where: { id: groupData.turnId },
