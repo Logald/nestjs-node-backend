@@ -16,6 +16,10 @@ export class GroupsProvider {
     return await this.groupService.find();
   }
 
+  async getGroupsWithTurn() {
+    return await this.groupService.find({ relations: ['turn'] });
+  }
+
   async getGroup(groupId: number) {
     const groupFound = await this.groupService.findOne({
       where: { id: groupId },
