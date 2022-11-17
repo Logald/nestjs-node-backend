@@ -1,5 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CreateGroup } from './dto/createGroup.dto';
+import { Group } from './group.entity';
 import { GroupsProvider } from './groups.service';
 
 @Controller('groups')
@@ -29,6 +38,14 @@ export class GroupsController {
   @Post()
   createGroup(@Body() groupDate: CreateGroup) {
     return this.groupsProvider.createGroup(groupDate);
+  }
+
+  @Patch('/:id')
+  updateGroup(
+    @Param('id') groupId: number,
+    @Body() groupData: Partial<Omit<Group, 'id' | 'turn'>>,
+  ) {
+    return this.groupsProvider.updateGroup(groupId, groupData);
   }
 
   @Delete('/:id')
