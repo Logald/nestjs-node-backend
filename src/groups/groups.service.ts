@@ -12,6 +12,10 @@ export class GroupsProvider {
     @InjectRepository(Turn) private turnService: Repository<Turn>,
   ) {}
 
+  async getGroups() {
+    return await this.groupService.find();
+  }
+
   async createGroup(groupData: CreateGroup) {
     const turnFound = await this.turnService.findOne({
       where: { id: groupData.turnId },
