@@ -50,6 +50,13 @@ export class GroupsProvider {
     });
   }
 
+  async getActiveGroupsWithTurn() {
+    return await this.groupService.find({
+      where: { active: true },
+      relations: ['turn'],
+    });
+  }
+
   async getInactiveGroupsWithTurnid(turnId: number) {
     return await this.findGroupsWithTurnid(turnId, {
       where: { turnId, active: false },
