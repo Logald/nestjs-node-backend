@@ -16,6 +16,10 @@ export class GroupsProvider {
     return await this.groupService.find();
   }
 
+  async getActiveGroups() {
+    return await this.groupService.find({ where: { active: true } });
+  }
+
   async getGroupsWithTurn() {
     return await this.groupService.find({ relations: ['turn'] });
   }
