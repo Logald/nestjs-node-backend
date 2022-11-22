@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { PeopleProvider } from './people.service';
 import { Person } from './person.entity';
 
@@ -19,6 +27,14 @@ export class PeopleController {
   @Post()
   createPerson(@Body() personData: Omit<Person, 'id'>) {
     return this.peopleProvider.createPerson(personData);
+  }
+
+  @Patch('/:id')
+  updatePerson(
+    @Param('id') personId: number,
+    @Body() personData: Omit<Person, 'id'>,
+  ) {
+    return this.peopleProvider.updatePerson(personId, personData);
   }
 
   @Delete('/:id')

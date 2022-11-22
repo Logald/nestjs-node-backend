@@ -35,12 +35,17 @@ export class PeopleProvider {
     return await this.peopleService.save(tempPerson);
   }
 
-  async deletePerson(personId: number) {
-    const personFound = await this.peopleService.findOne({
-      where: { id: personId },
-    });
-    if (!personFound)
+  async updatePerson(personId: number, personData: Omit<Person, 'id'>) {
+    const personFound = await this.peopleService.update(personId, personData);
+    if (personFound.affected == 0)
       return new HttpException('Person not found', HttpStatus.NOT_ACCEPTABLE);
-    return await this.peopleService.delete(personId);
+    return personFound;
+  }
+
+  async deletePerson(personId: number) {
+    const personFound = await this.peopleService.delete(personId);
+    if (personFound.affected == 0)
+      return new HttpException('Person not found', HttpStatus.NOT_ACCEPTABLE);
+    return personFound;
   }
 }
