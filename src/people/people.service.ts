@@ -34,4 +34,13 @@ export class PeopleProvider {
     const tempPerson = this.peopleService.create(personData);
     return await this.peopleService.save(tempPerson);
   }
+
+  async deletePerson(personId: number) {
+    const personFound = await this.peopleService.findOne({
+      where: { id: personId },
+    });
+    if (!personFound)
+      return new HttpException('Person not found', HttpStatus.NOT_ACCEPTABLE);
+    return await this.peopleService.delete(personId);
+  }
 }
