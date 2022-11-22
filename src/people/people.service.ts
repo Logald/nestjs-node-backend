@@ -13,6 +13,15 @@ export class PeopleProvider {
     return await this.peopleService.find();
   }
 
+  async getPerson(personId: number) {
+    const personFound = await this.peopleService.findOne({
+      where: { id: personId },
+    });
+    if (!personFound)
+      return new HttpException('Person not found', HttpStatus.NOT_ACCEPTABLE);
+    return personFound;
+  }
+
   async createPerson(personData: Omit<Person, 'id'>) {
     const personCiMatch = await this.peopleService.findOne({
       where: { ci: personData.ci },

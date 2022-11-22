@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PeopleProvider } from './people.service';
 import { Person } from './person.entity';
 
@@ -9,6 +9,11 @@ export class PeopleController {
   @Get()
   getPeople() {
     return this.peopleProvider.getPeople();
+  }
+
+  @Get('/:id')
+  getPerson(@Param('id') personId: number) {
+    return this.peopleProvider.getPerson(personId);
   }
 
   @Post()
