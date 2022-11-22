@@ -9,6 +9,10 @@ export class PeopleProvider {
     @InjectRepository(Person) private peopleService: Repository<Person>,
   ) {}
 
+  async getPeople() {
+    return await this.peopleService.find();
+  }
+
   async createPerson(personData: Omit<Person, 'id'>) {
     const personCiMatch = await this.peopleService.findOne({
       where: { ci: personData.ci },
