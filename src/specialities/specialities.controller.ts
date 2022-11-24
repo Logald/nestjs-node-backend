@@ -26,6 +26,11 @@ export class SpecialitiesController {
     return this.specialitiesProvider.getSpecialitiesWithProffessor();
   }
 
+  @Get('/proffessor/active')
+  getSpecialitiesWithActiveProffessors() {
+    return this.specialitiesProvider.getSpecialitiesWithActiveProffessors();
+  }
+
   @Get('/proffessor/inactive')
   getSpecialitiesWithInactiveProffessors() {
     return this.specialitiesProvider.getSpecialitiesWithInactiveProffessors();
