@@ -43,4 +43,27 @@ export class ProffessorsProvider {
     const tempProffessor = this.proffessorsService.create(proffessorData);
     return await this.proffessorsService.save(tempProffessor);
   }
+
+  async updateProffessor(
+    proffessorId: number,
+    proffessorData: Partial<Omit<Proffessor, 'id'>>,
+  ) {
+    if ('personId' in proffessorData) {
+      const personFound = await this.peopleService.findOne({
+        where: { id: proffessorData.personId },
+      });
+      if (!personFound)
+        return new HttpException('Person not found', HttpStatus.NOT_ACCEPTABLE);
+    }
+    const proffessorFound = await this.proffessorsService.update(
+      proffessorId,
+      proffessorData,
+    );
+    if (proffessorFound.affected == 0)
+      return new HttpException(
+        'Proffessor not found',
+        HttpStatus.NOT_ACCEPTABLE,
+      );
+    return proffessorData;
+  }
 }
