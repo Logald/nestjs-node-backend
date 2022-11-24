@@ -23,6 +23,10 @@ export class SpecialitiesProvider {
     return await this.specialitiesService.find({ relations: ['matter'] });
   }
 
+  async getSpecialitiesWithProffessor() {
+    return await this.specialitiesService.find({ relations: ['proffessor'] });
+  }
+
   async getSpeciality(specialityId: number) {
     const specialityFound = await this.specialitiesService.findOne({
       where: { id: specialityId },
