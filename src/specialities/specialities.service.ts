@@ -33,6 +33,10 @@ export class SpecialitiesProvider {
     return await this.specialitiesService.find({ relations: ['proffessor'] });
   }
 
+  async getSpecialitiesWithProffessorId(proffessorId: number) {
+    return await this.specialitiesService.find({ where: { proffessorId } });
+  }
+
   async findSpeciality(findOptions: FindOneOptions) {
     const specialityFound = await this.specialitiesService.findOne(findOptions);
     if (!specialityFound)
