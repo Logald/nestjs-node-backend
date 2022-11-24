@@ -170,4 +170,11 @@ export class SpecialitiesProvider {
       return new HttpException('Speciality not found', HttpStatus.NOT_FOUND);
     return specialityFound;
   }
+
+  async deleteSpeciality(specialityId: number) {
+    const specialityFound = await this.specialitiesService.delete(specialityId);
+    if (specialityFound.affected == 0)
+      return new HttpException('Speciality not found', HttpStatus.NOT_FOUND);
+    return specialityFound;
+  }
 }

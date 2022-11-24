@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { SpecialitiesProvider } from './specialities.service';
 import { Speciality } from './speciality.entity';
 
@@ -113,5 +121,10 @@ export class SpecialitiesController {
       specialityId,
       specialityData,
     );
+  }
+
+  @Delete('/:id')
+  deleteSpeciality(@Param('id') specialityId: number) {
+    return this.specialitiesProvider.deleteSpeciality(specialityId);
   }
 }
