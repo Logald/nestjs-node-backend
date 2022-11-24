@@ -28,6 +28,15 @@ export class SpecialitiesController {
     );
   }
 
+  @Get('/matter/:matterId/proffessor/active')
+  getSpecialitiesWithMatterIdAndActiveProffesor(
+    @Param('matterId') matterId: number,
+  ) {
+    return this.specialitiesProvider.getSpecialitiesWithMatterIdAndActiveProffessor(
+      matterId,
+    );
+  }
+
   @Get('/matter/:matterId')
   getSpecialitiesWithMatterId(@Param('matterId') matterId: number) {
     return this.specialitiesProvider.getSpecialitiesWithMatterId(matterId);
