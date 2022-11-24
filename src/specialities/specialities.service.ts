@@ -38,10 +38,7 @@ export class SpecialitiesProvider {
         HttpStatus.NOT_ACCEPTABLE,
       );
     const tempSpeciality = this.specialitiesService.create(specialityData);
-    const newSpeciality = await this.specialitiesService
-      .save(tempSpeciality)
-      .catch((err) => console.error(err));
-
+    const newSpeciality = await this.specialitiesService.save(tempSpeciality);
     return newSpeciality;
   }
 }
