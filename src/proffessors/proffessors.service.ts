@@ -33,6 +33,15 @@ export class ProffessorsProvider {
     });
   }
 
+  async getProffessorByPersonId(personId: number) {
+    const proffessorFound = await this.proffessorsService.findOne({
+      where: { personId },
+    });
+    if (!proffessorFound)
+      return new HttpException('Proffessor not found', HttpStatus.NOT_FOUND);
+    return proffessorFound;
+  }
+
   async getProffessorWithPerson(proffessorId: number) {
     return await this.findProffessor({
       where: { id: proffessorId },

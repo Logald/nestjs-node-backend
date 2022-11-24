@@ -16,6 +16,11 @@ export class ProffessorsController {
     return this.proffessorsProvider.getProffessorsWithPerson();
   }
 
+  @Get('person/:id')
+  getProffessorByPersonId(@Param('id') personId: number) {
+    return this.proffessorsProvider.getProffessorByPersonId(personId);
+  }
+
   @Get('/:id')
   getProffessor(@Param('id') proffessorId: number) {
     return this.proffessorsProvider.getProffessor(proffessorId);
