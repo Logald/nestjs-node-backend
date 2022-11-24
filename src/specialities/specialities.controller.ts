@@ -20,11 +20,17 @@ export class SpecialitiesController {
   getSpecialitiesWithMatterAndProffessor() {
     return this.specialitiesProvider.getSpecialitiesWithMatterAndProffessor();
   }
+
   @Get('/matter/:matterId/proffessor')
   getSpecialitiesWithMatterIdAndProffesor(@Param('matterId') matterId: number) {
     return this.specialitiesProvider.getSpecialitiesWithMatterIdAndProffessor(
       matterId,
     );
+  }
+
+  @Get('/matter/:matterId')
+  getSpecialitiesWithMatterId(@Param('matterId') matterId: number) {
+    return this.specialitiesProvider.getSpecialitiesWithMatterId(matterId);
   }
 
   @Get('/proffessor')
