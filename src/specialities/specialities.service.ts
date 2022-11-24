@@ -33,6 +33,13 @@ export class SpecialitiesProvider {
     return await this.specialitiesService.find({ relations: ['proffessor'] });
   }
 
+  async getSpecialitiesWithInactiveProffessors() {
+    return await this.specialitiesService.find({
+      relations: ['proffessor'],
+      where: { proffessor: { active: false } },
+    });
+  }
+
   async getSpecialitiesWithProffessorId(proffessorId: number) {
     return await this.specialitiesService.find({ where: { proffessorId } });
   }
