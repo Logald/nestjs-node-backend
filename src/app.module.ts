@@ -5,6 +5,7 @@ import { GroupsModule } from './groups/groups.module';
 import { MattersModule } from './matters/matters.module';
 import { PeopleModule } from './people/people.module';
 import { ProffessorsModule } from './proffessors/proffessors.module';
+import { SpecialitiesModule } from './specialities/specialities.module';
 import { TurnsModule } from './turns/turns.module';
 
 @Module({
@@ -14,6 +15,7 @@ import { TurnsModule } from './turns/turns.module';
     GroupsModule,
     PeopleModule,
     ProffessorsModule,
+    SpecialitiesModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
