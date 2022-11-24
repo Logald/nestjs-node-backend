@@ -16,6 +16,11 @@ export class SpecialitiesController {
     return this.specialitiesProvider.getSpecialitiesWithMatter();
   }
 
+  @Get('/matter/proffessor')
+  getSpecialitiesWithMatterAndProffessor() {
+    return this.specialitiesProvider.getSpecialitiesWithMatterAndProffessor();
+  }
+
   @Get('/proffessor')
   getSpecialitiesWithProffessor() {
     return this.specialitiesProvider.getSpecialitiesWithProffessor();
