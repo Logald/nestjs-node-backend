@@ -11,6 +11,11 @@ export class SpecialitiesController {
     return this.specialitiesProvider.getSpecialities();
   }
 
+  @Get('/matter')
+  getSpecialitiesWithMatter() {
+    return this.specialitiesProvider.getSpecialitiesWithMatter();
+  }
+
   @Get('/:id')
   getSpeciality(@Param('id') specialityId: number) {
     return this.specialitiesProvider.getSpeciality(specialityId);
