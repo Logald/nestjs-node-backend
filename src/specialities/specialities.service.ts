@@ -57,6 +57,13 @@ export class SpecialitiesProvider {
     });
   }
 
+  async getSpecialityWithProffessor(specialityId: number) {
+    return await this.findSpeciality({
+      where: { id: specialityId },
+      relations: ['proffessor'],
+    });
+  }
+
   async getSpecialityWithMatterIdAndProffessorId(
     matterId: number,
     proffessorId: number,
