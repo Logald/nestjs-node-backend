@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Person } from 'src/people/person.entity';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { Proffessor } from './proffessor.entity';
 
 @Injectable()
@@ -20,13 +20,24 @@ export class ProffessorsProvider {
     return await this.proffessorsService.find({ relations: ['person'] });
   }
 
-  async getProffessor(proffessorId: number) {
-    const proffessorFound = await this.proffessorsService.findOne({
-      where: { id: proffessorId },
-    });
+  private async findProffessor(findOptions: FindOneOptions) {
+    const proffessorFound = await this.proffessorsService.findOne(findOptions);
     if (!proffessorFound)
       return new HttpException('Proffessor not found', HttpStatus.NOT_FOUND);
     return proffessorFound;
+  }
+
+  async getProffessor(proffessorId: number) {
+    return await this.findProffessor({
+      where: { id: proffessorId },
+    });
+  }
+
+  async getProffessorWithPerson(proffessorId: number) {
+    return await this.findProffessor({
+      where: { id: proffessorId },
+      relations: ['person'],
+    });
   }
 
   async createProffessor(proffessorData: Omit<Proffessor, 'id'>) {
