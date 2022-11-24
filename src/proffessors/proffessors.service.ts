@@ -108,4 +108,11 @@ export class ProffessorsProvider {
       );
     return proffessorData;
   }
+
+  async deleteProffessor(proffessorId: number) {
+    const proffessorFound = await this.proffessorsService.delete(proffessorId);
+    if (proffessorFound.affected == 0)
+      return new HttpException('Proffessor not found', HttpStatus.NOT_FOUND);
+    return proffessorFound;
+  }
 }

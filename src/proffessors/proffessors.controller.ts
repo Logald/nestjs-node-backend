@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { Proffessor } from './proffessor.entity';
 import { ProffessorsProvider } from './proffessors.service';
 
@@ -65,5 +73,10 @@ export class ProffessorsController {
       proffessorId,
       proffessorData,
     );
+  }
+
+  @Delete('/:id')
+  deleteProffessor(@Param('id') proffessorId: number) {
+    return this.proffessorsProvider.deleteProffessor(proffessorId);
   }
 }
