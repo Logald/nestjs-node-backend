@@ -11,6 +11,11 @@ export class ProffessorsController {
     return this.proffessorsProvider.getProffessors();
   }
 
+  @Get('/person')
+  getProffessorsWithPerson() {
+    return this.proffessorsProvider.getProffessorsWithPerson();
+  }
+
   @Post()
   createProffessor(@Body() proffessorData: Omit<Proffessor, 'id'>) {
     return this.proffessorsProvider.createProffessor(proffessorData);
