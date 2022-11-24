@@ -20,6 +20,15 @@ export class ProffessorsProvider {
     return await this.proffessorsService.find({ relations: ['person'] });
   }
 
+  async getProffessor(proffessorId: number) {
+    const proffessorFound = await this.proffessorsService.findOne({
+      where: { id: proffessorId },
+    });
+    if (!proffessorFound)
+      return new HttpException('Proffessor not found', HttpStatus.NOT_FOUND);
+    return proffessorFound;
+  }
+
   async createProffessor(proffessorData: Omit<Proffessor, 'id'>) {
     const personFound = await this.peopleService.findOne({
       where: { id: proffessorData.personId },
