@@ -24,6 +24,13 @@ export class ProffessorsProvider {
     return await this.proffessorsService.find({ where: { active: false } });
   }
 
+  async getInactiveProffessorsWithPerson() {
+    return await this.proffessorsService.find({
+      where: { active: false },
+      relations: ['person'],
+    });
+  }
+
   async getProffessorsWithPerson() {
     return await this.proffessorsService.find({ relations: ['person'] });
   }
