@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { SpecialitiesProvider } from './specialities.service';
 import { Speciality } from './speciality.entity';
 
@@ -9,6 +9,11 @@ export class SpecialitiesController {
   @Get()
   getSpecialities() {
     return this.specialitiesProvider.getSpecialities();
+  }
+
+  @Get('/:id')
+  getSpeciality(@Param('id') specialityId: number) {
+    return this.specialitiesProvider.getSpeciality(specialityId);
   }
 
   @Post()
