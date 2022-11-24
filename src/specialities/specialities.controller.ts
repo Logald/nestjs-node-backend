@@ -37,6 +37,15 @@ export class SpecialitiesController {
     );
   }
 
+  @Get('/matter/:matterId/proffessor/inactive')
+  getSpecialitiesWithMatterIdAndInactiveProffesor(
+    @Param('matterId') matterId: number,
+  ) {
+    return this.specialitiesProvider.getSpecialitiesWithMatterIdAndInactiveProffessor(
+      matterId,
+    );
+  }
+
   @Get('/matter/:matterId')
   getSpecialitiesWithMatterId(@Param('matterId') matterId: number) {
     return this.specialitiesProvider.getSpecialitiesWithMatterId(matterId);

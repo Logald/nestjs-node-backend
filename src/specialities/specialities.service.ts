@@ -43,6 +43,13 @@ export class SpecialitiesProvider {
     });
   }
 
+  async getSpecialitiesWithMatterIdAndInactiveProffessor(matterId: number) {
+    return await this.specialitiesService.find({
+      relations: ['proffessor'],
+      where: { matterId, proffessor: { active: false } },
+    });
+  }
+
   async getSpecialitiesWithMatterAndProffessor() {
     return await this.specialitiesService.find({
       relations: ['matter', 'proffessor'],
