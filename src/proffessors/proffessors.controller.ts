@@ -11,6 +11,11 @@ export class ProffessorsController {
     return this.proffessorsProvider.getProffessors();
   }
 
+  @Get('/active')
+  getActiveProffessors() {
+    return this.proffessorsProvider.getActiveProffessors();
+  }
+
   @Get('/person')
   getProffessorsWithPerson() {
     return this.proffessorsProvider.getProffessorsWithPerson();
