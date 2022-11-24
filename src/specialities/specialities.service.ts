@@ -15,6 +15,10 @@ export class SpecialitiesProvider {
     private proffessorsService: Repository<Proffessor>,
   ) {}
 
+  async getSpecialities() {
+    return await this.specialitiesService.find();
+  }
+
   async createSpeciality(specialityData: Omit<Speciality, 'id'>) {
     const specialityFound = await this.specialitiesService.findOne({
       where: {
