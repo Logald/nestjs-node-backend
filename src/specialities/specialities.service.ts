@@ -19,6 +19,15 @@ export class SpecialitiesProvider {
     return await this.specialitiesService.find();
   }
 
+  async getSpeciality(specialityId: number) {
+    const specialityFound = await this.specialitiesService.findOne({
+      where: { id: specialityId },
+    });
+    if (!specialityFound)
+      return new HttpException('Speciality not found', HttpStatus.NOT_FOUND);
+    return specialityFound;
+  }
+
   async createSpeciality(specialityData: Omit<Speciality, 'id'>) {
     const specialityFound = await this.specialitiesService.findOne({
       where: {
