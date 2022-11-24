@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { Proffessor } from './proffessor.entity';
 import { ProffessorsProvider } from './proffessors.service';
 
@@ -24,5 +24,16 @@ export class ProffessorsController {
   @Post()
   createProffessor(@Body() proffessorData: Omit<Proffessor, 'id'>) {
     return this.proffessorsProvider.createProffessor(proffessorData);
+  }
+
+  @Patch('/:id')
+  updateProffessor(
+    @Param('id') proffessorId: number,
+    @Body() proffessorData: Partial<Omit<Proffessor, 'id'>>,
+  ) {
+    return this.proffessorsProvider.updateProffessor(
+      proffessorId,
+      proffessorData,
+    );
   }
 }
