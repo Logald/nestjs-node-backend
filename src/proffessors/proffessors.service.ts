@@ -12,6 +12,10 @@ export class ProffessorsProvider {
     @InjectRepository(Person) private peopleService: Repository<Person>,
   ) {}
 
+  async getProffessors() {
+    return await this.proffessorsService.find();
+  }
+
   async createProffessor(proffessorData: Omit<Proffessor, 'id'>) {
     const personFound = await this.peopleService.findOne({
       where: { id: proffessorData.personId },
