@@ -31,6 +31,17 @@ export class SpecialitiesController {
     return this.specialitiesProvider.getSpeciality(specialityId);
   }
 
+  @Get('/matter/:matterId/proffessor/:proffessorId')
+  getSpecialityWithMatterIdAndProffessorId(
+    @Param('matterId') matterId: number,
+    @Param('proffessorId') proffessorId: number,
+  ) {
+    return this.specialitiesProvider.getSpecialityWithMatterIdAndProffessorId(
+      matterId,
+      proffessorId,
+    );
+  }
+
   @Post()
   createSpeciality(@Body() specialityData: Omit<Speciality, 'id'>) {
     return this.specialitiesProvider.createSpeciality(specialityData);

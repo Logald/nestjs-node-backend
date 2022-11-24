@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Matter } from 'src/matters/matter.entity';
 import { Proffessor } from 'src/proffessors/proffessor.entity';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { Speciality } from './speciality.entity';
 
 @Injectable()
@@ -33,13 +33,26 @@ export class SpecialitiesProvider {
     return await this.specialitiesService.find({ relations: ['proffessor'] });
   }
 
-  async getSpeciality(specialityId: number) {
-    const specialityFound = await this.specialitiesService.findOne({
-      where: { id: specialityId },
-    });
+  async findSpeciality(findOptions: FindOneOptions) {
+    const specialityFound = await this.specialitiesService.findOne(findOptions);
     if (!specialityFound)
       return new HttpException('Speciality not found', HttpStatus.NOT_FOUND);
     return specialityFound;
+  }
+
+  async getSpeciality(specialityId: number) {
+    return await this.findSpeciality({
+      where: { id: specialityId },
+    });
+  }
+
+  async getSpecialityWithMatterIdAndProffessorId(
+    matterId: number,
+    proffessorId: number,
+  ) {
+    return await this.findSpeciality({
+      where: { matterId, proffessorId },
+    });
   }
 
   async createSpeciality(specialityData: Omit<Speciality, 'id'>) {
