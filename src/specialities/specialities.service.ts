@@ -140,4 +140,34 @@ export class SpecialitiesProvider {
     const newSpeciality = await this.specialitiesService.save(tempSpeciality);
     return newSpeciality;
   }
+
+  async updateSpeciality(
+    specialityId: number,
+    specialityData: Partial<Omit<Speciality, 'id'>>,
+  ) {
+    if ('matterId' in specialityData) {
+      const matterFound = await this.mattersService.findOne({
+        where: { id: specialityData.matterId },
+      });
+      if (!matterFound)
+        return new HttpException('Matter not found', HttpStatus.NOT_ACCEPTABLE);
+    }
+    if ('proffessorId' in specialityData) {
+      const proffessorFound = await this.proffessorsService.findOne({
+        where: { id: specialityData.proffessorId },
+      });
+      if (!proffessorFound)
+        return new HttpException(
+          'Proffessor not found',
+          HttpStatus.NOT_ACCEPTABLE,
+        );
+    }
+    const specialityFound = await this.specialitiesService.update(
+      specialityId,
+      specialityData,
+    );
+    if (specialityFound.affected == 0)
+      return new HttpException('Speciality not found', HttpStatus.NOT_FOUND);
+    return specialityFound;
+  }
 }
