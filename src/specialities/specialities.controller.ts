@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { SpecialitiesProvider } from './specialities.service';
 import { Speciality } from './speciality.entity';
 
@@ -102,5 +102,16 @@ export class SpecialitiesController {
   @Post()
   createSpeciality(@Body() specialityData: Omit<Speciality, 'id'>) {
     return this.specialitiesProvider.createSpeciality(specialityData);
+  }
+
+  @Patch('/:id')
+  updateSpeciality(
+    @Param('id') specialityId,
+    @Body() specialityData: Partial<Omit<Speciality, 'id'>>,
+  ) {
+    return this.specialitiesProvider.updateSpeciality(
+      specialityId,
+      specialityData,
+    );
   }
 }
