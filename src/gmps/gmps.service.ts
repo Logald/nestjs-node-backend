@@ -26,12 +26,12 @@ export class GmpsProvider {
     });
   }
 
-  // async getGmpsWithProffessorsAndRelations() {
-  //   return await this.gmpsService.find({
-  //     where: { proffessorId: Not(IsNull()) },
-  //     relations: ['matter', 'group', 'proffessor'],
-  //   });
-  // }
+  async getGmpsWithProffessorsAndRelations() {
+    return await this.gmpsService.find({
+      where: { proffessorId: Not(IsNull()) },
+      relations: ['matter', 'group', 'proffessor'],
+    });
+  }
 
   async getGmpsWithoutProffessors() {
     return await this.gmpsService.find({ where: { proffessorId: IsNull() } });
