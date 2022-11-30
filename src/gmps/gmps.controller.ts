@@ -26,6 +26,13 @@ export class GmpsController {
     return this.gmpsProvider.getGmpsWithProffessorId(proffessorId);
   }
 
+  @Get('/proffessor/:proffessorId/all')
+  getGmpsWithProffessorIdAndRelations(
+    @Param('proffessorId') proffessorId: number,
+  ) {
+    return this.gmpsProvider.getGmpsWithProffessorIdAndRelations(proffessorId);
+  }
+
   @Get('/with/proffessors')
   getGmpsWithProffessors() {
     return this.gmpsProvider.getGmpsWithProffessors();
