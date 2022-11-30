@@ -88,6 +88,17 @@ export class GmpsController {
     return this.gmpsProvider.getGmpWithMatterIdAndGroupId(matterId, groupId);
   }
 
+  @Get('/matter/:matterId/group/:groupId/all')
+  getGmpsWithMatterIdGroupIdAndRelations(
+    @Param('matterId') matterId: number,
+    @Param('groupId') groupId: number,
+  ) {
+    return this.gmpsProvider.getGmpWithMatterIdGroupIdAndRelations(
+      matterId,
+      groupId,
+    );
+  }
+
   @Get('/matter/:matterId/proffessor/:proffessorId')
   getGmpsWithMatterIdAndProfessorId(
     @Param('matterId') matterId: number,
