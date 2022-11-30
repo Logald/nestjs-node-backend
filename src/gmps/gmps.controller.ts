@@ -11,6 +11,11 @@ export class GmpsController {
     return this.gmpsProvider.getGmps();
   }
 
+  @Get('/without/proffessors')
+  getGmpsWithoutProffessors() {
+    return this.gmpsProvider.getGmpsWithoutProffessors();
+  }
+
   @Get('/matter/:matterId')
   getGmpsWithMatterId(@Param('matterId') matterId: number) {
     return this.gmpsProvider.getGmpsWithMatterId(matterId);
