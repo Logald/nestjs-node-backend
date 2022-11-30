@@ -53,6 +53,25 @@ export class GmpsProvider {
     return await this.gmpsService.find({ where: { matterId } });
   }
 
+  async getGmpWithMatterIdAndGroupId(matterId: number, groupId: number) {
+    const matterFound = await this.mattersService.findOne({
+      where: { id: matterId },
+    });
+    if (!matterFound)
+      return new HttpException('Matter not found', HttpStatus.NOT_ACCEPTABLE);
+    const groupFound = await this.groupsService.findOne({
+      where: { id: groupId },
+    });
+    if (!groupFound)
+      return new HttpException('Group not found', HttpStatus.NOT_ACCEPTABLE);
+    const gmpFound = await this.gmpsService.findOne({
+      where: { matterId, groupId },
+    });
+    if (!gmpFound)
+      return new HttpException('Gmp not found', HttpStatus.NOT_FOUND);
+    return gmpFound;
+  }
+
   async getGmpsWithMatterIdAndProffessorId(
     matterId: number,
     proffessorId: number,
