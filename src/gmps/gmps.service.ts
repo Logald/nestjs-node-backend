@@ -20,6 +20,13 @@ export class GmpsProvider {
     return await this.gmpsService.find();
   }
 
+  async getGmp(gmpId: number) {
+    const gmpFound = await this.gmpsService.findOne({ where: { id: gmpId } });
+    if (!gmpFound)
+      return new HttpException('Gmp not found', HttpStatus.NOT_FOUND);
+    return gmpFound;
+  }
+
   async createGmp(gmpData: Omit<Gmp, 'id'>) {
     if ('matterId' in gmpData) {
       const matterFound = await this.mattersService.findOne({
