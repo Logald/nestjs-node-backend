@@ -20,6 +20,15 @@ export class GmpsProvider {
     return await this.gmpsService.find();
   }
 
+  async getGmpsWithMatterId(matterId: number) {
+    const matterFound = await this.mattersService.findOne({
+      where: { id: matterId },
+    });
+    if (!matterFound)
+      return new HttpException('Matter not found', HttpStatus.NOT_ACCEPTABLE);
+    return await this.gmpsService.find({ where: { matterId } });
+  }
+
   async getGmpsWithRelations() {
     return await this.gmpsService.find({
       relations: ['matter', 'group', 'proffessor'],
