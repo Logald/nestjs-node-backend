@@ -41,6 +41,18 @@ export class GmpsProvider {
     });
   }
 
+  async getGmpsWithProffessorId(proffessorId: number) {
+    const proffessorFound = await this.proffessorsService.findOne({
+      where: { id: proffessorId },
+    });
+    if (!proffessorFound)
+      return new HttpException(
+        'Proffessor not found',
+        HttpStatus.NOT_ACCEPTABLE,
+      );
+    return await this.gmpsService.find({ where: { proffessorId } });
+  }
+
   async getGmpsWithProffessors() {
     return await this.gmpsService.find({
       where: { proffessorId: Not(IsNull()) },
