@@ -11,6 +11,16 @@ export class GmpsController {
     return this.gmpsProvider.getGmps();
   }
 
+  @Get('/with/proffessors')
+  getGmpsWithProffessors() {
+    return this.gmpsProvider.getGmpsWithProffessors();
+  }
+
+  // @Get('/with/proffessors/all')
+  // getGmpsWithProffessorsAndRelations() {
+  //   return this.gmpsProvider.getGmpsWithProffessorsAndRelations();
+  // }
+
   @Get('/without/proffessors')
   getGmpsWithoutProffessors() {
     return this.gmpsProvider.getGmpsWithoutProffessors();

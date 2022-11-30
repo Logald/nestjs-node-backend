@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Group } from 'src/groups/group.entity';
 import { Matter } from 'src/matters/matter.entity';
 import { Proffessor } from 'src/proffessors/proffessor.entity';
-import { IsNull, Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { Gmp } from './gmp.entity';
 
 @Injectable()
@@ -19,6 +19,19 @@ export class GmpsProvider {
   async getGmps() {
     return await this.gmpsService.find();
   }
+
+  async getGmpsWithProffessors() {
+    return await this.gmpsService.find({
+      where: { proffessorId: Not(IsNull()) },
+    });
+  }
+
+  // async getGmpsWithProffessorsAndRelations() {
+  //   return await this.gmpsService.find({
+  //     where: { proffessorId: Not(IsNull()) },
+  //     relations: ['matter', 'group', 'proffessor'],
+  //   });
+  // }
 
   async getGmpsWithoutProffessors() {
     return await this.gmpsService.find({ where: { proffessorId: IsNull() } });
