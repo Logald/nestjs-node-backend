@@ -16,6 +16,10 @@ export class GmpsProvider {
     private proffessorsService: Repository<Proffessor>,
   ) {}
 
+  async getGmps() {
+    return await this.gmpsService.find();
+  }
+
   async createGmp(gmpData: Omit<Gmp, 'id'>) {
     if ('matterId' in gmpData) {
       const matterFound = await this.mattersService.findOne({
