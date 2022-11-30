@@ -24,6 +24,13 @@ export class GmpsProvider {
     return await this.gmpsService.find({ where: { proffessorId: IsNull() } });
   }
 
+  async getGmpsWithoutProffessorsAndRelations() {
+    return await this.gmpsService.find({
+      where: { proffessorId: IsNull() },
+      relations: ['matter', 'group', 'proffessor'],
+    });
+  }
+
   async getGmpsWithMatterId(matterId: number) {
     const matterFound = await this.mattersService.findOne({
       where: { id: matterId },
