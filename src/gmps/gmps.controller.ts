@@ -70,6 +70,11 @@ export class GmpsController {
     return this.gmpsProvider.getGmp(gmpId);
   }
 
+  @Get('/:id/all')
+  getGmpWithRelations(@Param('id') gmpId: number) {
+    return this.gmpsProvider.getGmpWithRelations(gmpId);
+  }
+
   @Post()
   createGmp(@Body() gmpData: Omit<Gmp, 'id'>) {
     return this.gmpsProvider.createGmp(gmpData);
