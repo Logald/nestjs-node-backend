@@ -20,6 +20,12 @@ export class GmpsProvider {
     return await this.gmpsService.find();
   }
 
+  async getGmpsWithRelations() {
+    return await this.gmpsService.find({
+      relations: ['matter', 'group', 'proffessor'],
+    });
+  }
+
   async getGmp(gmpId: number) {
     const gmpFound = await this.gmpsService.findOne({ where: { id: gmpId } });
     if (!gmpFound)
