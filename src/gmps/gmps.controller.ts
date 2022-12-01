@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { Gmp } from './gmp.entity';
 import { GmpsProvider } from './gmps.service';
 
@@ -152,5 +160,10 @@ export class GmpsController {
     @Body() gmpData: Omit<Gmp, 'id' | 'matter' | 'group' | 'proffessor'>,
   ) {
     return this.gmpsProvider.updateGmp(gmpId, gmpData);
+  }
+
+  @Delete('/:gmpId')
+  deleteGmp(@Param('gmpId') gmpId: number) {
+    return this.gmpsProvider.deleteGmp(gmpId);
   }
 }
