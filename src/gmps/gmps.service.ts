@@ -337,4 +337,11 @@ export class GmpsProvider {
       return new HttpException('Gmp not found', HttpStatus.NOT_FOUND);
     return gmpFound;
   }
+
+  async deleteGmp(gmpId: number) {
+    const gmpFound = await this.gmpsService.delete(gmpId);
+    if (gmpFound.affected == 0)
+      return new HttpException('Gmp not found', HttpStatus.NOT_FOUND);
+    return gmpFound;
+  }
 }
