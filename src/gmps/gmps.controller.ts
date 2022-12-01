@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { Gmp } from './gmp.entity';
 import { GmpsProvider } from './gmps.service';
 
@@ -144,5 +144,13 @@ export class GmpsController {
   @Post()
   createGmp(@Body() gmpData: Omit<Gmp, 'id'>) {
     return this.gmpsProvider.createGmp(gmpData);
+  }
+
+  @Put('/:gmpId')
+  updateGmp(
+    @Param('gmpId') gmpId: number,
+    @Body() gmpData: Omit<Gmp, 'id' | 'matter' | 'group' | 'proffessor'>,
+  ) {
+    return this.gmpsProvider.updateGmp(gmpId, gmpData);
   }
 }

@@ -303,4 +303,38 @@ export class GmpsProvider {
     const tempGmp = this.gmpsService.create(gmpData);
     return await this.gmpsService.save(tempGmp);
   }
+
+  async updateGmp(
+    gmpId: number,
+    gmpData: Omit<Gmp, 'id' | 'matter' | 'group' | 'proffessor'>,
+  ) {
+    if ('matterId' in gmpData) {
+      const matterFound = await this.mattersService.findOne({
+        where: { id: gmpData.matterId },
+      });
+      if (!matterFound)
+        return new HttpException('Matter not found', HttpStatus.NOT_ACCEPTABLE);
+    }
+    if ('groupId' in gmpData) {
+      const groupFound = await this.groupsService.findOne({
+        where: { id: gmpData.groupId },
+      });
+      if (!groupFound)
+        return new HttpException('Group not found', HttpStatus.NOT_ACCEPTABLE);
+    }
+    if ('proffessorId' in gmpData) {
+      const proffessorFound = await this.proffessorsService.findOne({
+        where: { id: gmpData.proffessorId },
+      });
+      if (!proffessorFound)
+        return new HttpException(
+          'Proffessor not found',
+          HttpStatus.NOT_ACCEPTABLE,
+        );
+    }
+    const gmpFound = await this.gmpsService.update(gmpId, gmpData);
+    if (gmpFound.affected == 0)
+      return new HttpException('Gmp not found', HttpStatus.NOT_FOUND);
+    return gmpFound;
+  }
 }
