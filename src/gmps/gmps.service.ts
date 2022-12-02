@@ -24,6 +24,13 @@ export class GmpsProvider {
     return await this.gmpsService.find({ where: gmpsFindManyOptions });
   }
 
+  async getGmpsWithRelationsByJson(gmpsFindManyOptions: Gmp) {
+    return await this.gmpsService.find({
+      where: gmpsFindManyOptions,
+      relations: ['matter', 'group', 'proffessor'],
+    });
+  }
+
   async getGmpsWithGroupId(groupId: number) {
     const groupFound = await this.groupsService.findOne({
       where: { id: groupId },

@@ -24,6 +24,11 @@ export class GmpsController {
     return this.gmpsProvider.getGmpsByJson(gmpsFindManyOptions);
   }
 
+  @Get('/json/all')
+  getGmpsWithRelationsByJson(@Body() gmpsFindManyOptions: Gmp) {
+    return this.gmpsProvider.getGmpsWithRelationsByJson(gmpsFindManyOptions);
+  }
+
   @Get('/group/:groupId')
   getGmpsWithGroupId(@Param('groupId') groupId: number) {
     return this.gmpsProvider.getGmpsWithGroupId(groupId);
