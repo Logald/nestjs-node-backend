@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { GmpsModule } from './gmps/gmps.module';
 import { GroupsModule } from './groups/groups.module';
 import { MattersModule } from './matters/matters.module';
+import { MGModule } from './mgs/mgs.module';
 import { PeopleModule } from './people/people.module';
 import { ProffessorsModule } from './proffessors/proffessors.module';
 import { SpecialitiesModule } from './specialities/specialities.module';
@@ -17,6 +18,7 @@ import { TurnsModule } from './turns/turns.module';
     PeopleModule,
     ProffessorsModule,
     SpecialitiesModule,
+    MGModule,
     GmpsModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
