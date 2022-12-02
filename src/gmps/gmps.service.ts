@@ -302,17 +302,15 @@ export class GmpsProvider {
           HttpStatus.NOT_ACCEPTABLE,
         );
     }
-    if ('matterId' in gmpData && 'groupId' in gmpData) {
-      const gmpFound = await this.gmpsService.findOne({
-        where: {
-          matterId: gmpData.matterId,
-          groupId: gmpData.groupId,
-        },
-      });
-      if (gmpFound) return new HttpException('Gmp found', HttpStatus.FOUND);
-    }
-    const tempGmp = this.gmpsService.create(gmpData);
-    return await this.gmpsService.save(tempGmp);
+    const gmpFound = await this.gmpsService.findOne({
+      where: {
+        matterId: gmpData.matterId,
+        groupId: gmpData.groupId,
+        active: true,
+      },
+    });
+    if (gmpFound) return new HttpException('Gmp found', HttpStatus.FOUND);
+    return await this.gmpsService.insert(gmpData);
   }
 
   async updateGmp(
