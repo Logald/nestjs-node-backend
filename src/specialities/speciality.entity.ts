@@ -3,11 +3,13 @@ import { Proffessor } from 'src/proffessors/proffessor.entity';
 import {
   Column,
   Entity,
+  Index,
   JoinTable,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 @Entity({ name: 'speciality' })
+@Index(['matterId', 'proffessorId'], { unique: true })
 export class Speciality {
   @PrimaryGeneratedColumn()
   id: number;
