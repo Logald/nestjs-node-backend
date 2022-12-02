@@ -341,7 +341,20 @@ export class GmpsProvider {
           HttpStatus.NOT_ACCEPTABLE,
         );
     }
-    const gmpFound = await this.gmpsService.update(gmpId, gmpData);
+    if ('matterId' in gmpData && 'groupId' in gmpData) {
+      const gmpFound = await this.gmpsService.findOne({
+        where: {
+          matterId: gmpData.matterId,
+          groupId: gmpData.groupId,
+          active: true,
+        },
+      });
+      if (gmpFound) return new HttpException('Gmp found', HttpStatus.FOUND);
+    }
+    const gmpFound = await this.gmpsService.update(
+      { id: gmpId, active: true },
+      gmpData,
+    );
     if (gmpFound.affected == 0)
       return new HttpException('Gmp not found', HttpStatus.NOT_FOUND);
     return gmpFound;
