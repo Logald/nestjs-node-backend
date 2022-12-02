@@ -20,6 +20,10 @@ export class GmpsProvider {
     return await this.gmpsService.find();
   }
 
+  async getGmpsByJson(gmpsFindManyOptions: Gmp) {
+    return await this.gmpsService.find({ where: gmpsFindManyOptions });
+  }
+
   async getGmpsWithGroupId(groupId: number) {
     const groupFound = await this.groupsService.findOne({
       where: { id: groupId },

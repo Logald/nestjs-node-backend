@@ -28,4 +28,6 @@ export class Gmp {
   @ManyToOne(() => Proffessor, { orphanedRowAction: 'nullify' })
   @JoinColumn()
   proffessor: Proffessor;
+  @Column({ type: 'boolean', default: true })
+  active: boolean;
 }
