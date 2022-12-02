@@ -19,6 +19,11 @@ export class GmpsController {
     return this.gmpsProvider.getGmps();
   }
 
+  @Get('/json')
+  getGmpsByJson(@Body() gmpsFindManyOptions: Gmp) {
+    return this.gmpsProvider.getGmpsByJson(gmpsFindManyOptions);
+  }
+
   @Get('/group/:groupId')
   getGmpsWithGroupId(@Param('groupId') groupId: number) {
     return this.gmpsProvider.getGmpsWithGroupId(groupId);
