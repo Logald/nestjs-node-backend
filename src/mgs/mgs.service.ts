@@ -31,6 +31,16 @@ export class MGProvider {
     return mgFound;
   }
 
+  async getMgWithRelations(mgId: number) {
+    const mgFound = await this.mgService.findOne({
+      where: { id: mgId },
+      relations: ['matter', 'group'],
+    });
+    if (!mgFound)
+      return new HttpException('Mg not found', HttpStatus.NOT_FOUND);
+    return mgFound;
+  }
+
   async createMg(mgData: Omit<MG, 'id'>) {
     const matterFound = await this.matterService.findOne({
       where: { id: mgData.matterId },
