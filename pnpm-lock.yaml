@@ -33,6 +33,7 @@ specifiers:
   typeorm: ^0.3.10
   typescript: ^4.9.3
   webpack: ^5.75.0
+  zod: ^3.19.1
 
 dependencies:
   '@nestjs/common': 9.2.1_yzt46al3aifnexifjjdb4dxxja
@@ -45,6 +46,7 @@ dependencies:
   rimraf: 3.0.2
   rxjs: 7.5.7
   typeorm: 0.3.10_pa4ea3wjef6s4gsskhbyci3cte
+  zod: 3.19.1
 
 devDependencies:
   '@nestjs/cli': 9.1.5
@@ -5249,3 +5251,7 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  /zod/3.19.1:
+    resolution: {integrity: sha512-LYjZsEDhCdYET9ikFu6dVPGp2YH9DegXjdJToSzD9rO6fy4qiRYFoyEYwps88OseJlPyl2NOe2iJuhEhL7IpEA==}
+    dev: false
