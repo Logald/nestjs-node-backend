@@ -13,8 +13,15 @@ export class MGProvider {
     @InjectRepository(Group) private groupService: Repository<Group>,
   ) {}
 
-  async getMgs() {
-    return await this.mgService.find();
+  async getMgs(mgsFindManyOptions: MG) {
+    return await this.mgService.find({ where: mgsFindManyOptions });
+  }
+
+  async getMgsWithRelations(mgsFindManyOptions: MG) {
+    return await this.mgService.find({
+      where: mgsFindManyOptions,
+      relations: ['matter', 'group'],
+    });
   }
 
   async createMg(mgData: Omit<MG, 'id'>) {
