@@ -21,6 +21,11 @@ export class MGController {
     return this.mgProvider.getMg(mgId);
   }
 
+  @Get('/:mgId/all')
+  getMgWithRelations(@Param('mgId') mgId: number) {
+    return this.mgProvider.getMgWithRelations(mgId);
+  }
+
   @Post()
   createMg(@Body() mgData: Omit<MG, 'id'>) {
     return this.mgProvider.createMg(mgData);
