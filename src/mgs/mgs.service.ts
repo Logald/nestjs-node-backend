@@ -13,6 +13,10 @@ export class MGProvider {
     @InjectRepository(Group) private groupService: Repository<Group>,
   ) {}
 
+  async getMgs() {
+    return await this.mgService.find();
+  }
+
   async createMg(mgData: Omit<MG, 'id'>) {
     const matterFound = await this.matterService.findOne({
       where: { id: mgData.matterId },
