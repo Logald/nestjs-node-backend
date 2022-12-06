@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { MG } from './mg.entity';
 import { MGProvider } from './mgs.service';
 
@@ -14,6 +14,11 @@ export class MGController {
   @Get('/all')
   getMgsWithRelations(@Body() mgsFindManyOptions: MG) {
     return this.mgProvider.getMgsWithRelations(mgsFindManyOptions);
+  }
+
+  @Get('/:mgId')
+  getMg(@Param('mgId') mgId: number) {
+    return this.mgProvider.getMg(mgId);
   }
 
   @Post()
