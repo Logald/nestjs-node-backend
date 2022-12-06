@@ -11,6 +11,11 @@ export class MGController {
     return this.mgProvider.getMgs(mgsFindManyOptions);
   }
 
+  @Get('/all')
+  getMgsWithRelations(@Body() mgsFindManyOptions: MG) {
+    return this.mgProvider.getMgsWithRelations(mgsFindManyOptions);
+  }
+
   @Post()
   createMg(@Body() mgData: Omit<MG, 'id'>) {
     return this.mgProvider.createMg(mgData);
