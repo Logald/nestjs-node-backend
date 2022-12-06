@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Group } from 'src/groups/group.entity';
 import { Matter } from 'src/matters/matter.entity';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { MG } from './mg.entity';
 
 @Injectable()
@@ -13,8 +13,8 @@ export class MGProvider {
     @InjectRepository(Group) private groupService: Repository<Group>,
   ) {}
 
-  async getMgs() {
-    return await this.mgService.find();
+  async getMgs(mgsFindManyOptions: MG) {
+    return await this.mgService.find({ where: mgsFindManyOptions });
   }
 
   async createMg(mgData: Omit<MG, 'id'>) {

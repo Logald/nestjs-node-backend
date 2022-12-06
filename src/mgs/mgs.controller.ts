@@ -7,8 +7,8 @@ export class MGController {
   constructor(private mgProvider: MGProvider) {}
 
   @Get()
-  getMgs() {
-    return this.mgProvider.getMgs();
+  getMgs(@Body() mgsFindManyOptions: MG) {
+    return this.mgProvider.getMgs(mgsFindManyOptions);
   }
 
   @Post()
