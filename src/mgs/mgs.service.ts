@@ -98,4 +98,11 @@ export class MGProvider {
         return new HttpException('Mg found', HttpStatus.FOUND);
       });
   }
+
+  async deleteMg(mgId: number) {
+    const deleteResult = await this.mgService.delete(mgId);
+    if (deleteResult.affected == 0)
+      return new HttpException('Mg not found', HttpStatus.NOT_ACCEPTABLE);
+    return deleteResult;
+  }
 }
