@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
 import { z } from 'zod';
 import { MG } from './mg.entity';
 import { MGProvider } from './mgs.service';
@@ -17,22 +9,22 @@ import { UpdateMg } from './schema/update_mg.schema';
 export class MGController {
   constructor(private mgProvider: MGProvider) {}
 
-  @Get()
+  @Post()
   getMgs(@Body() mgsFindManyOptions: MG) {
     return this.mgProvider.getMgs(mgsFindManyOptions);
   }
 
-  @Get('/all')
+  @Post('/all')
   getMgsWithRelations(@Body() mgsFindManyOptions: MG) {
     return this.mgProvider.getMgsWithRelations(mgsFindManyOptions);
   }
 
-  @Get('/:mgId')
+  @Post('/:mgId')
   getMg(@Param('mgId') mgId: number) {
     return this.mgProvider.getMg(mgId);
   }
 
-  @Get('/:mgId/all')
+  @Post('/:mgId/all')
   getMgWithRelations(@Param('mgId') mgId: number) {
     return this.mgProvider.getMgWithRelations(mgId);
   }
