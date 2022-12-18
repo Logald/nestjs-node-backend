@@ -2,11 +2,11 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Group } from 'src/groups/group.entity';
 import { Matter } from 'src/matters/matter.entity';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { z } from 'zod';
 import { MG } from './mg.entity';
-import { CreateMg } from './schema/create_mg.schema';
-import { UpdateMg } from './schema/update_mg.schema';
+import { CreateMg } from './schemas/create_mg.schema';
+import { UpdateMg } from './schemas/update_mg.schema';
 
 @Injectable()
 export class MGProvider {
@@ -27,21 +27,22 @@ export class MGProvider {
     });
   }
 
-  async getMg(mgId: number) {
-    const mgFound = await this.mgService.findOne({ where: { id: mgId } });
+  private async findMg(mgFindOneOptions: FindOneOptions) {
+    const mgFound = await this.mgService.findOne(mgFindOneOptions);
     if (!mgFound)
       return new HttpException('Mg not found', HttpStatus.NOT_FOUND);
     return mgFound;
   }
 
+  async getMg(mgId: number) {
+    return await this.findMg({ where: { id: mgId } });
+  }
+
   async getMgWithRelations(mgId: number) {
-    const mgFound = await this.mgService.findOne({
+    return await this.findMg({
       where: { id: mgId },
       relations: ['matter', 'group'],
     });
-    if (!mgFound)
-      return new HttpException('Mg not found', HttpStatus.NOT_FOUND);
-    return mgFound;
   }
 
   async createMg(mgData: z.infer<typeof CreateMg>) {
@@ -49,6 +50,10 @@ export class MGProvider {
     if (!passFormat.success)
       return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
     mgData = passFormat.data;
+    const mgFound = await this.mgService.findOne({
+      where: { matterId: mgData.matterId, groupId: mgData.groupId },
+    });
+    if (mgFound) return new HttpException('MG found', HttpStatus.FOUND);
     const matterFound = await this.matterService.findOne({
       where: { id: mgData.matterId },
     });
@@ -59,10 +64,6 @@ export class MGProvider {
     });
     if (!groupFound)
       return new HttpException('Group not found', HttpStatus.NOT_ACCEPTABLE);
-    const mgFound = await this.mgService.findOne({
-      where: { matterId: mgData.matterId, groupId: mgData.groupId },
-    });
-    if (mgFound) return new HttpException('MG found', HttpStatus.FOUND);
     return await this.mgService.insert(mgData);
   }
 

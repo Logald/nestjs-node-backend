@@ -1,84 +1,43 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
-import { CreateGroup } from './dto/createGroup.dto';
+import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
+import { z } from 'zod';
 import { Group } from './group.entity';
 import { GroupsProvider } from './groups.service';
+import { CreateGroup } from './schemas/create_group.schema';
+import { UpdateGroup } from './schemas/update_group.schema';
 
 @Controller('groups')
 export class GroupsController {
   constructor(private groupsProvider: GroupsProvider) {}
 
-  @Get()
-  getGroups() {
-    return this.groupsProvider.getGroups();
+  @Post()
+  getGroups(@Body() findManyOptions: Group) {
+    return this.groupsProvider.getGroups(findManyOptions);
   }
 
-  @Get('/active')
-  getActiveGroups() {
-    return this.groupsProvider.getActiveGroups();
+  @Post('/all')
+  getGroupsWithRelations(@Body() findManyOptions: Group) {
+    return this.groupsProvider.getGroupsWithRelations(findManyOptions);
   }
 
-  @Get('/inactive')
-  getInactiveGroups() {
-    return this.groupsProvider.getInactiveGroups();
+  @Post('/create')
+  createGroup(@Body() groupDate: z.infer<typeof CreateGroup>) {
+    return this.groupsProvider.createGroup(groupDate);
   }
 
-  @Get('/turn')
-  getGroupsWithTurn() {
-    return this.groupsProvider.getGroupsWithTurn();
-  }
-
-  @Get('/turn/active')
-  getActiveGroupsWithTurn() {
-    return this.groupsProvider.getActiveGroupsWithTurn();
-  }
-
-  @Get('/turn/inactive')
-  getInactiveGroupsWithTurn() {
-    return this.groupsProvider.getInactiveGroupsWithTurn();
-  }
-
-  @Get('/turn/:id')
-  getGroupsWithTurnid(@Param('id') turnId: number) {
-    return this.groupsProvider.getGroupsWithTurnid(turnId);
-  }
-
-  @Get('/turn/:id/active')
-  getActiveGroupsWithTurnid(@Param('id') turnId: number) {
-    return this.groupsProvider.getActiveGroupsWithTurnid(turnId);
-  }
-
-  @Get('/turn/:id/inactive')
-  getInactiveGroupsWithTurnid(@Param('id') turnId: number) {
-    return this.groupsProvider.getInactiveGroupsWithTurnid(turnId);
-  }
-
-  @Get('/:id')
+  @Post('/:id')
   getGroup(@Param('id') groupId: number) {
     return this.groupsProvider.getGroup(groupId);
   }
 
-  @Get('/turn/:id')
-  getGroupWithTurn(@Param('id') groupId: number) {
-    return this.groupsProvider.getGroupWithTurn(groupId);
-  }
-
-  @Post()
-  createGroup(@Body() groupDate: CreateGroup) {
-    return this.groupsProvider.createGroup(groupDate);
+  @Post('/:id/all')
+  getGroupWithRelations(@Param('id') groupId: number) {
+    return this.groupsProvider.getGroupWithRelations(groupId);
   }
 
   @Patch('/:id')
   updateGroup(
     @Param('id') groupId: number,
-    @Body() groupData: Partial<Omit<Group, 'id' | 'turn'>>,
+    @Body() groupData: z.infer<typeof UpdateGroup>,
   ) {
     return this.groupsProvider.updateGroup(groupId, groupData);
   }

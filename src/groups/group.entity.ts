@@ -1,11 +1,20 @@
 import { Turn } from 'src/turns/turn.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({ name: 'group' })
+@Index(['grade', 'name'], { unique: true })
 export class Group {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ type: 'varchar', unique: true })
+  @Column({ type: 'int' })
+  grade: number;
+  @Column({ type: 'varchar' })
   name: string;
   @Column({ type: 'varchar', nullable: true })
   description: string;

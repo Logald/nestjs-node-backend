@@ -2,8 +2,8 @@ import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
 import { z } from 'zod';
 import { MG } from './mg.entity';
 import { MGProvider } from './mgs.service';
-import { CreateMg } from './schema/create_mg.schema';
-import { UpdateMg } from './schema/update_mg.schema';
+import { CreateMg } from './schemas/create_mg.schema';
+import { UpdateMg } from './schemas/update_mg.schema';
 
 @Controller('mgs')
 export class MGController {
@@ -19,6 +19,11 @@ export class MGController {
     return this.mgProvider.getMgsWithRelations(mgsFindManyOptions);
   }
 
+  @Post('/create')
+  createMg(@Body() mgData: z.infer<typeof CreateMg>) {
+    return this.mgProvider.createMg(mgData);
+  }
+
   @Post('/:mgId')
   getMg(@Param('mgId') mgId: number) {
     return this.mgProvider.getMg(mgId);
@@ -27,11 +32,6 @@ export class MGController {
   @Post('/:mgId/all')
   getMgWithRelations(@Param('mgId') mgId: number) {
     return this.mgProvider.getMgWithRelations(mgId);
-  }
-
-  @Post()
-  createMg(@Body() mgData: z.infer<typeof CreateMg>) {
-    return this.mgProvider.createMg(mgData);
   }
 
   @Patch('/:mgId')
