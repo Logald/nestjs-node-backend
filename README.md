@@ -71,3 +71,14 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+- ### Environment Vars
+
+  > - NODE_ENV = development | production
+  > - MYSQL_HOST = localhost
+  > - MYSQL_PORT = 3306
+  > - MYSQL_USER = root
+  > - MYSQL_PASSWORD = 123
+  > - MYSQL_DATABASE = prueba
+
+  - ### Application listen on port 3000

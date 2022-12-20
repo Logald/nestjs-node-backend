@@ -7,16 +7,24 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { CreateMatter } from './dto/createMatter.dto';
+import { z } from 'zod';
+import { Matter } from './matter.entity';
 import { MattersProvider } from './matters.service';
+import { CreateMatter } from './schemas/create_matter.schema';
+import { UpdateMatter } from './schemas/update_matter.schema';
 
 @Controller('matters')
 export class MattersController {
   constructor(private matterProvider: MattersProvider) {}
 
-  @Get()
-  getMatters() {
-    return this.matterProvider.getMatters();
+  @Post()
+  getMatters(@Body() findMatterOptions: Matter) {
+    return this.matterProvider.getMatters(findMatterOptions);
+  }
+
+  @Post()
+  createMatter(@Body() matterData: z.infer<typeof CreateMatter>) {
+    return this.matterProvider.createMatter(matterData);
   }
 
   @Get('/:id')
@@ -24,13 +32,11 @@ export class MattersController {
     return this.matterProvider.getMatter(matterId);
   }
 
-  @Post()
-  createMatter(@Body() matterData: CreateMatter) {
-    return this.matterProvider.createMatter(matterData);
-  }
-
   @Patch('/:id')
-  updateMatter(@Param('id') matterId: number, @Body() matterData) {
+  updateMatter(
+    @Param('id') matterId: number,
+    @Body() matterData: z.infer<typeof UpdateMatter>,
+  ) {
     return this.matterProvider.updateMatter(matterId, matterData);
   }
 

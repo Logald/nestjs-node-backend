@@ -1,17 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateMatter } from './dto/createMatter.dto';
+import { z } from 'zod';
 import { Matter } from './matter.entity';
-
+import { CreateMatter } from './schemas/create_matter.schema';
+import { UpdateMatter } from './schemas/update_matter.schema';
 @Injectable()
 export class MattersProvider {
   constructor(
     @InjectRepository(Matter) private matterService: Repository<Matter>,
   ) {}
 
-  async getMatters() {
-    return await this.matterService.find();
+  async getMatters(findManyOptions: Matter) {
+    return await this.matterService.find({ where: findManyOptions });
   }
 
   async getMatter(matterId: number) {
@@ -23,16 +24,28 @@ export class MattersProvider {
     return matter;
   }
 
-  async createMatter(matterData: CreateMatter) {
+  async createMatter(matterData: z.infer<typeof CreateMatter>) {
+    const passFormat = CreateMatter.safeParse(matterData);
+    if (!passFormat.success)
+      return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
+    matterData = passFormat.data;
     const matterFound = await this.matterService.findOne({
       where: { name: matterData.name },
     });
     if (matterFound) return new HttpException('Matter found', HttpStatus.FOUND);
-    const tempMatter = this.matterService.create(matterData);
-    return await this.matterService.save(tempMatter);
+    return await this.matterService.insert(matterData);
   }
 
-  async updateMatter(matterId: number, matterData: Partial<CreateMatter>) {
+  async updateMatter(
+    matterId: number,
+    matterData: z.infer<typeof UpdateMatter>,
+  ) {
+    const passFormat = UpdateMatter.safeParse(matterData);
+    if (!passFormat.success)
+      return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
+    if (Object.keys(passFormat.data).length == 0)
+      return new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE);
+    matterData = passFormat.data;
     const matter = await this.matterService.findOne({
       where: { id: matterId },
     });

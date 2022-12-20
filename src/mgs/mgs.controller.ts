@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { z } from 'zod';
 import { MG } from './mg.entity';
 import { MGProvider } from './mgs.service';
@@ -24,12 +32,12 @@ export class MGController {
     return this.mgProvider.createMg(mgData);
   }
 
-  @Post('/:mgId')
+  @Get('/:mgId')
   getMg(@Param('mgId') mgId: number) {
     return this.mgProvider.getMg(mgId);
   }
 
-  @Post('/:mgId/all')
+  @Get('/:mgId/all')
   getMgWithRelations(@Param('mgId') mgId: number) {
     return this.mgProvider.getMgWithRelations(mgId);
   }
