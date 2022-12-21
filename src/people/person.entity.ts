@@ -8,6 +8,6 @@ export class Person {
   name: string;
   @Column({ type: 'varchar' })
   lastname: string;
-  @Column({ type: 'integer', unique: true })
-  ci: number;
+  @Column({ type: 'varchar', unique: true })
+  ci: string;
 }
