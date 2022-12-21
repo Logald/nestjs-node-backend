@@ -32,8 +32,7 @@ export class TurnsProvider {
       where: { name: turnData.name },
     });
     if (turnFound) return new HttpException('Turn was found', HttpStatus.FOUND);
-    const tempTurn = this.turnService.create(turnData);
-    return await this.turnService.save(tempTurn);
+    return await this.turnService.insert(turnData);
   }
 
   async updateTurn(turnId: number, turnData: z.infer<typeof UpdateTurn>) {
