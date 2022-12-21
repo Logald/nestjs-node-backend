@@ -22,7 +22,7 @@ export class TurnsController {
     return this.turnsProvider.getTurns(turnData);
   }
 
-  @Post()
+  @Post('/create')
   createTurn(@Body() turnData: z.infer<typeof CreateTurn>) {
     return this.turnsProvider.createTurn(turnData);
   }

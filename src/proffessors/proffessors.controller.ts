@@ -7,46 +7,24 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { z } from 'zod';
 import { Proffessor } from './proffessor.entity';
 import { ProffessorsProvider } from './proffessors.service';
+import { CreateProffessor } from './schemas/create_proffessor.schema';
+import { UpdateProffessor } from './schemas/update_proffessor.schema';
 
 @Controller('proffessors')
 export class ProffessorsController {
   constructor(private proffessorsProvider: ProffessorsProvider) {}
 
-  @Get()
-  getProffessors() {
-    return this.proffessorsProvider.getProffessors();
+  @Post()
+  getProffessors(@Body() proffessorData: Proffessor) {
+    return this.proffessorsProvider.getProffessors(proffessorData);
   }
 
-  @Get('/active')
-  getActiveProffessors() {
-    return this.proffessorsProvider.getActiveProffessors();
-  }
-
-  @Get('/person/active')
-  getActiveProffessorsWithPerson() {
-    return this.proffessorsProvider.getActiveProffessorsWithPerson();
-  }
-
-  @Get('/inactive')
-  getInactiveProffessors() {
-    return this.proffessorsProvider.getInactiveProffessors();
-  }
-
-  @Get('/person/inactive')
-  getInactiveProffessorsWithPerson() {
-    return this.proffessorsProvider.getInactiveProffessorsWithPerson();
-  }
-
-  @Get('/person')
-  getProffessorsWithPerson() {
-    return this.proffessorsProvider.getProffessorsWithPerson();
-  }
-
-  @Get('person/:id')
-  getProffessorByPersonId(@Param('id') personId: number) {
-    return this.proffessorsProvider.getProffessorByPersonId(personId);
+  @Post('/create')
+  createProffessor(@Body() proffessorData: z.infer<typeof CreateProffessor>) {
+    return this.proffessorsProvider.createProffessor(proffessorData);
   }
 
   @Get('/:id')
@@ -54,20 +32,15 @@ export class ProffessorsController {
     return this.proffessorsProvider.getProffessor(proffessorId);
   }
 
-  @Get('/:id/person')
+  @Get('/:id/all')
   getProffessorWithPerson(@Param('id') proffessorId: number) {
-    return this.proffessorsProvider.getProffessorWithPerson(proffessorId);
-  }
-
-  @Post()
-  createProffessor(@Body() proffessorData: Omit<Proffessor, 'id'>) {
-    return this.proffessorsProvider.createProffessor(proffessorData);
+    return this.proffessorsProvider.getProffessorWithRelations(proffessorId);
   }
 
   @Patch('/:id')
   updateProffessor(
     @Param('id') proffessorId: number,
-    @Body() proffessorData: Partial<Omit<Proffessor, 'id'>>,
+    @Body() proffessorData: z.infer<typeof UpdateProffessor>,
   ) {
     return this.proffessorsProvider.updateProffessor(
       proffessorId,

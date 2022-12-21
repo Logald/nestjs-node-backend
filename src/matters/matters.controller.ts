@@ -22,7 +22,7 @@ export class MattersController {
     return this.matterProvider.getMatters(findMatterOptions);
   }
 
-  @Post()
+  @Post('/create')
   createMatter(@Body() matterData: z.infer<typeof CreateMatter>) {
     return this.matterProvider.createMatter(matterData);
   }

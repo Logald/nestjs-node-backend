@@ -7,16 +7,24 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { z } from 'zod';
 import { PeopleProvider } from './people.service';
 import { Person } from './person.entity';
+import { CreatePeople } from './schemas/create_people.schema';
+import { UpdatePeople } from './schemas/update_people.schema';
 
 @Controller('people')
 export class PeopleController {
   constructor(private peopleProvider: PeopleProvider) {}
 
-  @Get()
-  getPeople() {
-    return this.peopleProvider.getPeople();
+  @Post()
+  getPeople(@Body() personData: Person) {
+    return this.peopleProvider.getPeople(personData);
+  }
+
+  @Post('/create')
+  createPerson(@Body() personData: z.infer<typeof CreatePeople>) {
+    return this.peopleProvider.createPerson(personData);
   }
 
   @Get('/:id')
@@ -24,15 +32,10 @@ export class PeopleController {
     return this.peopleProvider.getPerson(personId);
   }
 
-  @Post()
-  createPerson(@Body() personData: Omit<Person, 'id'>) {
-    return this.peopleProvider.createPerson(personData);
-  }
-
   @Patch('/:id')
   updatePerson(
     @Param('id') personId: number,
-    @Body() personData: Omit<Person, 'id'>,
+    @Body() personData: z.infer<typeof UpdatePeople>,
   ) {
     return this.peopleProvider.updatePerson(personId, personData);
   }
