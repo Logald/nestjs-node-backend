@@ -20,7 +20,7 @@ export class Group {
   description: string;
   @Column()
   turnId: number;
-  @ManyToOne(() => Turn, (turn) => turn.groups, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Turn, { onDelete: 'CASCADE' })
   turn: Turn;
   @Column({ default: true })
   active: boolean;
