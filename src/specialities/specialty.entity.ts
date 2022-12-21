@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 @Entity({ name: 'speciality' })
 @Index(['matterId', 'proffessorId'], { unique: true })
-export class Speciality {
+export class Specialty {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({ unique: false })

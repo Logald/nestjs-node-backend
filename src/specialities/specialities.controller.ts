@@ -7,117 +7,49 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { z } from 'zod';
+import { CreateSpecialty } from './schemas/create_specialty.schema';
+import { UpdateSpecialty } from './schemas/update_specialty.schema';
 import { SpecialitiesProvider } from './specialities.service';
-import { Speciality } from './speciality.entity';
+import { Specialty } from './specialty.entity';
 
 @Controller('specialities')
 export class SpecialitiesController {
   constructor(private specialitiesProvider: SpecialitiesProvider) {}
 
-  @Get()
-  getSpecialities() {
-    return this.specialitiesProvider.getSpecialities();
+  @Post()
+  getSpecialities(@Body() findManyOptions: Specialty) {
+    return this.specialitiesProvider.getSpecialities(findManyOptions);
   }
 
-  @Get('/matter')
-  getSpecialitiesWithMatter() {
-    return this.specialitiesProvider.getSpecialitiesWithMatter();
-  }
-
-  @Get('/matter/proffessor')
-  getSpecialitiesWithMatterAndProffessor() {
-    return this.specialitiesProvider.getSpecialitiesWithMatterAndProffessor();
-  }
-
-  @Get('/matter/:matterId/proffessor')
-  getSpecialitiesWithMatterIdAndProffesor(@Param('matterId') matterId: number) {
-    return this.specialitiesProvider.getSpecialitiesWithMatterIdAndProffessor(
-      matterId,
+  @Post('/all')
+  getSpecialitiesWithRelations(@Body() findManyOptions: Specialty) {
+    return this.specialitiesProvider.getSpecialitiesWithRelations(
+      findManyOptions,
     );
   }
 
-  @Get('/matter/:matterId/proffessor/active')
-  getSpecialitiesWithMatterIdAndActiveProffesor(
-    @Param('matterId') matterId: number,
-  ) {
-    return this.specialitiesProvider.getSpecialitiesWithMatterIdAndActiveProffessor(
-      matterId,
-    );
-  }
-
-  @Get('/matter/:matterId/proffessor/inactive')
-  getSpecialitiesWithMatterIdAndInactiveProffesor(
-    @Param('matterId') matterId: number,
-  ) {
-    return this.specialitiesProvider.getSpecialitiesWithMatterIdAndInactiveProffessor(
-      matterId,
-    );
-  }
-
-  @Get('/matter/:matterId')
-  getSpecialitiesWithMatterId(@Param('matterId') matterId: number) {
-    return this.specialitiesProvider.getSpecialitiesWithMatterId(matterId);
-  }
-
-  @Get('/proffessor')
-  getSpecialitiesWithProffessor() {
-    return this.specialitiesProvider.getSpecialitiesWithProffessor();
-  }
-
-  @Get('/proffessor/active')
-  getSpecialitiesWithActiveProffessors() {
-    return this.specialitiesProvider.getSpecialitiesWithActiveProffessors();
-  }
-
-  @Get('/proffessor/inactive')
-  getSpecialitiesWithInactiveProffessors() {
-    return this.specialitiesProvider.getSpecialitiesWithInactiveProffessors();
-  }
-
-  @Get('/proffessor/:id')
-  getSpecialitiesWithProffessorId(@Param('id') proffessorId: number) {
-    return this.specialitiesProvider.getSpecialitiesWithProffessorId(
-      proffessorId,
-    );
+  @Post('/create')
+  createSpeciality(@Body() specialityData: z.infer<typeof CreateSpecialty>) {
+    return this.specialitiesProvider.createSpecialty(specialityData);
   }
 
   @Get('/:id')
-  getSpeciality(@Param('id') specialityId: number) {
-    return this.specialitiesProvider.getSpeciality(specialityId);
+  getSpecialty(@Param('id') specialityId: number) {
+    return this.specialitiesProvider.getSpecialty(specialityId);
   }
 
-  @Get('/:id/matter')
-  getSpecialityWithMatter(@Param('id') specialityId: number) {
-    return this.specialitiesProvider.getSpecialityWithMatter(specialityId);
-  }
-
-  @Get('/:id/proffessor')
-  getSpecialityWithProffessor(@Param('id') specialityId: number) {
-    return this.specialitiesProvider.getSpecialityWithProffessor(specialityId);
-  }
-
-  @Get('/matter/:matterId/proffessor/:proffessorId')
-  getSpecialityWithMatterIdAndProffessorId(
-    @Param('matterId') matterId: number,
-    @Param('proffessorId') proffessorId: number,
-  ) {
-    return this.specialitiesProvider.getSpecialityWithMatterIdAndProffessorId(
-      matterId,
-      proffessorId,
-    );
-  }
-
-  @Post()
-  createSpeciality(@Body() specialityData: Omit<Speciality, 'id'>) {
-    return this.specialitiesProvider.createSpeciality(specialityData);
+  @Get('/:id/all')
+  getSpecialtyWithRelations(@Param('id') specialityId: number) {
+    return this.specialitiesProvider.getSpecialtyWithRelations(specialityId);
   }
 
   @Patch('/:id')
   updateSpeciality(
     @Param('id') specialityId,
-    @Body() specialityData: Partial<Omit<Speciality, 'id'>>,
+    @Body() specialityData: z.infer<typeof UpdateSpecialty>,
   ) {
-    return this.specialitiesProvider.updateSpeciality(
+    return this.specialitiesProvider.updateSpecialty(
       specialityId,
       specialityData,
     );
