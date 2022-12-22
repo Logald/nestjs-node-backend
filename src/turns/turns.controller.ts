@@ -7,16 +7,24 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { CreateTurn } from './dto/createTurn.dto';
+import { z } from 'zod';
+import { CreateTurn } from './schemas/create_turn.schema';
+import { UpdateTurn } from './schemas/update_turn.schema';
+import { Turn } from './turn.entity';
 import { TurnsProvider } from './turns.service';
 
 @Controller('turns')
 export class TurnsController {
   constructor(private turnsProvider: TurnsProvider) {}
 
-  @Get()
-  getTurns() {
-    return this.turnsProvider.getTurns();
+  @Post()
+  getTurns(@Body() turnData: Turn) {
+    return this.turnsProvider.getTurns(turnData);
+  }
+
+  @Post('/create')
+  createTurn(@Body() turnData: z.infer<typeof CreateTurn>) {
+    return this.turnsProvider.createTurn(turnData);
   }
 
   @Get('/:id')
@@ -24,13 +32,11 @@ export class TurnsController {
     return this.turnsProvider.getTurn(turnId);
   }
 
-  @Post()
-  createTurn(@Body() turnData: CreateTurn) {
-    return this.turnsProvider.createTurn(turnData);
-  }
-
   @Patch('/:id')
-  updateTurn(@Param('id') turnId: number, @Body() turnData) {
+  updateTurn(
+    @Param('id') turnId: number,
+    @Body() turnData: z.infer<typeof UpdateTurn>,
+  ) {
     return this.turnsProvider.updateTurn(turnId, turnData);
   }
 

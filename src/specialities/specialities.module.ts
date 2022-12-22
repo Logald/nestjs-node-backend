@@ -4,10 +4,10 @@ import { Matter } from 'src/matters/matter.entity';
 import { Proffessor } from 'src/proffessors/proffessor.entity';
 import { SpecialitiesController } from './specialities.controller';
 import { SpecialitiesProvider } from './specialities.service';
-import { Speciality } from './speciality.entity';
+import { Specialty } from './specialty.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Speciality, Matter, Proffessor])],
+  imports: [TypeOrmModule.forFeature([Specialty, Matter, Proffessor])],
   controllers: [SpecialitiesController],
   providers: [SpecialitiesProvider],
 })

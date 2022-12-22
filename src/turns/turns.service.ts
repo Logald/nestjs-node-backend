@@ -1,15 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateTurn } from './dto/createTurn.dto';
+import { z } from 'zod';
+import { CreateTurn } from './schemas/create_turn.schema';
+import { UpdateTurn } from './schemas/update_turn.schema';
 import { Turn } from './turn.entity';
 
 @Injectable()
 export class TurnsProvider {
   constructor(@InjectRepository(Turn) private turnService: Repository<Turn>) {}
 
-  async getTurns() {
-    return await this.turnService.find();
+  async getTurns(findManyOptions: Turn) {
+    return await this.turnService.find({ where: findManyOptions });
   }
 
   async getTurn(turnId: number) {
@@ -21,16 +23,25 @@ export class TurnsProvider {
     return turnFound;
   }
 
-  async createTurn(turnData: CreateTurn) {
+  async createTurn(turnData: z.infer<typeof CreateTurn>) {
+    const passFormat = CreateTurn.safeParse(turnData);
+    if (!passFormat.success)
+      return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
+    turnData = passFormat.data;
     const turnFound = await this.turnService.findOne({
       where: { name: turnData.name },
     });
     if (turnFound) return new HttpException('Turn was found', HttpStatus.FOUND);
-    const tempTurn = this.turnService.create(turnData);
-    return await this.turnService.save(tempTurn);
+    return await this.turnService.insert(turnData);
   }
 
-  async updateTurn(turnId: number, turnData: Partial<CreateTurn>) {
+  async updateTurn(turnId: number, turnData: z.infer<typeof UpdateTurn>) {
+    const passFormat = UpdateTurn.safeParse(turnData);
+    if (!passFormat.success)
+      return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
+    if (Object.keys(passFormat.data).length == 0)
+      return new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE);
+    turnData = passFormat.data;
     const turnFound = await this.turnService.findOne({
       where: { id: turnId },
     });

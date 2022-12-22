@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { z } from 'zod';
 import { Group } from './group.entity';
 import { GroupsProvider } from './groups.service';
@@ -24,12 +32,12 @@ export class GroupsController {
     return this.groupsProvider.createGroup(groupDate);
   }
 
-  @Post('/:id')
+  @Get('/:id')
   getGroup(@Param('id') groupId: number) {
     return this.groupsProvider.getGroup(groupId);
   }
 
-  @Post('/:id/all')
+  @Get('/:id/all')
   getGroupWithRelations(@Param('id') groupId: number) {
     return this.groupsProvider.getGroupWithRelations(groupId);
   }

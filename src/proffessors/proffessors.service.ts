@@ -2,7 +2,10 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Person } from 'src/people/person.entity';
 import { FindOneOptions, Repository } from 'typeorm';
+import { z } from 'zod';
 import { Proffessor } from './proffessor.entity';
+import { CreateProffessor } from './schemas/create_proffessor.schema';
+import { UpdateProffessor } from './schemas/update_proffessor.schema';
 
 @Injectable()
 export class ProffessorsProvider {
@@ -12,34 +15,15 @@ export class ProffessorsProvider {
     @InjectRepository(Person) private peopleService: Repository<Person>,
   ) {}
 
-  async getProffessors() {
-    return await this.proffessorsService.find();
+  async getProffessors(findManyOptions: Proffessor) {
+    return await this.proffessorsService.find({ where: findManyOptions });
   }
 
-  async getActiveProffessors() {
-    return await this.proffessorsService.find({ where: { active: true } });
-  }
-
-  async getActiveProffessorsWithPerson() {
+  async getProffessorsWithRelations(findManyOptions: Proffessor) {
     return await this.proffessorsService.find({
-      where: { active: true },
+      where: findManyOptions,
       relations: ['person'],
     });
-  }
-
-  async getInactiveProffessors() {
-    return await this.proffessorsService.find({ where: { active: false } });
-  }
-
-  async getInactiveProffessorsWithPerson() {
-    return await this.proffessorsService.find({
-      where: { active: false },
-      relations: ['person'],
-    });
-  }
-
-  async getProffessorsWithPerson() {
-    return await this.proffessorsService.find({ relations: ['person'] });
   }
 
   private async findProffessor(findOptions: FindOneOptions) {
@@ -55,23 +39,18 @@ export class ProffessorsProvider {
     });
   }
 
-  async getProffessorByPersonId(personId: number) {
-    const proffessorFound = await this.proffessorsService.findOne({
-      where: { personId },
-    });
-    if (!proffessorFound)
-      return new HttpException('Proffessor not found', HttpStatus.NOT_FOUND);
-    return proffessorFound;
-  }
-
-  async getProffessorWithPerson(proffessorId: number) {
+  async getProffessorWithRelations(proffessorId: number) {
     return await this.findProffessor({
       where: { id: proffessorId },
       relations: ['person'],
     });
   }
 
-  async createProffessor(proffessorData: Omit<Proffessor, 'id'>) {
+  async createProffessor(proffessorData: z.infer<typeof CreateProffessor>) {
+    const passFormat = CreateProffessor.safeParse(proffessorData);
+    if (!passFormat.success)
+      return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
+    proffessorData = passFormat.data;
     const personFound = await this.peopleService.findOne({
       where: { id: proffessorData.personId },
     });
@@ -82,14 +61,19 @@ export class ProffessorsProvider {
     });
     if (proffessorFound)
       return new HttpException('Person found', HttpStatus.NOT_ACCEPTABLE);
-    const tempProffessor = this.proffessorsService.create(proffessorData);
-    return await this.proffessorsService.save(tempProffessor);
+    return await this.proffessorsService.insert(proffessorData);
   }
 
   async updateProffessor(
     proffessorId: number,
-    proffessorData: Partial<Omit<Proffessor, 'id'>>,
+    proffessorData: z.infer<typeof UpdateProffessor>,
   ) {
+    const passFormat = UpdateProffessor.safeParse(proffessorData);
+    if (!passFormat.success)
+      return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
+    if (Object.keys(passFormat.data).length == 0)
+      return new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE);
+    proffessorData = passFormat.data;
     if ('personId' in proffessorData) {
       const personFound = await this.peopleService.findOne({
         where: { id: proffessorData.personId },
@@ -106,7 +90,7 @@ export class ProffessorsProvider {
         'Proffessor not found',
         HttpStatus.NOT_ACCEPTABLE,
       );
-    return proffessorData;
+    return proffessorFound;
   }
 
   async deleteProffessor(proffessorId: number) {

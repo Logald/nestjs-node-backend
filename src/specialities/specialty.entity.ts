@@ -6,11 +6,11 @@ import {
   Index,
   JoinTable,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  PrimaryGeneratedColumn
 } from 'typeorm';
-@Entity({ name: 'speciality' })
+@Entity({ name: 'specialty' })
 @Index(['matterId', 'proffessorId'], { unique: true })
-export class Speciality {
+export class Specialty {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({ unique: false })

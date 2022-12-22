@@ -4,149 +4,32 @@ import {
   Delete,
   Get,
   Param,
-  Post,
-  Put,
+  Patch,
+  Post
 } from '@nestjs/common';
+import { z } from 'zod';
 import { Gmp } from './gmp.entity';
 import { GmpsProvider } from './gmps.service';
+import { CreateGmp } from './schemas/create_gmp.schema';
+import { UpdateGmp } from './schemas/update_gmp.schema';
 
 @Controller('gmps')
 export class GmpsController {
   constructor(private gmpsProvider: GmpsProvider) {}
 
-  @Get()
-  getGmps() {
-    return this.gmpsProvider.getGmps();
-  }
-
-  @Get('/json')
+  @Post()
   getGmpsByJson(@Body() gmpsFindManyOptions: Gmp) {
-    return this.gmpsProvider.getGmpsByJson(gmpsFindManyOptions);
+    return this.gmpsProvider.getGmps(gmpsFindManyOptions);
   }
 
-  @Get('/json/all')
+  @Post('/all')
   getGmpsWithRelationsByJson(@Body() gmpsFindManyOptions: Gmp) {
-    return this.gmpsProvider.getGmpsWithRelationsByJson(gmpsFindManyOptions);
+    return this.gmpsProvider.getGmpsWithRelations(gmpsFindManyOptions);
   }
 
-  @Get('/group/:groupId')
-  getGmpsWithGroupId(@Param('groupId') groupId: number) {
-    return this.gmpsProvider.getGmpsWithGroupId(groupId);
-  }
-
-  @Get('/group/:groupId/all')
-  getGmpsWithGroupIdAndRelations(@Param('groupId') groupId: number) {
-    return this.gmpsProvider.getGmpsWithGroupIdAndRelations(groupId);
-  }
-
-  @Get('/proffessor/:proffessorId')
-  getGmpsWithProffessorId(@Param('proffessorId') proffessorId: number) {
-    return this.gmpsProvider.getGmpsWithProffessorId(proffessorId);
-  }
-
-  @Get('/proffessor/:proffessorId/all')
-  getGmpsWithProffessorIdAndRelations(
-    @Param('proffessorId') proffessorId: number,
-  ) {
-    return this.gmpsProvider.getGmpsWithProffessorIdAndRelations(proffessorId);
-  }
-
-  @Get('/group/:groupId/proffessor/:proffessorId')
-  getGmpsWithGroupIdAndProffessorId(
-    @Param('groupId') groupId: number,
-    @Param('proffessorId') proffessorId: number,
-  ) {
-    return this.gmpsProvider.getGmpsWithGroupIdAndProffessorId(
-      groupId,
-      proffessorId,
-    );
-  }
-
-  @Get('/group/:groupId/proffessor/:proffessorId/all')
-  getGmpsWithGroupIdProffessorIdAndRelations(
-    @Param('groupId') groupId: number,
-    @Param('proffessorId') proffessorId: number,
-  ) {
-    return this.gmpsProvider.getGmpsWithGroupIdProffessorIdAndRelations(
-      groupId,
-      proffessorId,
-    );
-  }
-
-  @Get('/with/proffessors')
-  getGmpsWithProffessors() {
-    return this.gmpsProvider.getGmpsWithProffessors();
-  }
-
-  @Get('/with/proffessors/all')
-  getGmpsWithProffessorsAndRelations() {
-    return this.gmpsProvider.getGmpsWithProffessorsAndRelations();
-  }
-
-  @Get('/without/proffessors')
-  getGmpsWithoutProffessors() {
-    return this.gmpsProvider.getGmpsWithoutProffessors();
-  }
-
-  @Get('/without/proffessors/all')
-  getGmpsWithoutProffessorsAndRelations() {
-    return this.gmpsProvider.getGmpsWithoutProffessorsAndRelations();
-  }
-
-  @Get('/matter/:matterId')
-  getGmpsWithMatterId(@Param('matterId') matterId: number) {
-    return this.gmpsProvider.getGmpsWithMatterId(matterId);
-  }
-
-  @Get('/matter/:matterId/group/:groupId')
-  getGmpsWithMatterIdAndGroupId(
-    @Param('matterId') matterId: number,
-    @Param('groupId') groupId: number,
-  ) {
-    return this.gmpsProvider.getGmpWithMatterIdAndGroupId(matterId, groupId);
-  }
-
-  @Get('/matter/:matterId/group/:groupId/all')
-  getGmpsWithMatterIdGroupIdAndRelations(
-    @Param('matterId') matterId: number,
-    @Param('groupId') groupId: number,
-  ) {
-    return this.gmpsProvider.getGmpWithMatterIdGroupIdAndRelations(
-      matterId,
-      groupId,
-    );
-  }
-
-  @Get('/matter/:matterId/proffessor/:proffessorId')
-  getGmpsWithMatterIdAndProfessorId(
-    @Param('matterId') matterId: number,
-    @Param('proffessorId') proffessorId: number,
-  ) {
-    return this.gmpsProvider.getGmpsWithMatterIdAndProffessorId(
-      matterId,
-      proffessorId,
-    );
-  }
-
-  @Get('/matter/:matterId/proffessor/:proffessorId/all')
-  getGmpsWithMatterIdProfessorIdAndRelations(
-    @Param('matterId') matterId: number,
-    @Param('proffessorId') proffessorId: number,
-  ) {
-    return this.gmpsProvider.getGmpsWithMatterIdProffessorIdAndRelations(
-      matterId,
-      proffessorId,
-    );
-  }
-
-  @Get('/matter/:matterId/all')
-  getGmpsWithMatterIdAndRelations(@Param('matterId') matterId: number) {
-    return this.gmpsProvider.getGmpsWithMatterIdAndRelations(matterId);
-  }
-
-  @Get('/all')
-  getGmpsWithRelations() {
-    return this.gmpsProvider.getGmpsWithRelations();
+  @Post('/create')
+  createGmp(@Body() gmpData: z.infer<typeof CreateGmp>) {
+    return this.gmpsProvider.createGmp(gmpData);
   }
 
   @Get('/:id')
@@ -159,15 +42,10 @@ export class GmpsController {
     return this.gmpsProvider.getGmpWithRelations(gmpId);
   }
 
-  @Post()
-  createGmp(@Body() gmpData: Omit<Gmp, 'id'>) {
-    return this.gmpsProvider.createGmp(gmpData);
-  }
-
-  @Put('/:gmpId')
+  @Patch('/:gmpId')
   updateGmp(
     @Param('gmpId') gmpId: number,
-    @Body() gmpData: Omit<Gmp, 'id' | 'matter' | 'group' | 'proffessor'>,
+    @Body() gmpData: z.infer<typeof UpdateGmp>,
   ) {
     return this.gmpsProvider.updateGmp(gmpId, gmpData);
   }
