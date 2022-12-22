@@ -5,7 +5,7 @@ import {
   Get,
   Param,
   Patch,
-  Post,
+  Post
 } from '@nestjs/common';
 import { z } from 'zod';
 import { CreateSpecialty } from './schemas/create_specialty.schema';
@@ -30,33 +30,33 @@ export class SpecialitiesController {
   }
 
   @Post('/create')
-  createSpeciality(@Body() specialityData: z.infer<typeof CreateSpecialty>) {
-    return this.specialitiesProvider.createSpecialty(specialityData);
+  createspecialty(@Body() specialtyData: z.infer<typeof CreateSpecialty>) {
+    return this.specialitiesProvider.createSpecialty(specialtyData);
   }
 
   @Get('/:id')
-  getSpecialty(@Param('id') specialityId: number) {
-    return this.specialitiesProvider.getSpecialty(specialityId);
+  getSpecialty(@Param('id') specialtyId: number) {
+    return this.specialitiesProvider.getSpecialty(specialtyId);
   }
 
   @Get('/:id/all')
-  getSpecialtyWithRelations(@Param('id') specialityId: number) {
-    return this.specialitiesProvider.getSpecialtyWithRelations(specialityId);
+  getSpecialtyWithRelations(@Param('id') specialtyId: number) {
+    return this.specialitiesProvider.getSpecialtyWithRelations(specialtyId);
   }
 
   @Patch('/:id')
-  updateSpeciality(
-    @Param('id') specialityId,
-    @Body() specialityData: z.infer<typeof UpdateSpecialty>,
+  updatespecialty(
+    @Param('id') specialtyId,
+    @Body() specialtyData: z.infer<typeof UpdateSpecialty>,
   ) {
     return this.specialitiesProvider.updateSpecialty(
-      specialityId,
-      specialityData,
+      specialtyId,
+      specialtyData,
     );
   }
 
   @Delete('/:id')
-  deleteSpeciality(@Param('id') specialityId: number) {
-    return this.specialitiesProvider.deleteSpeciality(specialityId);
+  deletespecialty(@Param('id') specialtyId: number) {
+    return this.specialitiesProvider.deletespecialty(specialtyId);
   }
 }
