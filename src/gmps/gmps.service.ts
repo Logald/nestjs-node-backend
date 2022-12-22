@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Group } from 'src/groups/group.entity';
-import { Matter } from 'src/matters/matter.entity';
+import { MG } from 'src/mgs/mg.entity';
 import { Proffessor } from 'src/proffessors/proffessor.entity';
 import { Repository } from 'typeorm';
 import { z } from 'zod';
@@ -13,8 +12,7 @@ import { UpdateGmp } from './schemas/update_gmp.schema';
 export class GmpsProvider {
   constructor(
     @InjectRepository(Gmp) private gmpsService: Repository<Gmp>,
-    @InjectRepository(Matter) private mattersService: Repository<Matter>,
-    @InjectRepository(Group) private groupsService: Repository<Group>,
+    @InjectRepository(MG) private mgService: Repository<MG>,
     @InjectRepository(Proffessor)
     private proffessorsService: Repository<Proffessor>,
   ) {}
@@ -26,7 +24,7 @@ export class GmpsProvider {
   async getGmpsWithRelations(findManyOptions: Gmp) {
     return await this.gmpsService.find({
       where: findManyOptions,
-      relations: ['matter', 'group', 'proffessor'],
+      relations: ['mg', 'proffessor'],
     });
   }
 
@@ -40,7 +38,7 @@ export class GmpsProvider {
   async getGmpWithRelations(gmpId: number) {
     const gmpFound = await this.gmpsService.findOne({
       where: { id: gmpId },
-      relations: ['matter', 'group', 'proffessor'],
+      relations: ['mg', 'proffessor'],
     });
     if (!gmpFound)
       return new HttpException('Gmp not found', HttpStatus.NOT_FOUND);
@@ -52,21 +50,11 @@ export class GmpsProvider {
     if (!passFormat.success)
       return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
     gmpData = passFormat.data;
-    if ('matterId' in gmpData) {
-      const matterFound = await this.mattersService.findOne({
-        where: { id: gmpData.matterId },
+      const mgFound = await this.mgService.findOne({
+        where: { id: gmpData.mgId },
       });
-      if (!matterFound)
-        return new HttpException('Matter not found', HttpStatus.NOT_ACCEPTABLE);
-    }
-    if ('groupId' in gmpData) {
-      const groupFound = await this.groupsService.findOne({
-        where: { id: gmpData.groupId },
-      });
-      if (!groupFound)
-        return new HttpException('Group not found', HttpStatus.NOT_ACCEPTABLE);
-    }
-    if ('proffessorId' in gmpData) {
+      if (!mgFound)
+        return new HttpException('MG not found', HttpStatus.NOT_ACCEPTABLE);
       const proffessorFound = await this.proffessorsService.findOne({
         where: { id: gmpData.proffessorId },
       });
@@ -75,38 +63,29 @@ export class GmpsProvider {
           'Proffessor not found',
           HttpStatus.NOT_ACCEPTABLE,
         );
-    }
     const gmpFound = await this.gmpsService.findOne({
-      where: {
-        matterId: gmpData.matterId,
-        groupId: gmpData.groupId,
-        active: true,
-      },
+      where: [{
+        mgId: gmpData.mgId,
+        proffessorId: gmpData.proffessorId
+      },{mgId: gmpData.mgId, active: true}],
     });
-    if (gmpFound) return new HttpException('Gmp found', HttpStatus.FOUND);
+    if (gmpFound) return new HttpException('GMP found', HttpStatus.FOUND);
     return await this.gmpsService.insert(gmpData);
   }
 
   async updateGmp(gmpId: number, gmpData: z.infer<typeof UpdateGmp>) {
-    const passFormat = CreateGmp.safeParse(gmpData);
+    const passFormat = UpdateGmp.safeParse(gmpData);
     if (!passFormat.success)
       return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
     if (Object.keys(passFormat.data).length == 0)
       return new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE);
     gmpData = passFormat.data;
-    if ('matterId' in gmpData) {
-      const matterFound = await this.mattersService.findOne({
-        where: { id: gmpData.matterId },
+    if ('mgId' in gmpData) {
+      const mgFound = await this.mgService.findOne({
+        where: { id: gmpData.mgId },
       });
-      if (!matterFound)
-        return new HttpException('Matter not found', HttpStatus.NOT_ACCEPTABLE);
-    }
-    if ('groupId' in gmpData) {
-      const groupFound = await this.groupsService.findOne({
-        where: { id: gmpData.groupId },
-      });
-      if (!groupFound)
-        return new HttpException('Group not found', HttpStatus.NOT_ACCEPTABLE);
+      if (!mgFound)
+        return new HttpException('MG not found', HttpStatus.NOT_ACCEPTABLE);
     }
     if ('proffessorId' in gmpData) {
       const proffessorFound = await this.proffessorsService.findOne({
@@ -118,20 +97,14 @@ export class GmpsProvider {
           HttpStatus.NOT_ACCEPTABLE,
         );
     }
-    if ('matterId' in gmpData && 'groupId' in gmpData) {
-      const gmpFound = await this.gmpsService.findOne({
-        where: {
-          matterId: gmpData.matterId,
-          groupId: gmpData.groupId,
-          active: true,
-        },
-      });
-      if (gmpFound) return new HttpException('Gmp found', HttpStatus.FOUND);
-    }
-    const gmpFound = await this.gmpsService.update({ id: gmpId }, gmpData);
-    if (gmpFound.affected == 0)
-      return new HttpException('Gmp not found', HttpStatus.NOT_FOUND);
-    return gmpFound;
+    return await this.gmpsService.update({ id: gmpId }, gmpData)
+      .then((updateResult) => {
+        if (updateResult.affected == 0)
+          return new HttpException('GMP not found', HttpStatus.NOT_FOUND);
+        return updateResult;
+      })
+      .catch(()=>new HttpException('GMP found', HttpStatus.FOUND));
+    
   }
 
   async deleteGmp(gmpId: number) {

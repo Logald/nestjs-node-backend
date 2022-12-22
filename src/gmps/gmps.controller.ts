@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
-  Post,
-  Put,
+  Patch,
+  Post
 } from '@nestjs/common';
 import { z } from 'zod';
 import { Gmp } from './gmp.entity';
@@ -42,7 +42,7 @@ export class GmpsController {
     return this.gmpsProvider.getGmpWithRelations(gmpId);
   }
 
-  @Put('/:gmpId')
+  @Patch('/:gmpId')
   updateGmp(
     @Param('gmpId') gmpId: number,
     @Body() gmpData: z.infer<typeof UpdateGmp>,
