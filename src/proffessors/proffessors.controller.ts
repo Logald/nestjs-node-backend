@@ -5,7 +5,7 @@ import {
   Get,
   Param,
   Patch,
-  Post,
+  Post
 } from '@nestjs/common';
 import { z } from 'zod';
 import { Proffessor } from './proffessor.entity';
@@ -20,6 +20,11 @@ export class ProffessorsController {
   @Post()
   getProffessors(@Body() proffessorData: Proffessor) {
     return this.proffessorsProvider.getProffessors(proffessorData);
+  }
+
+  @Post('/all')
+  getProffessorsWithRelations(@Body() proffessorData: Proffessor) {
+    return this.proffessorsProvider.getProffessorsWithRelations(proffessorData);
   }
 
   @Post('/create')

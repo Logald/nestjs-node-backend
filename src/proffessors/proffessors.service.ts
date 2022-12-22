@@ -90,7 +90,7 @@ export class ProffessorsProvider {
         'Proffessor not found',
         HttpStatus.NOT_ACCEPTABLE,
       );
-    return proffessorData;
+    return proffessorFound;
   }
 
   async deleteProffessor(proffessorId: number) {
