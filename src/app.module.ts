@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AbsencesModule } from './absences/absences.module';
 import { GmpsModule } from './gmps/gmps.module';
 import { GroupsModule } from './groups/groups.module';
 import { MattersModule } from './matters/matters.module';
@@ -20,6 +21,7 @@ import { TurnsModule } from './turns/turns.module';
     SpecialitiesModule,
     MGModule,
     GmpsModule,
+    AbsencesModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',

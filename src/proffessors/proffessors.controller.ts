@@ -5,7 +5,7 @@ import {
   Get,
   Param,
   Patch,
-  Post
+  Post,
 } from '@nestjs/common';
 import { z } from 'zod';
 import { Proffessor } from './proffessor.entity';

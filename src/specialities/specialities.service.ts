@@ -106,15 +106,14 @@ export class SpecialitiesProvider {
           HttpStatus.NOT_ACCEPTABLE,
         );
     }
-    return await this.specialitiesService.update(
-      specialtyId,
-      specialtyData,
-    ).then((updateResult)=> {
-      if (updateResult.affected == 0)
-      return new HttpException('specialty not found', HttpStatus.NOT_FOUND);
-      return updateResult;
-    })
-    .catch(() => new HttpException('Specialty found', HttpStatus.FOUND));
+    return await this.specialitiesService
+      .update(specialtyId, specialtyData)
+      .then((updateResult) => {
+        if (updateResult.affected == 0)
+          return new HttpException('specialty not found', HttpStatus.NOT_FOUND);
+        return updateResult;
+      })
+      .catch(() => new HttpException('Specialty found', HttpStatus.FOUND));
   }
 
   async deletespecialty(specialtyId: number) {

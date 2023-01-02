@@ -5,7 +5,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @Entity({ name: 'gmp' })

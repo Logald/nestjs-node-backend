@@ -6,7 +6,7 @@ import {
   Index,
   JoinTable,
   ManyToOne,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 @Entity({ name: 'specialty' })
 @Index(['matterId', 'proffessorId'], { unique: true })

@@ -5,7 +5,7 @@ import {
   Get,
   Param,
   Patch,
-  Post
+  Post,
 } from '@nestjs/common';
 import { z } from 'zod';
 import { CreateSpecialty } from './schemas/create_specialty.schema';

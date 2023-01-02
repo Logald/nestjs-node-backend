@@ -50,24 +50,27 @@ export class GmpsProvider {
     if (!passFormat.success)
       return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
     gmpData = passFormat.data;
-      const mgFound = await this.mgService.findOne({
-        where: { id: gmpData.mgId },
-      });
-      if (!mgFound)
-        return new HttpException('MG not found', HttpStatus.NOT_ACCEPTABLE);
-      const proffessorFound = await this.proffessorsService.findOne({
-        where: { id: gmpData.proffessorId },
-      });
-      if (!proffessorFound)
-        return new HttpException(
-          'Proffessor not found',
-          HttpStatus.NOT_ACCEPTABLE,
-        );
+    const mgFound = await this.mgService.findOne({
+      where: { id: gmpData.mgId },
+    });
+    if (!mgFound)
+      return new HttpException('MG not found', HttpStatus.NOT_ACCEPTABLE);
+    const proffessorFound = await this.proffessorsService.findOne({
+      where: { id: gmpData.proffessorId },
+    });
+    if (!proffessorFound)
+      return new HttpException(
+        'Proffessor not found',
+        HttpStatus.NOT_ACCEPTABLE,
+      );
     const gmpFound = await this.gmpsService.findOne({
-      where: [{
-        mgId: gmpData.mgId,
-        proffessorId: gmpData.proffessorId
-      },{mgId: gmpData.mgId, active: true}],
+      where: [
+        {
+          mgId: gmpData.mgId,
+          proffessorId: gmpData.proffessorId,
+        },
+        { mgId: gmpData.mgId, active: true },
+      ],
     });
     if (gmpFound) return new HttpException('GMP found', HttpStatus.FOUND);
     return await this.gmpsService.insert(gmpData);
@@ -97,14 +100,14 @@ export class GmpsProvider {
           HttpStatus.NOT_ACCEPTABLE,
         );
     }
-    return await this.gmpsService.update({ id: gmpId }, gmpData)
+    return await this.gmpsService
+      .update({ id: gmpId }, gmpData)
       .then((updateResult) => {
         if (updateResult.affected == 0)
           return new HttpException('GMP not found', HttpStatus.NOT_FOUND);
         return updateResult;
       })
-      .catch(()=>new HttpException('GMP found', HttpStatus.FOUND));
-    
+      .catch(() => new HttpException('GMP found', HttpStatus.FOUND));
   }
 
   async deleteGmp(gmpId: number) {
