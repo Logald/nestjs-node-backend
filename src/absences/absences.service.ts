@@ -39,6 +39,13 @@ export class AbsencesProvider {
     return await this.findOne(absenceId, { where: { id: absenceId } });
   }
 
+  async getAbsenceWithRelations(absenceId: number) {
+    return await this.findOne(absenceId, {
+      where: { id: absenceId },
+      relations: ['gmp', 'turn'],
+    });
+  }
+
   async createAbsence(absenceData: z.infer<typeof CreateAbsence>) {
     const passFormat = CreateAbsence.safeParse(absenceData);
     if (!passFormat.success)

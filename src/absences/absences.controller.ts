@@ -27,4 +27,9 @@ export class AbsencesController {
   getAbsence(@Param('id') absenceId: number) {
     return this.absencesProvider.getAbsence(absenceId);
   }
+
+  @Get('/:id/all')
+  getAbsenceWithRelations(@Param('id') absenceId: number) {
+    return this.absencesProvider.getAbsenceWithRelations(absenceId);
+  }
 }
