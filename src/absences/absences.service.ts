@@ -15,6 +15,19 @@ export class AbsencesProvider {
     @InjectRepository(Turn) private turnsService: Repository<Turn>,
   ) {}
 
+  async getAbsences(findManyOptions: Absence) {
+    return await this.absencesService.find({
+      where: findManyOptions,
+    });
+  }
+
+  async getAbsencesWithRelations(findManyOptions: Absence) {
+    return await this.absencesService.find({
+      where: findManyOptions,
+      relations: ['gmp', 'turn'],
+    });
+  }
+
   async createAbsence(absenceData: z.infer<typeof CreateAbsence>) {
     const passFormat = CreateAbsence.safeParse(absenceData);
     if (!passFormat.success)

@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Gmp } from 'src/gmps/gmp.entity';
+import { Turn } from 'src/turns/turn.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'absence' })
 export class Absence {
@@ -6,8 +8,12 @@ export class Absence {
   id: number;
   @Column()
   gmpId: number;
+  @ManyToOne(() => Gmp, { onDelete: 'CASCADE' })
+  gmp: Gmp;
   @Column()
   turnId: number;
+  @ManyToOne(() => Turn, { onDelete: 'CASCADE' })
+  turn: Turn;
   @Column({ type: 'datetime' })
   startDate: Date;
   @Column({ type: 'datetime' })
