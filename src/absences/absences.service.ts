@@ -2,7 +2,13 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Gmp } from 'src/gmps/gmp.entity';
 import { Turn } from 'src/turns/turn.entity';
-import { FindOneOptions, Repository } from 'typeorm';
+import {
+  FindManyOptions,
+  FindOneOptions,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+  Repository
+} from 'typeorm';
 import { z } from 'zod';
 import { Absence } from './abcense.entity';
 import { CreateAbsence } from './schemas/create_absence.schema';
@@ -15,14 +21,24 @@ export class AbsencesProvider {
     @InjectRepository(Turn) private turnsService: Repository<Turn>,
   ) {}
 
+  private async findMany(findManyOptions: FindManyOptions) {
+    const options: any = findManyOptions.where;
+    if ('startDate' in options)
+      options.startDate = MoreThanOrEqual(new Date(options.startDate));
+    if ('endDate' in options)
+      options.endDate = LessThanOrEqual(new Date(options.endDate));
+    findManyOptions.where = options;
+    return await this.absencesService.find(findManyOptions);
+  }
+
   async getAbsences(findManyOptions: Absence) {
-    return await this.absencesService.find({
+    return await this.findMany({
       where: findManyOptions,
     });
   }
 
   async getAbsencesWithRelations(findManyOptions: Absence) {
-    return await this.absencesService.find({
+    return await this.findMany({
       where: findManyOptions,
       relations: ['gmp', 'turn'],
     });
@@ -34,7 +50,6 @@ export class AbsencesProvider {
       return new HttpException('Absence not found', HttpStatus.NOT_FOUND);
     return foundAbsence;
   }
-
   async getAbsence(absenceId: number) {
     return await this.findOne(absenceId, { where: { id: absenceId } });
   }
