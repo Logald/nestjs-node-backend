@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post
+} from '@nestjs/common';
 import { z } from 'zod';
 import { Absence } from './abcense.entity';
 import { AbsencesProvider } from './absences.service';
@@ -40,5 +48,10 @@ export class AbsencesController {
     @Body() absenceData: z.infer<typeof UpdateAbsence>,
   ) {
     return this.absencesProvider.updateAbsense(absenceId, absenceData);
+  }
+
+  @Delete('/:id')
+  deleteAbsence(@Param('id') absenceId: number) {
+    return this.absencesProvider.deleteAbsence(absenceId);
   }
 }

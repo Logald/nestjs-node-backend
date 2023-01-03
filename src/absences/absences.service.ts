@@ -145,4 +145,11 @@ export class AbsencesProvider {
       return new HttpException('Invalid dates', HttpStatus.NOT_ACCEPTABLE);
     return await this.absencesService.update(absenceId, absenceData);
   }
+
+  async deleteAbsence(absenceId: number) {
+    const absenceFound = await this.absencesService.delete(absenceId);
+    if (absenceFound.affected == 0)
+      return new HttpException('Absence not found', HttpStatus.NOT_FOUND);
+    return absenceFound;
+  }
 }
