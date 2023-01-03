@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Patch,
+  // eslint-disable-next-line prettier/prettier
   Post
 } from '@nestjs/common';
 import { z } from 'zod';

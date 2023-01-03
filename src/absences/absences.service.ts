@@ -18,11 +18,21 @@ import { UpdateAbsence } from './schemas/update_absence.schema';
 
 @Injectable()
 export class AbsencesProvider {
+  private dateFormat = 'YYYY-MM-DD HH:mm:ss.SSS';
   constructor(
     @InjectRepository(Absence) private absencesService: Repository<Absence>,
     @InjectRepository(Gmp) private gmpsService: Repository<Gmp>,
     @InjectRepository(Turn) private turnsService: Repository<Turn>,
-  ) {}
+  ) {
+    setInterval(() => {
+      this.absencesService
+        .createQueryBuilder()
+        .update()
+        .set({ active: false })
+        .where('endDate < :endDate and active = true', { endDate: new Date() })
+        .execute();
+    }, 10000);
+  }
 
   private async findMany(findManyOptions: FindManyOptions) {
     const options: any = findManyOptions.where;
@@ -65,13 +75,10 @@ export class AbsencesProvider {
   }
 
   async createAbsence(absenceData: z.infer<typeof CreateAbsence>) {
-    absenceData.startDate = moment(
-      absenceData.startDate,
-      'YYYY-MM-DD HH:mm:ss.SSS',
-    )
+    absenceData.startDate = moment(absenceData.startDate, this.dateFormat)
       .utc(true)
       .format();
-    absenceData.endDate = moment(absenceData.endDate, 'YYYY-MM-DD HH:mm:ss.SSS')
+    absenceData.endDate = moment(absenceData.endDate, this.dateFormat)
       .utc(true)
       .format();
     const passFormat = CreateAbsence.safeParse(absenceData);
@@ -101,17 +108,11 @@ export class AbsencesProvider {
     absenceData: z.infer<typeof UpdateAbsence>,
   ) {
     if (absenceData?.startDate)
-      absenceData.startDate = moment(
-        absenceData.startDate,
-        'YYYY-MM-DD HH:mm:ss.SSS',
-      )
+      absenceData.startDate = moment(absenceData.startDate, this.dateFormat)
         .utc(true)
         .format();
     if (absenceData?.endDate)
-      absenceData.endDate = moment(
-        absenceData.endDate,
-        'YYYY-MM-DD HH:mm:ss.SSS',
-      )
+      absenceData.endDate = moment(absenceData.endDate, this.dateFormat)
         .utc(true)
         .format();
     const passFormat = UpdateAbsence.safeParse(absenceData);
