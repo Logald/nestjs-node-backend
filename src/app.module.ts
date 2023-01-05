@@ -8,6 +8,7 @@ import { MattersModule } from './matters/matters.module';
 import { MGModule } from './mgs/mgs.module';
 import { PeopleModule } from './people/people.module';
 import { ProffessorsModule } from './proffessors/proffessors.module';
+import { ProfilesModule } from './profiles/profiles.module';
 import { SpecialitiesModule } from './specialities/specialities.module';
 import { TurnsModule } from './turns/turns.module';
 
@@ -22,6 +23,7 @@ import { TurnsModule } from './turns/turns.module';
     MGModule,
     GmpsModule,
     AbsencesModule,
+    ProfilesModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
