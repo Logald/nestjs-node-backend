@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { z } from 'zod';
 import { Profile } from './profile.entity';
 import { ProfilesProvider } from './profiles.service';
 import { CreateProfile } from './schemas/create_profile.schema';
+import { UpdateProfile } from './schemas/update_profile.schema';
 
 @Controller('profiles')
 export class ProfilesController {
@@ -21,5 +22,13 @@ export class ProfilesController {
   @Get('/:id')
   getProfile(@Param('id') profileId: number) {
     return this.profilesProvider.getProfile(profileId);
+  }
+
+  @Patch('/:id')
+  updateProfile(
+    @Param('id') profileId: number,
+    @Body() profileData: z.infer<typeof UpdateProfile>,
+  ) {
+    return this.profilesProvider.updateProfile(profileId, profileData);
   }
 }
