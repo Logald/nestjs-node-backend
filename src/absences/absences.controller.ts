@@ -8,11 +8,13 @@ import {
   // eslint-disable-next-line prettier/prettier
   Post
 } from '@nestjs/common';
+import { UpdateResult } from 'typeorm';
 import { z } from 'zod';
 import { Absence } from './abcense.entity';
 import { AbsencesProvider } from './absences.service';
 import { CreateAbsence } from './schemas/create_absence.schema';
 import { UpdateAbsence } from './schemas/update_absence.schema';
+
 
 @Controller('absences')
 export class AbsencesController {
@@ -47,7 +49,7 @@ export class AbsencesController {
   updateAbsence(
     @Param('id') absenceId: number,
     @Body() absenceData: z.infer<typeof UpdateAbsence>,
-  ) {
+  ): Promise<UpdateResult> {
     return this.absencesProvider.updateAbsense(absenceId, absenceData);
   }
 

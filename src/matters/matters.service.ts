@@ -20,19 +20,19 @@ export class MattersProvider {
       where: { id: matterId },
     });
     if (!matter)
-      return new HttpException('Matter not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Matter not found', HttpStatus.NOT_FOUND);
     return matter;
   }
 
   async createMatter(matterData: z.infer<typeof CreateMatter>) {
     const passFormat = CreateMatter.safeParse(matterData);
     if (!passFormat.success)
-      return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
     matterData = passFormat.data;
     const matterFound = await this.matterService.findOne({
       where: { name: matterData.name },
     });
-    if (matterFound) return new HttpException('Matter found', HttpStatus.FOUND);
+    if (matterFound) throw new HttpException('Matter found', HttpStatus.FOUND);
     return await this.matterService.insert(matterData);
   }
 
@@ -42,21 +42,21 @@ export class MattersProvider {
   ) {
     const passFormat = UpdateMatter.safeParse(matterData);
     if (!passFormat.success)
-      return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
     if (Object.keys(passFormat.data).length == 0)
-      return new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE);
     matterData = passFormat.data;
     const matter = await this.matterService.findOne({
       where: { id: matterId },
     });
     if (!matter)
-      return new HttpException('Matter not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Matter not found', HttpStatus.NOT_FOUND);
     if ('name' in matterData) {
       const matterMatchName = await this.matterService.findOne({
         where: { name: matterData.name },
       });
       if (matterMatchName)
-        return new HttpException('Bad matter name', HttpStatus.NOT_ACCEPTABLE);
+        throw new HttpException('Bad matter name', HttpStatus.NOT_ACCEPTABLE);
     }
     return this.matterService.update(matterId, matterData);
   }
@@ -64,7 +64,7 @@ export class MattersProvider {
   async deleteMatter(matterId: number) {
     const matterFound = await this.matterService.delete(matterId);
     if (matterFound.affected == 0)
-      return new HttpException('Matter not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Matter not found', HttpStatus.NOT_FOUND);
     return matterFound;
   }
 }

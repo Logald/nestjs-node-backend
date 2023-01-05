@@ -4,12 +4,12 @@ import * as moment from 'moment';
 import { Gmp } from 'src/gmps/gmp.entity';
 import { Turn } from 'src/turns/turn.entity';
 import {
-  FindManyOptions,
-  FindOneOptions,
-  LessThanOrEqual,
-  MoreThanOrEqual,
-  // eslint-disable-next-line prettier/prettier
-  Repository
+    FindManyOptions,
+    FindOneOptions,
+    LessThanOrEqual,
+    MoreThanOrEqual,
+    // eslint-disable-next-line prettier/prettier
+    Repository
 } from 'typeorm';
 import { z } from 'zod';
 import { Absence } from './abcense.entity';
@@ -60,7 +60,7 @@ export class AbsencesProvider {
   private async findOne(absenceId: number, options: FindOneOptions) {
     const foundAbsence = await this.absencesService.findOne(options);
     if (!foundAbsence)
-      return new HttpException('Absence not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Absence not found', HttpStatus.NOT_FOUND);
     return foundAbsence;
   }
   async getAbsence(absenceId: number) {
@@ -83,10 +83,10 @@ export class AbsencesProvider {
       .format();
     const passFormat = CreateAbsence.safeParse(absenceData);
     if (!passFormat.success)
-      return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
     absenceData = passFormat.data;
     if (moment(absenceData.startDate).isAfter(absenceData.endDate))
-      return new HttpException(
+      throw new HttpException(
         'StartDate cannot be greater than EndDate',
         HttpStatus.NOT_ACCEPTABLE,
       );
@@ -94,12 +94,12 @@ export class AbsencesProvider {
       where: { id: absenceData.gmpId },
     });
     if (!gmpFound)
-      return new HttpException('Gmp not found', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Gmp not found', HttpStatus.NOT_ACCEPTABLE);
     const turnFound = await this.turnsService.findOne({
       where: { id: absenceData.turnId },
     });
     if (!turnFound)
-      return new HttpException('Turn not found', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Turn not found', HttpStatus.NOT_ACCEPTABLE);
     return await this.absencesService.insert(absenceData);
   }
 
@@ -117,40 +117,40 @@ export class AbsencesProvider {
         .format();
     const passFormat = UpdateAbsence.safeParse(absenceData);
     if (!passFormat.success)
-      return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
     absenceData = passFormat.data;
     const absenceFound = await this.absencesService.findOne({
       where: { id: absenceId },
     });
     if (!absenceFound)
-      return new HttpException('Absence not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Absence not found', HttpStatus.NOT_FOUND);
     if ('gmpId' in absenceData) {
       const gmpFound = await this.gmpsService.findOne({
         where: { id: absenceData.gmpId },
       });
       if (!gmpFound)
-        return new HttpException('Gmp not found', HttpStatus.NOT_ACCEPTABLE);
+        throw new HttpException('Gmp not found', HttpStatus.NOT_ACCEPTABLE);
     }
     if ('turnId' in absenceData) {
       const turnFound = await this.turnsService.findOne({
         where: { id: absenceData.turnId },
       });
       if (!turnFound)
-        return new HttpException('Turn not found', HttpStatus.NOT_ACCEPTABLE);
+        throw new HttpException('Turn not found', HttpStatus.NOT_ACCEPTABLE);
     }
     if (
       moment(absenceData?.startDate ?? absenceFound.startDate).isAfter(
         absenceData?.endDate ?? absenceFound.endDate,
       )
     )
-      return new HttpException('Invalid dates', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Invalid dates', HttpStatus.NOT_ACCEPTABLE);
     return await this.absencesService.update(absenceId, absenceData);
   }
 
   async deleteAbsence(absenceId: number) {
     const absenceFound = await this.absencesService.delete(absenceId);
     if (absenceFound.affected == 0)
-      return new HttpException('Absence not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Absence not found', HttpStatus.NOT_FOUND);
     return absenceFound;
   }
 }

@@ -21,17 +21,17 @@ export class ProfilesProvider {
       where: { id: profileId },
     });
     if (!profileFound)
-      return new HttpException('Profile not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Profile not found', HttpStatus.NOT_FOUND);
     return profileFound;
   }
 
   async createProfile(profileData: z.infer<typeof CreateProfile>) {
     const passFormat = CreateProfile.safeParse(profileData);
     if (!passFormat.success)
-      return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
     profileData = passFormat.data;
     return await this.profilesService.insert(profileData).catch(() => {
-      return new HttpException('Profile found', HttpStatus.FOUND);
+      throw new HttpException('Profile found', HttpStatus.FOUND);
     });
   }
 
@@ -41,18 +41,18 @@ export class ProfilesProvider {
   ) {
     const passFormat = UpdateProfile.safeParse(profileData);
     if (!passFormat.success)
-      return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
     profileData = passFormat.data;
     const profileFound = await this.profilesService.findOne({
       where: { type: profileData.type },
     });
     if (profileFound)
-      return new HttpException('Profile found', HttpStatus.FOUND);
+      throw new HttpException('Profile found', HttpStatus.FOUND);
     return await this.profilesService
       .update(profileId, profileData)
       .then((res) => {
         if (res.affected == 0)
-          return new HttpException('Profile not found', HttpStatus.NOT_FOUND);
+          throw new HttpException('Profile not found', HttpStatus.NOT_FOUND);
         return res;
       });
   }
@@ -60,7 +60,7 @@ export class ProfilesProvider {
   async deleteProfile(profileId: number) {
     return await this.profilesService.delete(profileId).then((res) => {
       if (res.affected == 0)
-        return new HttpException('Profile not found', HttpStatus.NOT_FOUND);
+        throw new HttpException('Profile not found', HttpStatus.NOT_FOUND);
       return res;
     });
   }

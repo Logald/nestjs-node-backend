@@ -28,7 +28,7 @@ export class GroupsProvider {
   private async findGroup(findOneOptions: FindOneOptions<Group>) {
     const groupFound = await this.groupService.findOne(findOneOptions);
     if (!groupFound)
-      return new HttpException('Group not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Group not found', HttpStatus.NOT_FOUND);
     return groupFound;
   }
 
@@ -48,50 +48,50 @@ export class GroupsProvider {
   async createGroup(groupData: z.infer<typeof CreateGroup>) {
     const passFormat = CreateGroup.safeParse(groupData);
     if (!passFormat.success)
-      return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
     groupData = passFormat.data;
     const groupFound = await this.groupService.findOne({
       where: { grade: groupData.grade, name: groupData.name },
     });
-    if (groupFound) return new HttpException('Group found', HttpStatus.FOUND);
+    if (groupFound) throw new HttpException('Group found', HttpStatus.FOUND);
     const turnFound = await this.turnService.findOne({
       where: { id: groupData.turnId },
     });
     if (!turnFound)
-      return new HttpException('Turn not found', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Turn not found', HttpStatus.NOT_ACCEPTABLE);
     return await this.groupService.insert(groupData);
   }
 
   async updateGroup(groupId: number, groupData: z.infer<typeof UpdateGroup>) {
     const passFormat = UpdateGroup.safeParse(groupData);
     if (!passFormat.success)
-      return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
     if (Object.keys(passFormat.data).length == 0)
-      return new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE);
     groupData = passFormat.data;
     if ('turnId' in groupData) {
       const turnFound = await this.turnService.findOne({
         where: { id: groupData.turnId },
       });
       if (!turnFound)
-        return new HttpException('Turn not found', HttpStatus.NOT_ACCEPTABLE);
+        throw new HttpException('Turn not found', HttpStatus.NOT_ACCEPTABLE);
     }
     return await this.groupService
       .update(groupId, groupData)
       .then((updateResult) => {
         if (updateResult.affected == 0)
-          return new HttpException('Group not found', HttpStatus.NOT_FOUND);
+          throw new HttpException('Group not found', HttpStatus.NOT_FOUND);
         return updateResult;
       })
       .catch(() => {
-        return new HttpException('Group found', HttpStatus.FOUND);
+        throw new HttpException('Group found', HttpStatus.FOUND);
       });
   }
 
   async deleteGroup(groupId: number) {
     const deletedData = await this.groupService.delete(groupId);
     if (deletedData.affected == 0)
-      return new HttpException('Group not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Group not found', HttpStatus.NOT_FOUND);
     return deletedData;
   }
 }

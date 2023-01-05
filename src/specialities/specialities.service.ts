@@ -32,7 +32,7 @@ export class SpecialitiesProvider {
   async findSpecialty(findOptions: FindOneOptions) {
     const specialtyFound = await this.specialitiesService.findOne(findOptions);
     if (!specialtyFound)
-      return new HttpException('specialty not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('specialty not found', HttpStatus.NOT_FOUND);
     return specialtyFound;
   }
 
@@ -52,7 +52,7 @@ export class SpecialitiesProvider {
   async createSpecialty(specialtyData: z.infer<typeof CreateSpecialty>) {
     const passFormat = CreateSpecialty.safeParse(specialtyData);
     if (!passFormat.success)
-      return new HttpException('Invalid Format', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Invalid Format', HttpStatus.NOT_ACCEPTABLE);
     specialtyData = passFormat.data;
     const specialtyFound = await this.specialitiesService.findOne({
       where: {
@@ -61,17 +61,17 @@ export class SpecialitiesProvider {
       },
     });
     if (specialtyFound)
-      return new HttpException('specialty found', HttpStatus.FOUND);
+      throw new HttpException('specialty found', HttpStatus.FOUND);
     const matterFound = await this.mattersService.findOne({
       where: { id: specialtyData.matterId },
     });
     if (!matterFound)
-      return new HttpException('Matter not found', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Matter not found', HttpStatus.NOT_ACCEPTABLE);
     const proffessorFound = await this.proffessorsService.findOne({
       where: { id: specialtyData.proffessorId },
     });
     if (!proffessorFound)
-      return new HttpException(
+      throw new HttpException(
         'Proffessor not found',
         HttpStatus.NOT_ACCEPTABLE,
       );
@@ -85,23 +85,23 @@ export class SpecialitiesProvider {
   ) {
     const passFormat = UpdateSpecialty.safeParse(specialtyData);
     if (!passFormat.success)
-      return new HttpException('Invalid Format', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Invalid Format', HttpStatus.NOT_ACCEPTABLE);
     if (Object.keys(passFormat.data).length == 0)
-      return new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE);
     specialtyData = passFormat.data;
     if ('matterId' in specialtyData) {
       const matterFound = await this.mattersService.findOne({
         where: { id: specialtyData.matterId },
       });
       if (!matterFound)
-        return new HttpException('Matter not found', HttpStatus.NOT_ACCEPTABLE);
+        throw new HttpException('Matter not found', HttpStatus.NOT_ACCEPTABLE);
     }
     if ('proffessorId' in specialtyData) {
       const proffessorFound = await this.proffessorsService.findOne({
         where: { id: specialtyData.proffessorId },
       });
       if (!proffessorFound)
-        return new HttpException(
+        throw new HttpException(
           'Proffessor not found',
           HttpStatus.NOT_ACCEPTABLE,
         );
@@ -110,7 +110,7 @@ export class SpecialitiesProvider {
       .update(specialtyId, specialtyData)
       .then((updateResult) => {
         if (updateResult.affected == 0)
-          return new HttpException('specialty not found', HttpStatus.NOT_FOUND);
+          throw new HttpException('specialty not found', HttpStatus.NOT_FOUND);
         return updateResult;
       })
       .catch(() => new HttpException('Specialty found', HttpStatus.FOUND));
@@ -119,7 +119,7 @@ export class SpecialitiesProvider {
   async deletespecialty(specialtyId: number) {
     const specialtyFound = await this.specialitiesService.delete(specialtyId);
     if (specialtyFound.affected == 0)
-      return new HttpException('specialty not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('specialty not found', HttpStatus.NOT_FOUND);
     return specialtyFound;
   }
 }

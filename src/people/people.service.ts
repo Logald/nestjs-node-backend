@@ -21,20 +21,20 @@ export class PeopleProvider {
       where: { id: personId },
     });
     if (!personFound)
-      return new HttpException('Person not found', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Person not found', HttpStatus.NOT_ACCEPTABLE);
     return personFound;
   }
 
   async createPerson(personData: z.infer<typeof CreatePeople>) {
     const passFormat = CreatePeople.safeParse(personData);
     if (!passFormat.success)
-      return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
     personData = passFormat.data;
     const personCiMatch = await this.peopleService.findOne({
       where: { ci: personData.ci },
     });
     if (personCiMatch)
-      return new HttpException(
+      throw new HttpException(
         'The ci is already in use',
         HttpStatus.NOT_ACCEPTABLE,
       );
@@ -47,27 +47,27 @@ export class PeopleProvider {
   ) {
     const passFormat = UpdatePeople.safeParse(personData);
     if (!passFormat.success)
-      return new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
     if (Object.keys(passFormat.data).length == 0)
-      return new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE);
     personData = passFormat.data;
     if (personData?.ci) {
       const personFound = await this.peopleService.findOne({
         where: { ci: personData.ci },
       });
       if (personFound)
-        return new HttpException('Person Found', HttpStatus.NOT_ACCEPTABLE);
+        throw new HttpException('Person Found', HttpStatus.NOT_ACCEPTABLE);
     }
     const personFound = await this.peopleService.update(personId, personData);
     if (personFound.affected == 0)
-      return new HttpException('Person not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Person not found', HttpStatus.NOT_FOUND);
     return personFound;
   }
 
   async deletePerson(personId: number) {
     const personFound = await this.peopleService.delete(personId);
     if (personFound.affected == 0)
-      return new HttpException('Person not found', HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException('Person not found', HttpStatus.NOT_ACCEPTABLE);
     return personFound;
   }
 }
