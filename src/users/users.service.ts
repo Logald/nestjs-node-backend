@@ -4,7 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { compare, hash } from "bcrypt";
 import { Person } from "src/people/person.entity";
 import { Profile } from "src/profiles/profile.entity";
-import { Repository } from "typeorm";
+import { FindOneOptions, Repository } from "typeorm";
 import { z } from "zod";
 import { CreateUser } from "./schemas/create_user.schema";
 import { Login } from "./schemas/login.schema";
@@ -18,6 +18,20 @@ export class UsersProvider {
     @InjectRepository(Profile) private profilesService: Repository<Profile>,
     private JwtService: JwtService
   ) {}
+
+  private async findOne(findOneOptions: FindOneOptions) {
+    const userFound = await this.usersService.findOne(findOneOptions)
+    if (!userFound) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+    return userFound;
+  }
+
+  async getUser(userId: number) {
+    return await this.findOne({where: {id: userId}})
+  }
+
+  async getUserWithRelations(userId: number) {
+    return await this.findOne({where: {id: userId}, relations: [ 'person','profile']})
+  }
 
   async signIn(userData: z.infer<typeof Login>) {
     const passFormat = Login.safeParse(userData);

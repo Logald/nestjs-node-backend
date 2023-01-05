@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { z } from "zod";
 import { CreateUser } from "./schemas/create_user.schema";
 import { Login } from "./schemas/login.schema";
@@ -18,5 +18,15 @@ export class UsersController {
   @Post('/signup')
   signUp(@Body() userData: z.infer<typeof CreateUser>) {
     return this.usersProvider.signUp(userData)
+  }
+
+  @Get('/:id')
+  getUser(@Param('id') userId: number) {
+    return this.usersProvider.getUser(userId)
+  }
+
+  @Get('/:id/all')
+  getUserWithRelations(@Param('id') userId: number) {
+    return this.usersProvider.getUserWithRelations(userId)
   }
 }
