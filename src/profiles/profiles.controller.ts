@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { z } from 'zod';
 import { Profile } from './profile.entity';
 import { ProfilesProvider } from './profiles.service';
@@ -16,5 +16,10 @@ export class ProfilesController {
   @Post('/create')
   createProfile(@Body() profileData: z.infer<typeof CreateProfile>) {
     return this.profilesProvider.createProfile(profileData);
+  }
+
+  @Get('/:id')
+  getProfile(@Param('id') profileId: number) {
+    return this.profilesProvider.getProfile(profileId);
   }
 }

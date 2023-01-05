@@ -15,6 +15,15 @@ export class ProfilesProvider {
     return await this.profilesService.find({ where: findManyOptions });
   }
 
+  async getProfile(profileId: number) {
+    const profileFound = await this.profilesService.findOne({
+      where: { id: profileId },
+    });
+    if (!profileFound)
+      return new HttpException('Profile not found', HttpStatus.NOT_FOUND);
+    return profileFound;
+  }
+
   async createProfile(profileData: z.infer<typeof CreateProfile>) {
     const passFormat = CreateProfile.safeParse(profileData);
     if (!passFormat.success)
