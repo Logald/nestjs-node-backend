@@ -11,6 +11,7 @@ import { ProffessorsModule } from './proffessors/proffessors.module';
 import { ProfilesModule } from './profiles/profiles.module';
 import { SpecialitiesModule } from './specialities/specialities.module';
 import { TurnsModule } from './turns/turns.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { TurnsModule } from './turns/turns.module';
     GmpsModule,
     AbsencesModule,
     ProfilesModule,
+    UsersModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
