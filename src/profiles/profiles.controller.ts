@@ -5,43 +5,47 @@ import {
   Get,
   Param,
   Patch,
-  Post
-} from '@nestjs/common';
-import { z } from 'zod';
-import { Profile } from './profile.entity';
-import { ProfilesProvider } from './profiles.service';
-import { CreateProfile } from './schemas/create_profile.schema';
-import { UpdateProfile } from './schemas/update_profile.schema';
+  Post,
+  UseGuards
+} from '@nestjs/common'
+import { AccessTokenGuard } from 'src/users/accessTokenGuard'
+import { z } from 'zod'
+import { Profile } from './profile.entity'
+import { ProfilesProvider } from './profiles.service'
+import { CreateProfile } from './schemas/create_profile.schema'
+import { UpdateProfile } from './schemas/update_profile.schema'
 
 @Controller('profiles')
 export class ProfilesController {
-  constructor(private profilesProvider: ProfilesProvider) {}
+  constructor (private readonly profilesProvider: ProfilesProvider) {}
 
   @Post()
-  getProfiles(@Body() findManyOptions: Profile) {
-    return this.profilesProvider.getProfiles(findManyOptions);
+  async getProfiles (@Body() findManyOptions: Profile) {
+    return await this.profilesProvider.getProfiles(findManyOptions)
   }
 
   @Post('/create')
-  createProfile(@Body() profileData: z.infer<typeof CreateProfile>) {
-    return this.profilesProvider.createProfile(profileData);
+  async createProfile (@Body() profileData: z.infer<typeof CreateProfile>) {
+    return await this.profilesProvider.createProfile(profileData)
   }
 
   @Get('/:id')
-  getProfile(@Param('id') profileId: number) {
-    return this.profilesProvider.getProfile(profileId);
+  async getProfile (@Param('id') profileId: number) {
+    return await this.profilesProvider.getProfile(profileId)
   }
 
+  @UseGuards(AccessTokenGuard)
   @Patch('/:id')
-  updateProfile(
-    @Param('id') profileId: number,
-    @Body() profileData: z.infer<typeof UpdateProfile>,
+  async updateProfile (
+  @Param('id') profileId: number,
+    @Body() profileData: z.infer<typeof UpdateProfile>
   ) {
-    return this.profilesProvider.updateProfile(profileId, profileData);
+    return await this.profilesProvider.updateProfile(profileId, profileData)
   }
 
+  @UseGuards(AccessTokenGuard)
   @Delete('/:id')
-  deleteProfile(@Param('id') profileId: number) {
-    return this.profilesProvider.deleteProfile(profileId);
+  async deleteProfile (@Param('id') profileId: number) {
+    return await this.profilesProvider.deleteProfile(profileId)
   }
 }

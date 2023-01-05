@@ -1,21 +1,24 @@
-import { Person } from 'src/people/person.entity';
+import { Person } from 'src/people/person.entity'
 import {
   Column,
   Entity,
   JoinColumn,
   OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+  PrimaryGeneratedColumn
+} from 'typeorm'
 
 @Entity({ name: 'proffessor' })
 export class Proffessor {
   @PrimaryGeneratedColumn()
-  id: number;
+    id: number
+
   @Column({ unique: true })
-  personId: number;
+    personId: number
+
   @OneToOne(() => Person, { onDelete: 'CASCADE' })
   @JoinColumn()
-  person: Person;
+    person: Person
+
   @Column({ default: true })
-  active: boolean;
+    active: boolean
 }

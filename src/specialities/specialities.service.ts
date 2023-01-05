@@ -1,125 +1,118 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Matter } from 'src/matters/matter.entity';
-import { Proffessor } from 'src/proffessors/proffessor.entity';
-import { FindOneOptions, Repository } from 'typeorm';
-import { z } from 'zod';
-import { CreateSpecialty } from './schemas/create_specialty.schema';
-import { UpdateSpecialty } from './schemas/update_specialty.schema';
-import { Specialty } from './specialty.entity';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Matter } from 'src/matters/matter.entity'
+import { Proffessor } from 'src/proffessors/proffessor.entity'
+import { FindOneOptions, Repository } from 'typeorm'
+import { z } from 'zod'
+import { CreateSpecialty } from './schemas/create_specialty.schema'
+import { UpdateSpecialty } from './schemas/update_specialty.schema'
+import { Specialty } from './specialty.entity'
 
 @Injectable()
 export class SpecialitiesProvider {
-  constructor(
+  constructor (
     @InjectRepository(Specialty)
-    private specialitiesService: Repository<Specialty>,
-    @InjectRepository(Matter) private mattersService: Repository<Matter>,
+    private readonly specialitiesService: Repository<Specialty>,
+    @InjectRepository(Matter) private readonly mattersService: Repository<Matter>,
     @InjectRepository(Proffessor)
-    private proffessorsService: Repository<Proffessor>,
+    private readonly proffessorsService: Repository<Proffessor>
   ) {}
 
-  async getSpecialities(findManyOptions: Specialty) {
-    return await this.specialitiesService.find({ where: findManyOptions });
+  async getSpecialities (findManyOptions: Specialty) {
+    return await this.specialitiesService.find({ where: findManyOptions })
   }
 
-  async getSpecialitiesWithRelations(findManyOptions: Specialty) {
+  async getSpecialitiesWithRelations (findManyOptions: Specialty) {
     return await this.specialitiesService.find({
       where: findManyOptions,
-      relations: ['matter', 'proffessor'],
-    });
+      relations: ['matter', 'proffessor']
+    })
   }
 
-  async findSpecialty(findOptions: FindOneOptions) {
-    const specialtyFound = await this.specialitiesService.findOne(findOptions);
-    if (!specialtyFound)
-      throw new HttpException('specialty not found', HttpStatus.NOT_FOUND);
-    return specialtyFound;
+  async findSpecialty (findOptions: FindOneOptions) {
+    const specialtyFound = await this.specialitiesService.findOne(findOptions)
+    if (!specialtyFound) { throw new HttpException('specialty not found', HttpStatus.NOT_FOUND) }
+    return specialtyFound
   }
 
-  async getSpecialty(specialtyId: number) {
+  async getSpecialty (specialtyId: number) {
+    return await this.findSpecialty({
+      where: { id: specialtyId }
+    })
+  }
+
+  async getSpecialtyWithRelations (specialtyId: number) {
     return await this.findSpecialty({
       where: { id: specialtyId },
-    });
+      relations: ['matter', 'proffessor']
+    })
   }
 
-  async getSpecialtyWithRelations(specialtyId: number) {
-    return await this.findSpecialty({
-      where: { id: specialtyId },
-      relations: ['matter', 'proffessor'],
-    });
-  }
-
-  async createSpecialty(specialtyData: z.infer<typeof CreateSpecialty>) {
-    const passFormat = CreateSpecialty.safeParse(specialtyData);
-    if (!passFormat.success)
-      throw new HttpException('Invalid Format', HttpStatus.NOT_ACCEPTABLE);
-    specialtyData = passFormat.data;
+  async createSpecialty (specialtyData: z.infer<typeof CreateSpecialty>) {
+    const passFormat = CreateSpecialty.safeParse(specialtyData)
+    if (!passFormat.success) { throw new HttpException('Invalid Format', HttpStatus.NOT_ACCEPTABLE) }
+    specialtyData = passFormat.data
     const specialtyFound = await this.specialitiesService.findOne({
       where: {
         matterId: specialtyData.matterId,
-        proffessorId: specialtyData.proffessorId,
-      },
-    });
-    if (specialtyFound)
-      throw new HttpException('specialty found', HttpStatus.FOUND);
+        proffessorId: specialtyData.proffessorId
+      }
+    })
+    if (specialtyFound) { throw new HttpException('specialty found', HttpStatus.FOUND) }
     const matterFound = await this.mattersService.findOne({
-      where: { id: specialtyData.matterId },
-    });
-    if (!matterFound)
-      throw new HttpException('Matter not found', HttpStatus.NOT_ACCEPTABLE);
+      where: { id: specialtyData.matterId }
+    })
+    if (!matterFound) { throw new HttpException('Matter not found', HttpStatus.NOT_ACCEPTABLE) }
     const proffessorFound = await this.proffessorsService.findOne({
-      where: { id: specialtyData.proffessorId },
-    });
-    if (!proffessorFound)
+      where: { id: specialtyData.proffessorId }
+    })
+    if (!proffessorFound) {
       throw new HttpException(
         'Proffessor not found',
-        HttpStatus.NOT_ACCEPTABLE,
-      );
-    const newSpecialty = await this.specialitiesService.insert(specialtyData);
-    return newSpecialty;
+        HttpStatus.NOT_ACCEPTABLE
+      )
+    }
+    const newSpecialty = await this.specialitiesService.insert(specialtyData)
+    return newSpecialty
   }
 
-  async updateSpecialty(
+  async updateSpecialty (
     specialtyId: number,
-    specialtyData: Partial<Omit<Specialty, 'id'>>,
+    specialtyData: Partial<Omit<Specialty, 'id'>>
   ) {
-    const passFormat = UpdateSpecialty.safeParse(specialtyData);
-    if (!passFormat.success)
-      throw new HttpException('Invalid Format', HttpStatus.NOT_ACCEPTABLE);
-    if (Object.keys(passFormat.data).length == 0)
-      throw new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE);
-    specialtyData = passFormat.data;
+    const passFormat = UpdateSpecialty.safeParse(specialtyData)
+    if (!passFormat.success) { throw new HttpException('Invalid Format', HttpStatus.NOT_ACCEPTABLE) }
+    if (Object.keys(passFormat.data).length == 0) { throw new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE) }
+    specialtyData = passFormat.data
     if ('matterId' in specialtyData) {
       const matterFound = await this.mattersService.findOne({
-        where: { id: specialtyData.matterId },
-      });
-      if (!matterFound)
-        throw new HttpException('Matter not found', HttpStatus.NOT_ACCEPTABLE);
+        where: { id: specialtyData.matterId }
+      })
+      if (!matterFound) { throw new HttpException('Matter not found', HttpStatus.NOT_ACCEPTABLE) }
     }
     if ('proffessorId' in specialtyData) {
       const proffessorFound = await this.proffessorsService.findOne({
-        where: { id: specialtyData.proffessorId },
-      });
-      if (!proffessorFound)
+        where: { id: specialtyData.proffessorId }
+      })
+      if (!proffessorFound) {
         throw new HttpException(
           'Proffessor not found',
-          HttpStatus.NOT_ACCEPTABLE,
-        );
+          HttpStatus.NOT_ACCEPTABLE
+        )
+      }
     }
     return await this.specialitiesService
       .update(specialtyId, specialtyData)
       .then((updateResult) => {
-        if (updateResult.affected == 0)
-          throw new HttpException('specialty not found', HttpStatus.NOT_FOUND);
-        return updateResult;
+        if (updateResult.affected == 0) { throw new HttpException('specialty not found', HttpStatus.NOT_FOUND) }
+        return updateResult
       })
-      .catch(() => new HttpException('Specialty found', HttpStatus.FOUND));
+      .catch(() => new HttpException('Specialty found', HttpStatus.FOUND))
   }
 
-  async deletespecialty(specialtyId: number) {
-    const specialtyFound = await this.specialitiesService.delete(specialtyId);
-    if (specialtyFound.affected == 0)
-      throw new HttpException('specialty not found', HttpStatus.NOT_FOUND);
-    return specialtyFound;
+  async deletespecialty (specialtyId: number) {
+    const specialtyFound = await this.specialitiesService.delete(specialtyId)
+    if (specialtyFound.affected == 0) { throw new HttpException('specialty not found', HttpStatus.NOT_FOUND) }
+    return specialtyFound
   }
 }

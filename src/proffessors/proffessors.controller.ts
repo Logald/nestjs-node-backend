@@ -6,55 +6,58 @@ import {
   Param,
   Patch,
   Post,
-} from '@nestjs/common';
-import { z } from 'zod';
-import { Proffessor } from './proffessor.entity';
-import { ProffessorsProvider } from './proffessors.service';
-import { CreateProffessor } from './schemas/create_proffessor.schema';
-import { UpdateProffessor } from './schemas/update_proffessor.schema';
+  UseGuards
+} from '@nestjs/common'
+import { AccessTokenGuard } from 'src/users/accessTokenGuard'
+import { z } from 'zod'
+import { Proffessor } from './proffessor.entity'
+import { ProffessorsProvider } from './proffessors.service'
+import { CreateProffessor } from './schemas/create_proffessor.schema'
+import { UpdateProffessor } from './schemas/update_proffessor.schema'
 
+@UseGuards(AccessTokenGuard)
 @Controller('proffessors')
 export class ProffessorsController {
-  constructor(private proffessorsProvider: ProffessorsProvider) {}
+  constructor (private readonly proffessorsProvider: ProffessorsProvider) {}
 
   @Post()
-  getProffessors(@Body() proffessorData: Proffessor) {
-    return this.proffessorsProvider.getProffessors(proffessorData);
+  async getProffessors (@Body() proffessorData: Proffessor) {
+    return await this.proffessorsProvider.getProffessors(proffessorData)
   }
 
   @Post('/all')
-  getProffessorsWithRelations(@Body() proffessorData: Proffessor) {
-    return this.proffessorsProvider.getProffessorsWithRelations(proffessorData);
+  async getProffessorsWithRelations (@Body() proffessorData: Proffessor) {
+    return await this.proffessorsProvider.getProffessorsWithRelations(proffessorData)
   }
 
   @Post('/create')
-  createProffessor(@Body() proffessorData: z.infer<typeof CreateProffessor>) {
-    return this.proffessorsProvider.createProffessor(proffessorData);
+  async createProffessor (@Body() proffessorData: z.infer<typeof CreateProffessor>) {
+    return await this.proffessorsProvider.createProffessor(proffessorData)
   }
 
   @Get('/:id')
-  getProffessor(@Param('id') proffessorId: number) {
-    return this.proffessorsProvider.getProffessor(proffessorId);
+  async getProffessor (@Param('id') proffessorId: number) {
+    return await this.proffessorsProvider.getProffessor(proffessorId)
   }
 
   @Get('/:id/all')
-  getProffessorWithPerson(@Param('id') proffessorId: number) {
-    return this.proffessorsProvider.getProffessorWithRelations(proffessorId);
+  async getProffessorWithPerson (@Param('id') proffessorId: number) {
+    return await this.proffessorsProvider.getProffessorWithRelations(proffessorId)
   }
 
   @Patch('/:id')
-  updateProffessor(
-    @Param('id') proffessorId: number,
-    @Body() proffessorData: z.infer<typeof UpdateProffessor>,
+  async updateProffessor (
+  @Param('id') proffessorId: number,
+    @Body() proffessorData: z.infer<typeof UpdateProffessor>
   ) {
-    return this.proffessorsProvider.updateProffessor(
+    return await this.proffessorsProvider.updateProffessor(
       proffessorId,
-      proffessorData,
-    );
+      proffessorData
+    )
   }
 
   @Delete('/:id')
-  deleteProffessor(@Param('id') proffessorId: number) {
-    return this.proffessorsProvider.deleteProffessor(proffessorId);
+  async deleteProffessor (@Param('id') proffessorId: number) {
+    return await this.proffessorsProvider.deleteProffessor(proffessorId)
   }
 }

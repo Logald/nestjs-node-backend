@@ -5,56 +5,57 @@ import {
   Get,
   Param,
   Patch,
-  // eslint-disable-next-line prettier/prettier
-  Post
-} from '@nestjs/common';
-import { UpdateResult } from 'typeorm';
-import { z } from 'zod';
-import { Absence } from './abcense.entity';
-import { AbsencesProvider } from './absences.service';
-import { CreateAbsence } from './schemas/create_absence.schema';
-import { UpdateAbsence } from './schemas/update_absence.schema';
+  Post,
+  UseGuards
+} from '@nestjs/common'
+import { AccessTokenGuard } from 'src/users/accessTokenGuard'
+import { UpdateResult } from 'typeorm'
+import { z } from 'zod'
+import { Absence } from './abcense.entity'
+import { AbsencesProvider } from './absences.service'
+import { CreateAbsence } from './schemas/create_absence.schema'
+import { UpdateAbsence } from './schemas/update_absence.schema'
 
-
+@UseGuards(AccessTokenGuard)
 @Controller('absences')
 export class AbsencesController {
-  constructor(private absencesProvider: AbsencesProvider) {}
+  constructor (private readonly absencesProvider: AbsencesProvider) {}
 
   @Post()
-  async getAbsences(@Body() findManyOptions: Absence) {
-    return this.absencesProvider.getAbsences(findManyOptions);
+  async getAbsences (@Body() findManyOptions: Absence) {
+    return await this.absencesProvider.getAbsences(findManyOptions)
   }
 
   @Post('/all')
-  getAbsencesWithRelations(@Body() findManyOptions: Absence) {
-    return this.absencesProvider.getAbsencesWithRelations(findManyOptions);
+  async getAbsencesWithRelations (@Body() findManyOptions: Absence) {
+    return await this.absencesProvider.getAbsencesWithRelations(findManyOptions)
   }
 
   @Post('/create')
-  createAbsence(@Body() absenceData: z.infer<typeof CreateAbsence>) {
-    return this.absencesProvider.createAbsence(absenceData);
+  async createAbsence (@Body() absenceData: z.infer<typeof CreateAbsence>) {
+    return await this.absencesProvider.createAbsence(absenceData)
   }
 
   @Get('/:id')
-  getAbsence(@Param('id') absenceId: number) {
-    return this.absencesProvider.getAbsence(absenceId);
+  async getAbsence (@Param('id') absenceId: number) {
+    return await this.absencesProvider.getAbsence(absenceId)
   }
 
   @Get('/:id/all')
-  getAbsenceWithRelations(@Param('id') absenceId: number) {
-    return this.absencesProvider.getAbsenceWithRelations(absenceId);
+  async getAbsenceWithRelations (@Param('id') absenceId: number) {
+    return await this.absencesProvider.getAbsenceWithRelations(absenceId)
   }
 
   @Patch('/:id')
-  updateAbsence(
+  async updateAbsence (
     @Param('id') absenceId: number,
-    @Body() absenceData: z.infer<typeof UpdateAbsence>,
+      @Body() absenceData: z.infer<typeof UpdateAbsence>
   ): Promise<UpdateResult> {
-    return this.absencesProvider.updateAbsense(absenceId, absenceData);
+    return await this.absencesProvider.updateAbsense(absenceId, absenceData)
   }
 
   @Delete('/:id')
-  deleteAbsence(@Param('id') absenceId: number) {
-    return this.absencesProvider.deleteAbsence(absenceId);
+  async deleteAbsence (@Param('id') absenceId: number) {
+    return await this.absencesProvider.deleteAbsence(absenceId)
   }
 }

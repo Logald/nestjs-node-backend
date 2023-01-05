@@ -1,3 +1,3 @@
-import { CreateGmp } from './create_gmp.schema';
+import { CreateGmp } from './create_gmp.schema'
 
-export const UpdateGmp = CreateGmp.partial();
+export const UpdateGmp = CreateGmp.partial()

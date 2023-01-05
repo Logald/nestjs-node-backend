@@ -1,3 +1,3 @@
-import { CreatePeople } from './create_people.schema';
+import { CreatePeople } from './create_people.schema'
 
-export const UpdatePeople = CreatePeople.partial();
+export const UpdatePeople = CreatePeople.partial()

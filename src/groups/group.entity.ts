@@ -1,27 +1,33 @@
-import { Turn } from 'src/turns/turn.entity';
+import { Turn } from 'src/turns/turn.entity'
 import {
   Column,
   Entity,
   Index,
   ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+  PrimaryGeneratedColumn
+} from 'typeorm'
 
 @Entity({ name: 'group' })
 @Index(['grade', 'name'], { unique: true })
 export class Group {
   @PrimaryGeneratedColumn()
-  id: number;
+    id: number
+
   @Column({ type: 'int' })
-  grade: number;
+    grade: number
+
   @Column({ type: 'varchar' })
-  name: string;
+    name: string
+
   @Column({ type: 'varchar', nullable: true })
-  description: string;
+    description: string
+
   @Column()
-  turnId: number;
+    turnId: number
+
   @ManyToOne(() => Turn, { onDelete: 'CASCADE' })
-  turn: Turn;
+    turn: Turn
+
   @Column({ default: true })
-  active: boolean;
+    active: boolean
 }

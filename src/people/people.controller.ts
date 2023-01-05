@@ -6,42 +6,46 @@ import {
   Param,
   Patch,
   Post,
-} from '@nestjs/common';
-import { z } from 'zod';
-import { PeopleProvider } from './people.service';
-import { Person } from './person.entity';
-import { CreatePeople } from './schemas/create_people.schema';
-import { UpdatePeople } from './schemas/update_people.schema';
+  UseGuards
+} from '@nestjs/common'
+import { AccessTokenGuard } from 'src/users/accessTokenGuard'
+import { z } from 'zod'
+import { PeopleProvider } from './people.service'
+import { Person } from './person.entity'
+import { CreatePeople } from './schemas/create_people.schema'
+import { UpdatePeople } from './schemas/update_people.schema'
 
 @Controller('people')
 export class PeopleController {
-  constructor(private peopleProvider: PeopleProvider) {}
+  constructor (private readonly peopleProvider: PeopleProvider) {}
 
   @Post()
-  getPeople(@Body() personData: Person) {
-    return this.peopleProvider.getPeople(personData);
+  async getPeople (@Body() personData: Person) {
+    return await this.peopleProvider.getPeople(personData)
   }
 
   @Post('/create')
-  createPerson(@Body() personData: z.infer<typeof CreatePeople>) {
-    return this.peopleProvider.createPerson(personData);
+  async createPerson (@Body() personData: z.infer<typeof CreatePeople>) {
+    return await this.peopleProvider.createPerson(personData)
   }
 
   @Get('/:id')
-  getPerson(@Param('id') personId: number) {
-    return this.peopleProvider.getPerson(personId);
+  async getPerson (@Param('id') personId: number) {
+    return await this.peopleProvider.getPerson(personId)
   }
 
+  @UseGuards(AccessTokenGuard)
   @Patch('/:id')
-  updatePerson(
-    @Param('id') personId: number,
-    @Body() personData: z.infer<typeof UpdatePeople>,
+  async updatePerson (
+  @Param('id') personId: number,
+    @Body() personData: z.infer<typeof UpdatePeople>
   ) {
-    return this.peopleProvider.updatePerson(personId, personData);
+    return await this.peopleProvider.updatePerson(personId, personData)
   }
 
+  @UseGuards(AccessTokenGuard)
   @Delete('/:id')
-  deletePersone(@Param('id') personId: number) {
-    return this.peopleProvider.deletePerson(personId);
+  async deletePersone (@Param('id') personId: number) {
+    return await this.peopleProvider.deletePerson(personId)
   }
 }

@@ -6,52 +6,55 @@ import {
   Param,
   Patch,
   Post,
-} from '@nestjs/common';
-import { z } from 'zod';
-import { Group } from './group.entity';
-import { GroupsProvider } from './groups.service';
-import { CreateGroup } from './schemas/create_group.schema';
-import { UpdateGroup } from './schemas/update_group.schema';
+  UseGuards
+} from '@nestjs/common'
+import { AccessTokenGuard } from 'src/users/accessTokenGuard'
+import { z } from 'zod'
+import { Group } from './group.entity'
+import { GroupsProvider } from './groups.service'
+import { CreateGroup } from './schemas/create_group.schema'
+import { UpdateGroup } from './schemas/update_group.schema'
 
+@UseGuards(AccessTokenGuard)
 @Controller('groups')
 export class GroupsController {
-  constructor(private groupsProvider: GroupsProvider) {}
+  constructor (private readonly groupsProvider: GroupsProvider) {}
 
   @Post()
-  getGroups(@Body() findManyOptions: Group) {
-    return this.groupsProvider.getGroups(findManyOptions);
+  async getGroups (@Body() findManyOptions: Group) {
+    return await this.groupsProvider.getGroups(findManyOptions)
   }
 
   @Post('/all')
-  getGroupsWithRelations(@Body() findManyOptions: Group) {
-    return this.groupsProvider.getGroupsWithRelations(findManyOptions);
+  async getGroupsWithRelations (@Body() findManyOptions: Group) {
+    return await this.groupsProvider.getGroupsWithRelations(findManyOptions)
   }
 
   @Post('/create')
-  createGroup(@Body() groupDate: z.infer<typeof CreateGroup>) {
-    return this.groupsProvider.createGroup(groupDate);
+  async createGroup (@Body() groupDate: z.infer<typeof CreateGroup>) {
+    return await this.groupsProvider.createGroup(groupDate)
   }
 
   @Get('/:id')
-  getGroup(@Param('id') groupId: number) {
-    return this.groupsProvider.getGroup(groupId);
+  async getGroup (@Param('id') groupId: number) {
+    return await this.groupsProvider.getGroup(groupId)
   }
 
   @Get('/:id/all')
-  getGroupWithRelations(@Param('id') groupId: number) {
-    return this.groupsProvider.getGroupWithRelations(groupId);
+  async getGroupWithRelations (@Param('id') groupId: number) {
+    return await this.groupsProvider.getGroupWithRelations(groupId)
   }
 
   @Patch('/:id')
-  updateGroup(
-    @Param('id') groupId: number,
-    @Body() groupData: z.infer<typeof UpdateGroup>,
+  async updateGroup (
+  @Param('id') groupId: number,
+    @Body() groupData: z.infer<typeof UpdateGroup>
   ) {
-    return this.groupsProvider.updateGroup(groupId, groupData);
+    return await this.groupsProvider.updateGroup(groupId, groupData)
   }
 
   @Delete('/:id')
-  deleteGroup(@Param('id') groupId: number) {
-    return this.groupsProvider.deleteGroup(groupId);
+  async deleteGroup (@Param('id') groupId: number) {
+    return await this.groupsProvider.deleteGroup(groupId)
   }
 }

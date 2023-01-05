@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 export const CreateUser = z.object({
   password: z.string().min(4),

@@ -1,3 +1,3 @@
-import { CreateMg } from './create_mg.schema';
+import { CreateMg } from './create_mg.schema'
 
-export const UpdateMg = CreateMg.partial();
+export const UpdateMg = CreateMg.partial()

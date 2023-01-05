@@ -1,3 +1,3 @@
-import { CreateProffessor } from './create_proffessor.schema';
+import { CreateProffessor } from './create_proffessor.schema'
 
-export const UpdateProffessor = CreateProffessor.partial();
+export const UpdateProffessor = CreateProffessor.partial()

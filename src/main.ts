@@ -1,8 +1,8 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { NestFactory } from '@nestjs/core'
+import { AppModule } from './app.module'
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+async function bootstrap () {
+  const app = await NestFactory.create(AppModule)
   /* const config = new DocumentBuilder()
     .setTitle('Tecnicatura 2022 Backend Node')
     .setDescription('Backend')
@@ -26,6 +26,6 @@ async function bootstrap() {
       filter: true
     }
   }) */
-  await app.listen(3000);
+  await app.listen(3000)
 }
-bootstrap();
+bootstrap()

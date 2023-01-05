@@ -6,52 +6,55 @@ import {
   Param,
   Patch,
   Post,
-} from '@nestjs/common';
-import { z } from 'zod';
-import { MG } from './mg.entity';
-import { MGProvider } from './mgs.service';
-import { CreateMg } from './schemas/create_mg.schema';
-import { UpdateMg } from './schemas/update_mg.schema';
+  UseGuards
+} from '@nestjs/common'
+import { AccessTokenGuard } from 'src/users/accessTokenGuard'
+import { z } from 'zod'
+import { MG } from './mg.entity'
+import { MGProvider } from './mgs.service'
+import { CreateMg } from './schemas/create_mg.schema'
+import { UpdateMg } from './schemas/update_mg.schema'
 
+@UseGuards(AccessTokenGuard)
 @Controller('mgs')
 export class MGController {
-  constructor(private mgProvider: MGProvider) {}
+  constructor (private readonly mgProvider: MGProvider) {}
 
   @Post()
-  getMgs(@Body() mgsFindManyOptions: MG) {
-    return this.mgProvider.getMgs(mgsFindManyOptions);
+  async getMgs (@Body() mgsFindManyOptions: MG) {
+    return await this.mgProvider.getMgs(mgsFindManyOptions)
   }
 
   @Post('/all')
-  getMgsWithRelations(@Body() mgsFindManyOptions: MG) {
-    return this.mgProvider.getMgsWithRelations(mgsFindManyOptions);
+  async getMgsWithRelations (@Body() mgsFindManyOptions: MG) {
+    return await this.mgProvider.getMgsWithRelations(mgsFindManyOptions)
   }
 
   @Post('/create')
-  createMg(@Body() mgData: z.infer<typeof CreateMg>) {
-    return this.mgProvider.createMg(mgData);
+  async createMg (@Body() mgData: z.infer<typeof CreateMg>) {
+    return await this.mgProvider.createMg(mgData)
   }
 
   @Get('/:mgId')
-  getMg(@Param('mgId') mgId: number) {
-    return this.mgProvider.getMg(mgId);
+  async getMg (@Param('mgId') mgId: number) {
+    return await this.mgProvider.getMg(mgId)
   }
 
   @Get('/:mgId/all')
-  getMgWithRelations(@Param('mgId') mgId: number) {
-    return this.mgProvider.getMgWithRelations(mgId);
+  async getMgWithRelations (@Param('mgId') mgId: number) {
+    return await this.mgProvider.getMgWithRelations(mgId)
   }
 
   @Patch('/:mgId')
-  updateMg(
-    @Param('mgId') mgId: number,
-    @Body() mgData: z.infer<typeof UpdateMg>,
+  async updateMg (
+  @Param('mgId') mgId: number,
+    @Body() mgData: z.infer<typeof UpdateMg>
   ) {
-    return this.mgProvider.updateMg(mgId, mgData);
+    return await this.mgProvider.updateMg(mgId, mgData)
   }
 
   @Delete('/:mgId')
-  deleteMg(@Param('mgId') mgId: number) {
-    return this.mgProvider.deleteMg(mgId);
+  async deleteMg (@Param('mgId') mgId: number) {
+    return await this.mgProvider.deleteMg(mgId)
   }
 }

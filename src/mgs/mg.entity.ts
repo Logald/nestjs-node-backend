@@ -1,27 +1,31 @@
-import { Group } from 'src/groups/group.entity';
-import { Matter } from 'src/matters/matter.entity';
+import { Group } from 'src/groups/group.entity'
+import { Matter } from 'src/matters/matter.entity'
 import {
   Column,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+  PrimaryGeneratedColumn
+} from 'typeorm'
 
 @Entity({ name: 'mg' })
 @Index(['matterId', 'groupId'], { unique: true })
 export class MG {
   @PrimaryGeneratedColumn()
-  id: number;
+    id: number
+
   @Column()
-  matterId: number;
+    matterId: number
+
   @ManyToOne(() => Matter, { onDelete: 'CASCADE' })
   @JoinColumn()
-  matter: Matter;
+    matter: Matter
+
   @Column()
-  groupId: number;
+    groupId: number
+
   @ManyToOne(() => Group, { onDelete: 'CASCADE' })
   @JoinColumn()
-  group: Group;
+    group: Group
 }

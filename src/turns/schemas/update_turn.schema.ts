@@ -1,3 +1,3 @@
-import { CreateTurn } from './create_turn.schema';
+import { CreateTurn } from './create_turn.schema'
 
-export const UpdateTurn = CreateTurn.partial();
+export const UpdateTurn = CreateTurn.partial()

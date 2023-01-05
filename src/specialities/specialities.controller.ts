@@ -6,57 +6,60 @@ import {
   Param,
   Patch,
   Post,
-} from '@nestjs/common';
-import { z } from 'zod';
-import { CreateSpecialty } from './schemas/create_specialty.schema';
-import { UpdateSpecialty } from './schemas/update_specialty.schema';
-import { SpecialitiesProvider } from './specialities.service';
-import { Specialty } from './specialty.entity';
+  UseGuards
+} from '@nestjs/common'
+import { AccessTokenGuard } from 'src/users/accessTokenGuard'
+import { z } from 'zod'
+import { CreateSpecialty } from './schemas/create_specialty.schema'
+import { UpdateSpecialty } from './schemas/update_specialty.schema'
+import { SpecialitiesProvider } from './specialities.service'
+import { Specialty } from './specialty.entity'
 
+@UseGuards(AccessTokenGuard)
 @Controller('specialities')
 export class SpecialitiesController {
-  constructor(private specialitiesProvider: SpecialitiesProvider) {}
+  constructor (private readonly specialitiesProvider: SpecialitiesProvider) {}
 
   @Post()
-  getSpecialities(@Body() findManyOptions: Specialty) {
-    return this.specialitiesProvider.getSpecialities(findManyOptions);
+  async getSpecialities (@Body() findManyOptions: Specialty) {
+    return await this.specialitiesProvider.getSpecialities(findManyOptions)
   }
 
   @Post('/all')
-  getSpecialitiesWithRelations(@Body() findManyOptions: Specialty) {
-    return this.specialitiesProvider.getSpecialitiesWithRelations(
-      findManyOptions,
-    );
+  async getSpecialitiesWithRelations (@Body() findManyOptions: Specialty) {
+    return await this.specialitiesProvider.getSpecialitiesWithRelations(
+      findManyOptions
+    )
   }
 
   @Post('/create')
-  createspecialty(@Body() specialtyData: z.infer<typeof CreateSpecialty>) {
-    return this.specialitiesProvider.createSpecialty(specialtyData);
+  async createspecialty (@Body() specialtyData: z.infer<typeof CreateSpecialty>) {
+    return await this.specialitiesProvider.createSpecialty(specialtyData)
   }
 
   @Get('/:id')
-  getSpecialty(@Param('id') specialtyId: number) {
-    return this.specialitiesProvider.getSpecialty(specialtyId);
+  async getSpecialty (@Param('id') specialtyId: number) {
+    return await this.specialitiesProvider.getSpecialty(specialtyId)
   }
 
   @Get('/:id/all')
-  getSpecialtyWithRelations(@Param('id') specialtyId: number) {
-    return this.specialitiesProvider.getSpecialtyWithRelations(specialtyId);
+  async getSpecialtyWithRelations (@Param('id') specialtyId: number) {
+    return await this.specialitiesProvider.getSpecialtyWithRelations(specialtyId)
   }
 
   @Patch('/:id')
-  updatespecialty(
-    @Param('id') specialtyId,
-    @Body() specialtyData: z.infer<typeof UpdateSpecialty>,
+  async updatespecialty (
+  @Param('id') specialtyId,
+    @Body() specialtyData: z.infer<typeof UpdateSpecialty>
   ) {
-    return this.specialitiesProvider.updateSpecialty(
+    return await this.specialitiesProvider.updateSpecialty(
       specialtyId,
-      specialtyData,
-    );
+      specialtyData
+    )
   }
 
   @Delete('/:id')
-  deletespecialty(@Param('id') specialtyId: number) {
-    return this.specialitiesProvider.deletespecialty(specialtyId);
+  async deletespecialty (@Param('id') specialtyId: number) {
+    return await this.specialitiesProvider.deletespecialty(specialtyId)
   }
 }

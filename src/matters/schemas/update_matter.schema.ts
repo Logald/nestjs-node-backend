@@ -1,3 +1,3 @@
-import { CreateMatter } from './create_matter.schema';
+import { CreateMatter } from './create_matter.schema'
 
-export const UpdateMatter = CreateMatter.partial();
+export const UpdateMatter = CreateMatter.partial()

@@ -1,3 +1,3 @@
-import { CreateProfile } from './create_profile.schema';
+import { CreateProfile } from './create_profile.schema'
 
-export const UpdateProfile = CreateProfile.partial();
+export const UpdateProfile = CreateProfile.partial()

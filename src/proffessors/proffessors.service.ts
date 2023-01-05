@@ -1,102 +1,95 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Person } from 'src/people/person.entity';
-import { FindOneOptions, Repository } from 'typeorm';
-import { z } from 'zod';
-import { Proffessor } from './proffessor.entity';
-import { CreateProffessor } from './schemas/create_proffessor.schema';
-import { UpdateProffessor } from './schemas/update_proffessor.schema';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Person } from 'src/people/person.entity'
+import { FindOneOptions, Repository } from 'typeorm'
+import { z } from 'zod'
+import { Proffessor } from './proffessor.entity'
+import { CreateProffessor } from './schemas/create_proffessor.schema'
+import { UpdateProffessor } from './schemas/update_proffessor.schema'
 
 @Injectable()
 export class ProffessorsProvider {
-  constructor(
+  constructor (
     @InjectRepository(Proffessor)
-    private proffessorsService: Repository<Proffessor>,
-    @InjectRepository(Person) private peopleService: Repository<Person>,
+    private readonly proffessorsService: Repository<Proffessor>,
+    @InjectRepository(Person) private readonly peopleService: Repository<Person>
   ) {}
 
-  async getProffessors(findManyOptions: Proffessor) {
-    return await this.proffessorsService.find({ where: findManyOptions });
+  async getProffessors (findManyOptions: Proffessor) {
+    return await this.proffessorsService.find({ where: findManyOptions })
   }
 
-  async getProffessorsWithRelations(findManyOptions: Proffessor) {
+  async getProffessorsWithRelations (findManyOptions: Proffessor) {
     return await this.proffessorsService.find({
       where: findManyOptions,
-      relations: ['person'],
-    });
+      relations: ['person']
+    })
   }
 
-  private async findProffessor(findOptions: FindOneOptions) {
-    const proffessorFound = await this.proffessorsService.findOne(findOptions);
-    if (!proffessorFound)
-      throw new HttpException('Proffessor not found', HttpStatus.NOT_FOUND);
-    return proffessorFound;
+  private async findProffessor (findOptions: FindOneOptions) {
+    const proffessorFound = await this.proffessorsService.findOne(findOptions)
+    if (!proffessorFound) { throw new HttpException('Proffessor not found', HttpStatus.NOT_FOUND) }
+    return proffessorFound
   }
 
-  async getProffessor(proffessorId: number) {
+  async getProffessor (proffessorId: number) {
+    return await this.findProffessor({
+      where: { id: proffessorId }
+    })
+  }
+
+  async getProffessorWithRelations (proffessorId: number) {
     return await this.findProffessor({
       where: { id: proffessorId },
-    });
+      relations: ['person']
+    })
   }
 
-  async getProffessorWithRelations(proffessorId: number) {
-    return await this.findProffessor({
-      where: { id: proffessorId },
-      relations: ['person'],
-    });
-  }
-
-  async createProffessor(proffessorData: z.infer<typeof CreateProffessor>) {
-    const passFormat = CreateProffessor.safeParse(proffessorData);
-    if (!passFormat.success)
-      throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
-    proffessorData = passFormat.data;
+  async createProffessor (proffessorData: z.infer<typeof CreateProffessor>) {
+    const passFormat = CreateProffessor.safeParse(proffessorData)
+    if (!passFormat.success) { throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE) }
+    proffessorData = passFormat.data
     const personFound = await this.peopleService.findOne({
-      where: { id: proffessorData.personId },
-    });
-    if (!personFound)
-      throw new HttpException('Person not found', HttpStatus.NOT_ACCEPTABLE);
+      where: { id: proffessorData.personId }
+    })
+    if (!personFound) { throw new HttpException('Person not found', HttpStatus.NOT_ACCEPTABLE) }
     const proffessorFound = await this.proffessorsService.findOne({
-      where: { personId: proffessorData.personId },
-    });
-    if (proffessorFound)
-      throw new HttpException('Person found', HttpStatus.NOT_ACCEPTABLE);
-    return await this.proffessorsService.insert(proffessorData);
+      where: { personId: proffessorData.personId }
+    })
+    if (proffessorFound) { throw new HttpException('Person found', HttpStatus.NOT_ACCEPTABLE) }
+    return await this.proffessorsService.insert(proffessorData)
   }
 
-  async updateProffessor(
+  async updateProffessor (
     proffessorId: number,
-    proffessorData: z.infer<typeof UpdateProffessor>,
+    proffessorData: z.infer<typeof UpdateProffessor>
   ) {
-    const passFormat = UpdateProffessor.safeParse(proffessorData);
-    if (!passFormat.success)
-      throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE);
-    if (Object.keys(passFormat.data).length == 0)
-      throw new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE);
-    proffessorData = passFormat.data;
+    const passFormat = UpdateProffessor.safeParse(proffessorData)
+    if (!passFormat.success) { throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE) }
+    if (Object.keys(passFormat.data).length == 0) { throw new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE) }
+    proffessorData = passFormat.data
     if ('personId' in proffessorData) {
       const personFound = await this.peopleService.findOne({
-        where: { id: proffessorData.personId },
-      });
-      if (!personFound)
-        throw new HttpException('Person not found', HttpStatus.NOT_ACCEPTABLE);
+        where: { id: proffessorData.personId }
+      })
+      if (!personFound) { throw new HttpException('Person not found', HttpStatus.NOT_ACCEPTABLE) }
     }
     const proffessorFound = await this.proffessorsService.update(
       proffessorId,
-      proffessorData,
-    );
-    if (proffessorFound.affected == 0)
+      proffessorData
+    )
+    if (proffessorFound.affected == 0) {
       throw new HttpException(
         'Proffessor not found',
-        HttpStatus.NOT_ACCEPTABLE,
-      );
-    return proffessorFound;
+        HttpStatus.NOT_ACCEPTABLE
+      )
+    }
+    return proffessorFound
   }
 
-  async deleteProffessor(proffessorId: number) {
-    const proffessorFound = await this.proffessorsService.delete(proffessorId);
-    if (proffessorFound.affected == 0)
-      throw new HttpException('Proffessor not found', HttpStatus.NOT_FOUND);
-    return proffessorFound;
+  async deleteProffessor (proffessorId: number) {
+    const proffessorFound = await this.proffessorsService.delete(proffessorId)
+    if (proffessorFound.affected == 0) { throw new HttpException('Proffessor not found', HttpStatus.NOT_FOUND) }
+    return proffessorFound
   }
 }

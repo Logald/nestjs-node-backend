@@ -1,3 +1,3 @@
-import { CreateGroup } from './create_group.schema';
+import { CreateGroup } from './create_group.schema'
 
-export const UpdateGroup = CreateGroup.partial();
+export const UpdateGroup = CreateGroup.partial()

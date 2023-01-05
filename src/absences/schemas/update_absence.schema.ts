@@ -1,3 +1,3 @@
-import { CreateAbsence } from './create_absence.schema';
+import { CreateAbsence } from './create_absence.schema'
 
-export const UpdateAbsence = CreateAbsence.partial();
+export const UpdateAbsence = CreateAbsence.partial()
