@@ -11,6 +11,10 @@ export class ProfilesProvider {
     @InjectRepository(Profile) private profilesService: Repository<Profile>,
   ) {}
 
+  async getProfiles(findManyOptions: Profile) {
+    return await this.profilesService.find({ where: findManyOptions });
+  }
+
   async createProfile(profileData: z.infer<typeof CreateProfile>) {
     const passFormat = CreateProfile.safeParse(profileData);
     if (!passFormat.success)
