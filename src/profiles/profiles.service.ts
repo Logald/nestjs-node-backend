@@ -56,4 +56,12 @@ export class ProfilesProvider {
         return res;
       });
   }
+
+  async deleteProfile(profileId: number) {
+    return await this.profilesService.delete(profileId).then((res) => {
+      if (res.affected == 0)
+        return new HttpException('Profile not found', HttpStatus.NOT_FOUND);
+      return res;
+    });
+  }
 }

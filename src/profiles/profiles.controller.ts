@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post
+} from '@nestjs/common';
 import { z } from 'zod';
 import { Profile } from './profile.entity';
 import { ProfilesProvider } from './profiles.service';
@@ -30,5 +38,10 @@ export class ProfilesController {
     @Body() profileData: z.infer<typeof UpdateProfile>,
   ) {
     return this.profilesProvider.updateProfile(profileId, profileData);
+  }
+
+  @Delete('/:id')
+  deleteProfile(@Param('id') profileId: number) {
+    return this.profilesProvider.deleteProfile(profileId);
   }
 }
