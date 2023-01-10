@@ -9,7 +9,7 @@ import {
   Post,
   UseGuards
 } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
 import { CreateTurnDto } from './dtos/create_turn.dto'
 import { FindTurnDto } from './dtos/find_turn.dto'
@@ -17,6 +17,7 @@ import { UpdateTurnDto } from './dtos/update_turn.dto'
 import { TurnsProvider } from './turns.service'
 
 @UseGuards(AccessTokenGuard)
+@ApiBearerAuth()
 @ApiTags('turns')
 @Controller('turns')
 export class TurnsController {

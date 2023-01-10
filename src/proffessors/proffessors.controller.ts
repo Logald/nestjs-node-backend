@@ -9,7 +9,7 @@ import {
   Post,
   UseGuards
 } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
 import { CreateProffessorDto } from './dtos/create_proffessor.dto'
 import { FindProffessorDto } from './dtos/find_proffessor.dto'
@@ -17,6 +17,7 @@ import { UpdateProffessorDto } from './dtos/update_proffessor.dto'
 import { ProffessorsProvider } from './proffessors.service'
 
 @UseGuards(AccessTokenGuard)
+@ApiBearerAuth()
 @ApiTags('proffessors')
 @Controller('proffessors')
 export class ProffessorsController {

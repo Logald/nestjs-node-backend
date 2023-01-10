@@ -9,6 +9,7 @@ async function bootstrap () {
     .setTitle('Tecnicatura 2022 Backend Node')
     .setDescription('Backend')
     .setVersion('1.0')
+    .addBearerAuth()
     .addTag('absences')
     .addTag('gmps')
     .addTag('groups')

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from './accessTokenGuard'
 import { CreateUserDto } from './dtos/create_user.dto'
 import { FindUserDto } from './dtos/find_user.dto'
@@ -14,12 +14,14 @@ export class UsersController {
   ) {}
 
   @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
   @Post()
   async getUsers (@Body() findManyOptions: FindUserDto) {
     return await this.usersProvider.getUsers(findManyOptions)
   }
 
   @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
   @Post('/all')
   async getUsersWithRelations (@Body() findManyOptions: FindUserDto) {
     return await this.usersProvider.getUsersWithRelations(findManyOptions)
@@ -36,24 +38,28 @@ export class UsersController {
   }
 
   @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
   @Get('/:id')
   async getUser (@Param('id', ParseIntPipe) userId: number) {
     return await this.usersProvider.getUser(userId)
   }
 
   @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
   @Get('/:id/all')
   async getUserWithRelations (@Param('id', ParseIntPipe) userId: number) {
     return await this.usersProvider.getUserWithRelations(userId)
   }
 
   @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
   @Patch('/:id')
   async updateUser (@Param('id', ParseIntPipe) userId: number, @Body() userData: UpdateUserDto) {
     return await this.usersProvider.updateUser(userId, userData)
   }
 
   @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
   @Delete('/:id')
   async deleteUser (@Param('id', ParseIntPipe) userId: number) {
     return await this.usersProvider.deleteUser(userId)

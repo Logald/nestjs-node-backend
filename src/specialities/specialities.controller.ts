@@ -9,7 +9,7 @@ import {
   Post,
   UseGuards
 } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
 import { CreateSpecialtyDto } from './dtos/create_specialty.dto'
 import { FindSpecialtyDto } from './dtos/find_specialty.dto'
@@ -17,6 +17,7 @@ import { UpdateSpecialtyDto } from './dtos/update_specialty.dto'
 import { SpecialitiesProvider } from './specialities.service'
 
 @UseGuards(AccessTokenGuard)
+@ApiBearerAuth()
 @ApiTags('specialities')
 @Controller('specialities')
 export class SpecialitiesController {

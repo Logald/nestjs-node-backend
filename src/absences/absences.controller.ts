@@ -9,7 +9,7 @@ import {
   Post,
   UseGuards
 } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
 import { UpdateResult } from 'typeorm'
 import { AbsencesProvider } from './absences.service'
@@ -18,6 +18,7 @@ import { FindAbsenceDto } from './dtos/find_absence.dto'
 import { UpdateAbsenceDto } from './dtos/update_absence.dto'
 
 @UseGuards(AccessTokenGuard)
+@ApiBearerAuth()
 @ApiTags('absences')
 @Controller('absences')
 export class AbsencesController {

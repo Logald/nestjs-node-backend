@@ -9,7 +9,7 @@ import {
   Post,
   UseGuards
 } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
 import { CreateProfileDto } from './dtos/create_profile.dto'
 import { FindProfileDto } from './dtos/find_profile.dto'
@@ -36,6 +36,7 @@ export class ProfilesController {
   }
 
   @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
   @Patch('/:id')
   async updateProfile (
   @Param('id', ParseIntPipe) profileId: number,
@@ -45,6 +46,7 @@ export class ProfilesController {
   }
 
   @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
   @Delete('/:id')
   async deleteProfile (@Param('id', ParseIntPipe) profileId: number) {
     return await this.profilesProvider.deleteProfile(profileId)

@@ -9,7 +9,7 @@ import {
   Post,
   UseGuards
 } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
 import { CreateGroupDto } from './dtos/create_group.dto'
 import { FindGroupDto } from './dtos/find_group.dto'
@@ -17,6 +17,7 @@ import { UpdateGroupDto } from './dtos/update_group.dto'
 import { GroupsProvider } from './groups.service'
 
 @UseGuards(AccessTokenGuard)
+@ApiBearerAuth()
 @ApiTags('groups')
 @Controller('groups')
 export class GroupsController {

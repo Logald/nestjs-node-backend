@@ -9,7 +9,7 @@ import {
   Post,
   UseGuards
 } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
 import { CreateMgDto } from './dtos/create_mg.dto'
 import { FindMgDto } from './dtos/find_mg.dto'
@@ -17,6 +17,7 @@ import { UpdateMgDto } from './dtos/update_mg.dto'
 import { MGProvider } from './mgs.service'
 
 @UseGuards(AccessTokenGuard)
+@ApiBearerAuth()
 @ApiTags('mgs')
 @Controller('mgs')
 export class MGController {

@@ -9,7 +9,7 @@ import {
   Post,
   UseGuards
 } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
 import { CreatePeopleDto } from './dtos/create_people.dto'
 import { FindPeopleDto } from './dtos/find_people.dto'
@@ -37,6 +37,7 @@ export class PeopleController {
   }
 
   @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
   @Patch('/:id')
   async updatePerson (
   @Param('id', ParseIntPipe) personId: number,
@@ -46,6 +47,7 @@ export class PeopleController {
   }
 
   @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
   @Delete('/:id')
   async deletePersone (@Param('id', ParseIntPipe) personId: number) {
     return await this.peopleProvider.deletePerson(personId)
