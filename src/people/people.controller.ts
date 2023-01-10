@@ -9,7 +9,7 @@ import {
   Post,
   UseGuards
 } from '@nestjs/common'
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
 import { CreatePeopleDto } from './dtos/create_people.dto'
 import { FindPeopleDto } from './dtos/find_people.dto'
@@ -20,7 +20,9 @@ import { PeopleProvider } from './people.service'
 @Controller('people')
 export class PeopleController {
   constructor (private readonly peopleProvider: PeopleProvider) {}
-
+  @ApiBody({
+    type: FindPeopleDto
+  })
   @Post()
   async getPeople (@Body() personData: FindPeopleDto) {
     return await this.peopleProvider.getPeople(personData)

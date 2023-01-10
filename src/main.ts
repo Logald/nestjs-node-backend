@@ -10,6 +10,7 @@ async function bootstrap () {
     .setDescription('Backend')
     .setVersion('1.0')
     .addBearerAuth()
+    .addTag('users')
     .addTag('absences')
     .addTag('gmps')
     .addTag('groups')
@@ -20,7 +21,6 @@ async function bootstrap () {
     .addTag('profiles')
     .addTag('specialities')
     .addTag('turns')
-    .addTag('users')
     .build()
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api', app, document, {
