@@ -1,89 +1,67 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Turn } from 'src/turns/turn.entity'
+import { TurnsProvider } from 'src/turns/turns.service'
+import { isEmpty } from 'src/utils/empty_object.utils'
+import { groupFoundError, groupNotFoundError } from 'src/utils/errors.utils'
 import { FindOneOptions, Repository } from 'typeorm'
-import { z } from 'zod'
+import { CreateGroupDto } from './dtos/create_group.dto'
+import { FindGroupDto } from './dtos/find_group.dto'
+import { UpdateGroupDto } from './dtos/update_group.dto'
 import { Group } from './group.entity'
-import { CreateGroup } from './schemas/create_group.schema'
-import { UpdateGroup } from './schemas/update_group.schema'
 
 @Injectable()
 export class GroupsProvider {
   constructor (
     @InjectRepository(Group) private readonly groupService: Repository<Group>,
-    @InjectRepository(Turn) private readonly turnService: Repository<Turn>
+    @InjectRepository(Turn) private readonly turnService: Repository<Turn>,
+    private readonly turnProvider: TurnsProvider
   ) {}
 
-  async getGroups (findManyOptions: Group) {
+  async getGroups (findManyOptions: FindGroupDto) {
     return await this.groupService.find({ where: findManyOptions })
   }
 
-  async getGroupsWithRelations (findManyOptions: Group) {
+  async getGroupsWithRelations (findManyOptions: FindGroupDto) {
     return await this.groupService.find({
       where: findManyOptions,
       relations: ['turn']
     })
   }
 
-  private async findGroup (findOneOptions: FindOneOptions<Group>) {
+  async findOne (findOneOptions: FindOneOptions<Group>, found: boolean = true) {
     const groupFound = await this.groupService.findOne(findOneOptions)
-    if (!groupFound) { throw new HttpException('Group not found', HttpStatus.NOT_FOUND) }
-    return groupFound
+    if (found && !groupFound) groupNotFoundError()
+    else if (!found && groupFound) groupFoundError()
+    else return groupFound
   }
 
   async getGroup (groupId: number) {
-    return await this.findGroup({
-      where: { id: groupId }
-    })
+    return await this.findOne({ where: { id: groupId } })
   }
 
   async getGroupWithRelations (groupId: number) {
-    return await this.findGroup({
+    return await this.findOne({
       where: { id: groupId },
       relations: ['turn']
     })
   }
 
-  async createGroup (groupData: z.infer<typeof CreateGroup>) {
-    const passFormat = CreateGroup.safeParse(groupData)
-    if (!passFormat.success) { throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE) }
-    groupData = passFormat.data
-    const groupFound = await this.groupService.findOne({
-      where: { grade: groupData.grade, name: groupData.name }
-    })
-    if (groupFound) throw new HttpException('Group found', HttpStatus.FOUND)
-    const turnFound = await this.turnService.findOne({
-      where: { id: groupData.turnId }
-    })
-    if (!turnFound) { throw new HttpException('Turn not found', HttpStatus.NOT_ACCEPTABLE) }
+  async createGroup (groupData: CreateGroupDto) {
+    await this.findOne({ where: { grade: groupData.grade, name: groupData.name } }, false)
+    await this.turnProvider.findOne({ where: { id: groupData.turnId } })
     return await this.groupService.insert(groupData)
   }
 
-  async updateGroup (groupId: number, groupData: z.infer<typeof UpdateGroup>) {
-    const passFormat = UpdateGroup.safeParse(groupData)
-    if (!passFormat.success) { throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE) }
-    if (Object.keys(passFormat.data).length == 0) { throw new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE) }
-    groupData = passFormat.data
-    if ('turnId' in groupData) {
-      const turnFound = await this.turnService.findOne({
-        where: { id: groupData.turnId }
-      })
-      if (!turnFound) { throw new HttpException('Turn not found', HttpStatus.NOT_ACCEPTABLE) }
-    }
-    return await this.groupService
-      .update(groupId, groupData)
-      .then((updateResult) => {
-        if (updateResult.affected == 0) { throw new HttpException('Group not found', HttpStatus.NOT_FOUND) }
-        return updateResult
-      })
-      .catch(() => {
-        throw new HttpException('Group found', HttpStatus.FOUND)
-      })
+  async updateGroup (groupId: number, groupData: UpdateGroupDto) {
+    isEmpty(groupData)
+    await this.findOne({ where: { id: groupId } })
+    if ('turnId' in groupData) await this.turnProvider.findOne({ where: { id: groupData.turnId } })
+    return await this.groupService.update(groupId, groupData).catch(() => { groupFoundError() })
   }
 
   async deleteGroup (groupId: number) {
-    const deletedData = await this.groupService.delete(groupId)
-    if (deletedData.affected == 0) { throw new HttpException('Group not found', HttpStatus.NOT_FOUND) }
-    return deletedData
+    await this.findOne({ where: { id: groupId } })
+    return await this.groupService.delete(groupId)
   }
 }

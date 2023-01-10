@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common'
-import { z } from 'zod'
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common'
 import { AccessTokenGuard } from './accessTokenGuard'
-import { CreateUser } from './schemas/create_user.schema'
-import { Login } from './schemas/login.schema'
-import { User } from './user.entity'
+import { CreateUserDto } from './dtos/create_user.dto'
+import { FindUserDto } from './dtos/find_user.dto'
+import { LoginDto } from './dtos/login.dto'
+import { UpdateUserDto } from './dtos/update_user.dto'
 import { UsersProvider } from './users.service'
 
 @Controller('users')
@@ -14,47 +14,47 @@ export class UsersController {
 
   @UseGuards(AccessTokenGuard)
   @Post()
-  async getUsers (@Body() findManyOptions: User) {
+  async getUsers (@Body() findManyOptions: FindUserDto) {
     return await this.usersProvider.getUsers(findManyOptions)
   }
 
   @UseGuards(AccessTokenGuard)
   @Post('/all')
-  async getUsersWithRelations (@Body() findManyOptions: User) {
+  async getUsersWithRelations (@Body() findManyOptions: FindUserDto) {
     return await this.usersProvider.getUsersWithRelations(findManyOptions)
   }
 
   @Post('/signin')
-  async signIn (@Body() userData: z.infer<typeof Login>) {
+  async signIn (@Body() userData: LoginDto) {
     return await this.usersProvider.signIn(userData)
   }
 
   @Post('/signup')
-  async signUp (@Body() userData: z.infer<typeof CreateUser>) {
+  async signUp (@Body() userData: CreateUserDto) {
     return await this.usersProvider.signUp(userData)
   }
 
   @UseGuards(AccessTokenGuard)
   @Get('/:id')
-  async getUser (@Param('id') userId: number) {
+  async getUser (@Param('id', ParseIntPipe) userId: number) {
     return await this.usersProvider.getUser(userId)
   }
 
   @UseGuards(AccessTokenGuard)
   @Get('/:id/all')
-  async getUserWithRelations (@Param('id') userId: number) {
+  async getUserWithRelations (@Param('id', ParseIntPipe) userId: number) {
     return await this.usersProvider.getUserWithRelations(userId)
   }
 
   @UseGuards(AccessTokenGuard)
   @Patch('/:id')
-  async updateUser (@Param('id') userId: number, @Body() userData: User) {
+  async updateUser (@Param('id', ParseIntPipe) userId: number, @Body() userData: UpdateUserDto) {
     return await this.usersProvider.updateUser(userId, userData)
   }
 
   @UseGuards(AccessTokenGuard)
   @Delete('/:id')
-  async deleteUser (@Param('id') userId: number) {
+  async deleteUser (@Param('id', ParseIntPipe) userId: number) {
     return await this.usersProvider.deleteUser(userId)
   }
 }

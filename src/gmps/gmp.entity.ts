@@ -3,12 +3,14 @@ import { Proffessor } from 'src/proffessors/proffessor.entity'
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn
 } from 'typeorm'
 
 @Entity({ name: 'gmp' })
+@Index(['mgId', 'proffessorId'], { unique: true })
 export class Gmp {
   @PrimaryGeneratedColumn()
     id: number
@@ -20,7 +22,7 @@ export class Gmp {
   @JoinColumn()
     mg: MG
 
-  @Column({ nullable: true })
+  @Column()
     proffessorId: number
 
   @ManyToOne(() => Proffessor, { orphanedRowAction: 'nullify' })

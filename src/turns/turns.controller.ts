@@ -4,15 +4,15 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   UseGuards
 } from '@nestjs/common'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
-import { z } from 'zod'
-import { CreateTurn } from './schemas/create_turn.schema'
-import { UpdateTurn } from './schemas/update_turn.schema'
-import { Turn } from './turn.entity'
+import { CreateTurnDto } from './dtos/create_turn.dto'
+import { FindTurnDto } from './dtos/find_turn.dto'
+import { UpdateTurnDto } from './dtos/update_turn.dto'
 import { TurnsProvider } from './turns.service'
 
 @UseGuards(AccessTokenGuard)
@@ -21,30 +21,30 @@ export class TurnsController {
   constructor (private readonly turnsProvider: TurnsProvider) {}
 
   @Post()
-  async getTurns (@Body() turnData: Turn) {
+  async getTurns (@Body() turnData: FindTurnDto) {
     return await this.turnsProvider.getTurns(turnData)
   }
 
   @Post('/create')
-  async createTurn (@Body() turnData: z.infer<typeof CreateTurn>) {
+  async createTurn (@Body() turnData: CreateTurnDto) {
     return await this.turnsProvider.createTurn(turnData)
   }
 
   @Get('/:id')
-  async getTurn (@Param('id') turnId: number) {
+  async getTurn (@Param('id', ParseIntPipe) turnId: number) {
     return await this.turnsProvider.getTurn(turnId)
   }
 
   @Patch('/:id')
   async updateTurn (
-  @Param('id') turnId: number,
-    @Body() turnData: z.infer<typeof UpdateTurn>
+  @Param('id', ParseIntPipe) turnId: number,
+    @Body() turnData: UpdateTurnDto
   ) {
     return await this.turnsProvider.updateTurn(turnId, turnData)
   }
 
   @Delete('/:id')
-  async deleteTurn (@Param('id') turnId: number) {
+  async deleteTurn (@Param('id', ParseIntPipe) turnId: number) {
     return await this.turnsProvider.deleteTurn(turnId)
   }
 }

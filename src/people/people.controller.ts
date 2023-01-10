@@ -4,48 +4,48 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   UseGuards
 } from '@nestjs/common'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
-import { z } from 'zod'
+import { CreatePeopleDto } from './dtos/create_people.dto'
+import { FindPeopleDto } from './dtos/find_people.dto'
+import { UpdatePeopleDto } from './dtos/update_people.dto'
 import { PeopleProvider } from './people.service'
-import { Person } from './person.entity'
-import { CreatePeople } from './schemas/create_people.schema'
-import { UpdatePeople } from './schemas/update_people.schema'
 
 @Controller('people')
 export class PeopleController {
   constructor (private readonly peopleProvider: PeopleProvider) {}
 
   @Post()
-  async getPeople (@Body() personData: Person) {
+  async getPeople (@Body() personData: FindPeopleDto) {
     return await this.peopleProvider.getPeople(personData)
   }
 
   @Post('/create')
-  async createPerson (@Body() personData: z.infer<typeof CreatePeople>) {
+  async createPerson (@Body() personData: CreatePeopleDto) {
     return await this.peopleProvider.createPerson(personData)
   }
 
   @Get('/:id')
-  async getPerson (@Param('id') personId: number) {
+  async getPerson (@Param('id', ParseIntPipe) personId: number) {
     return await this.peopleProvider.getPerson(personId)
   }
 
   @UseGuards(AccessTokenGuard)
   @Patch('/:id')
   async updatePerson (
-  @Param('id') personId: number,
-    @Body() personData: z.infer<typeof UpdatePeople>
+  @Param('id', ParseIntPipe) personId: number,
+    @Body() personData: UpdatePeopleDto
   ) {
     return await this.peopleProvider.updatePerson(personId, personData)
   }
 
   @UseGuards(AccessTokenGuard)
   @Delete('/:id')
-  async deletePersone (@Param('id') personId: number) {
+  async deletePersone (@Param('id', ParseIntPipe) personId: number) {
     return await this.peopleProvider.deletePerson(personId)
   }
 }
