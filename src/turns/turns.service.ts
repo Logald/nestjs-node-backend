@@ -1,59 +1,46 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
-import { z } from 'zod'
-import { CreateTurn } from './schemas/create_turn.schema'
-import { UpdateTurn } from './schemas/update_turn.schema'
+import { isEmpty } from 'src/utils/empty_object.utils'
+import { turnFoundError, turnNotFoundError } from 'src/utils/errors.utils'
+import { FindOneOptions, Repository } from 'typeorm'
+import { CreateTurnDto } from './dtos/create_turn.dto'
+import { FindTurnDto } from './dtos/find_turn.dto'
+import { UpdateTurnDto } from './dtos/update_turn.dto'
 import { Turn } from './turn.entity'
 
 @Injectable()
 export class TurnsProvider {
   constructor (@InjectRepository(Turn) private readonly turnService: Repository<Turn>) {}
 
-  async getTurns (findManyOptions: Turn) {
+  async findOne (findOneOptions: FindOneOptions<Turn>, found: boolean = true) {
+    const turnFound = await this.turnService.findOne(findOneOptions)
+    if (found && !turnFound) turnNotFoundError()
+    else if (!found && turnFound) turnFoundError()
+    else return turnFound
+  }
+
+  async getTurns (findManyOptions: FindTurnDto) {
     return await this.turnService.find({ where: findManyOptions })
   }
 
   async getTurn (turnId: number) {
-    const turnFound = await this.turnService.findOne({
-      where: { id: turnId }
-    })
-    if (!turnFound) { throw new HttpException('Turn not found', HttpStatus.NOT_FOUND) }
-    return turnFound
+    return await this.findOne({ where: { id: turnId } })
   }
 
-  async createTurn (turnData: z.infer<typeof CreateTurn>) {
-    const passFormat = CreateTurn.safeParse(turnData)
-    if (!passFormat.success) { throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE) }
-    turnData = passFormat.data
-    const turnFound = await this.turnService.findOne({
-      where: { name: turnData.name }
-    })
-    if (turnFound) throw new HttpException('Turn was found', HttpStatus.FOUND)
+  async createTurn (turnData: CreateTurnDto) {
+    await this.findOne({ where: { name: turnData.name } }, false)
     return await this.turnService.insert(turnData)
   }
 
-  async updateTurn (turnId: number, turnData: z.infer<typeof UpdateTurn>) {
-    const passFormat = UpdateTurn.safeParse(turnData)
-    if (!passFormat.success) { throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE) }
-    if (Object.keys(passFormat.data).length == 0) { throw new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE) }
-    turnData = passFormat.data
-    const turnFound = await this.turnService.findOne({
-      where: { id: turnId }
-    })
-    if (!turnFound) { throw new HttpException('Turn not found', HttpStatus.NOT_FOUND) }
-    if ('name' in turnData) {
-      const turnMatchName = await this.turnService.findOne({
-        where: { name: turnData.name }
-      })
-      if (turnMatchName) { throw new HttpException('Bad turn name', HttpStatus.NOT_ACCEPTABLE) }
-    }
+  async updateTurn (turnId: number, turnData: UpdateTurnDto) {
+    isEmpty(turnData)
+    await this.findOne({ where: { id: turnId } })
+    await this.findOne({ where: { name: turnData.name } }, false)
     return await this.turnService.update(turnId, turnData)
   }
 
   async deleteTurn (turnId: number) {
-    const turnFound = await this.turnService.delete(turnId)
-    if (turnFound.affected == 0) { throw new HttpException('Turn not found', HttpStatus.NOT_FOUND) }
-    return turnFound
+    await this.findOne({ where: { id: turnId } })
+    return await this.turnService.delete(turnId)
   }
 }

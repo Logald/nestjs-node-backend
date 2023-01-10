@@ -4,53 +4,56 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   UseGuards
 } from '@nestjs/common'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
-import { z } from 'zod'
-import { CreateSpecialty } from './schemas/create_specialty.schema'
-import { UpdateSpecialty } from './schemas/update_specialty.schema'
+import { CreateSpecialtyDto } from './dtos/create_specialty.dto'
+import { FindSpecialtyDto } from './dtos/find_specialty.dto'
+import { UpdateSpecialtyDto } from './dtos/update_specialty.dto'
 import { SpecialitiesProvider } from './specialities.service'
-import { Specialty } from './specialty.entity'
 
 @UseGuards(AccessTokenGuard)
+@ApiBearerAuth()
+@ApiTags('specialities')
 @Controller('specialities')
 export class SpecialitiesController {
   constructor (private readonly specialitiesProvider: SpecialitiesProvider) {}
 
   @Post()
-  async getSpecialities (@Body() findManyOptions: Specialty) {
+  async getSpecialities (@Body() findManyOptions: FindSpecialtyDto) {
     return await this.specialitiesProvider.getSpecialities(findManyOptions)
   }
 
   @Post('/all')
-  async getSpecialitiesWithRelations (@Body() findManyOptions: Specialty) {
+  async getSpecialitiesWithRelations (@Body() findManyOptions: FindSpecialtyDto) {
     return await this.specialitiesProvider.getSpecialitiesWithRelations(
       findManyOptions
     )
   }
 
   @Post('/create')
-  async createspecialty (@Body() specialtyData: z.infer<typeof CreateSpecialty>) {
+  async createspecialty (@Body() specialtyData: CreateSpecialtyDto) {
     return await this.specialitiesProvider.createSpecialty(specialtyData)
   }
 
   @Get('/:id')
-  async getSpecialty (@Param('id') specialtyId: number) {
+  async getSpecialty (@Param('id', ParseIntPipe) specialtyId: number) {
     return await this.specialitiesProvider.getSpecialty(specialtyId)
   }
 
   @Get('/:id/all')
-  async getSpecialtyWithRelations (@Param('id') specialtyId: number) {
+  async getSpecialtyWithRelations (@Param('id', ParseIntPipe) specialtyId: number) {
     return await this.specialitiesProvider.getSpecialtyWithRelations(specialtyId)
   }
 
   @Patch('/:id')
   async updatespecialty (
-  @Param('id') specialtyId,
-    @Body() specialtyData: z.infer<typeof UpdateSpecialty>
+  @Param('id', ParseIntPipe) specialtyId,
+    @Body() specialtyData: UpdateSpecialtyDto
   ) {
     return await this.specialitiesProvider.updateSpecialty(
       specialtyId,
@@ -59,7 +62,7 @@ export class SpecialitiesController {
   }
 
   @Delete('/:id')
-  async deletespecialty (@Param('id') specialtyId: number) {
+  async deletespecialty (@Param('id', ParseIntPipe) specialtyId: number) {
     return await this.specialitiesProvider.deletespecialty(specialtyId)
   }
 }

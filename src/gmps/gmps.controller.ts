@@ -4,51 +4,54 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   UseGuards
 } from '@nestjs/common'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
-import { z } from 'zod'
-import { Gmp } from './gmp.entity'
+import { CreateGmpDto } from './dtos/create_gmp.dto'
+import { FindGmpDto } from './dtos/find_gmp.dto'
+import { UpdateGmpDto } from './dtos/update_gmp.dto'
 import { GmpsProvider } from './gmps.service'
-import { CreateGmp } from './schemas/create_gmp.schema'
-import { UpdateGmp } from './schemas/update_gmp.schema'
 
 @UseGuards(AccessTokenGuard)
+@ApiBearerAuth()
+@ApiTags('gmps')
 @Controller('gmps')
 export class GmpsController {
   constructor (private readonly gmpsProvider: GmpsProvider) {}
 
   @Post()
-  async getGmpsByJson (@Body() gmpsFindManyOptions: Gmp) {
+  async getGmpsByJson (@Body() gmpsFindManyOptions: FindGmpDto) {
     return await this.gmpsProvider.getGmps(gmpsFindManyOptions)
   }
 
   @Post('/all')
-  async getGmpsWithRelationsByJson (@Body() gmpsFindManyOptions: Gmp) {
+  async getGmpsWithRelationsByJson (@Body() gmpsFindManyOptions: FindGmpDto) {
     return await this.gmpsProvider.getGmpsWithRelations(gmpsFindManyOptions)
   }
 
   @Post('/create')
-  async createGmp (@Body() gmpData: z.infer<typeof CreateGmp>) {
+  async createGmp (@Body() gmpData: CreateGmpDto) {
     return await this.gmpsProvider.createGmp(gmpData)
   }
 
   @Get('/:id')
-  async getGmp (@Param('id') gmpId: number) {
+  async getGmp (@Param('id', ParseIntPipe) gmpId: number) {
     return await this.gmpsProvider.getGmp(gmpId)
   }
 
   @Get('/:id/all')
-  async getGmpWithRelations (@Param('id') gmpId: number) {
+  async getGmpWithRelations (@Param('id', ParseIntPipe) gmpId: number) {
     return await this.gmpsProvider.getGmpWithRelations(gmpId)
   }
 
   @Patch('/:gmpId')
   async updateGmp (
   @Param('gmpId') gmpId: number,
-    @Body() gmpData: z.infer<typeof UpdateGmp>
+    @Body() gmpData: UpdateGmpDto
   ) {
     return await this.gmpsProvider.updateGmp(gmpId, gmpData)
   }

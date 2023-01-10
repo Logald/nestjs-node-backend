@@ -1,15 +1,19 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
 import { compare, hash } from 'bcrypt'
+import { PeopleProvider } from 'src/people/people.service'
 import { Person } from 'src/people/person.entity'
 import { Profile } from 'src/profiles/profile.entity'
+import { ProfilesProvider } from 'src/profiles/profiles.service'
+import { isEmpty } from 'src/utils/empty_object.utils'
+import { invalidPasswordError, userFoundError, userNotFoundError } from 'src/utils/errors.utils'
 import { FindOneOptions, Repository } from 'typeorm'
-import { z } from 'zod'
-import { CreateUser } from './schemas/create_user.schema'
-import { Login } from './schemas/login.schema'
-import { UpdateUser } from './schemas/update_user.schema'
+import { CreateUserDto } from './dtos/create_user.dto'
+import { FindUserDto } from './dtos/find_user.dto'
+import { LoginDto } from './dtos/login.dto'
+import { UpdateUserDto } from './dtos/update_user.dto'
 import { User } from './user.entity'
 
 @Injectable()
@@ -18,13 +22,25 @@ export class UsersProvider {
     @InjectRepository(User) private readonly usersService: Repository<User>,
     @InjectRepository(Person) private readonly peopleService: Repository<Person>,
     @InjectRepository(Profile) private readonly profilesService: Repository<Profile>,
-    private readonly JwtService: JwtService
+    private readonly JwtService: JwtService,
+    private readonly profilesProvider: ProfilesProvider,
+    private readonly peopleProvider: PeopleProvider
   ) {}
 
-  private async findOne (findOneOptions: FindOneOptions) {
+  private async checkPassword (password: string, encryptPassword: string) {
+    const checkPassword = await compare(password, encryptPassword)
+    if (!checkPassword) invalidPasswordError()
+  }
+
+  private createToken (payload: Object) {
+    return this.JwtService.sign(payload, { secret: process.env.JWT_SECRET ?? '1234', expiresIn: '7d' })
+  }
+
+  async findOne (findOneOptions: FindOneOptions<User>, found: boolean = true) {
     const userFound = await this.usersService.findOne(findOneOptions)
-    if (!userFound) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
-    return userFound
+    if (found && !userFound) userNotFoundError()
+    else if (!found && userFound) userFoundError()
+    else return userFound
   }
 
   async getUser (userId: number) {
@@ -35,69 +51,40 @@ export class UsersProvider {
     return await this.findOne({ where: { id: userId }, relations: ['person', 'profile'] })
   }
 
-  async getUsers (findManyOptions: User) {
+  async getUsers (findManyOptions: FindUserDto) {
     return await this.usersService.find({ where: findManyOptions })
   }
 
-  async getUsersWithRelations (findManyOptions: User) {
+  async getUsersWithRelations (findManyOptions: FindUserDto) {
     return await this.usersService.find({ where: findManyOptions, relations: ['person', 'profile'] })
   }
 
-  async signIn (userData: z.infer<typeof Login>) {
-    const passFormat = Login.safeParse(userData)
-    if (!passFormat.success) throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE)
-    userData = passFormat.data
-    const userFound = await this.usersService.findOne({ where: { person: { ci: userData.ci } }, relations: ['person'] })
-    if (!userFound) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
-    const checkPassword = await compare(userData.password, userFound.password)
-    if (!checkPassword) throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED)
+  async signIn (userData: LoginDto) {
+    const userFound = await this.findOne({ where: { person: { ci: userData.ci } }, relations: ['person'] })
+    await this.checkPassword(userData.password, userFound.password)
     const payload = { id: userFound.id, name: userFound.person.name, lastname: userFound.person.lastname }
-    const token = this.JwtService.sign(payload, { secret: process.env.JWT_SECRET ?? '1234', expiresIn: '7d' })
-    return { token }
+    return { token: this.createToken(payload) }
   }
 
-  async signUp (userData: z.infer<typeof CreateUser>) {
-    const passFormat = CreateUser.safeParse(userData)
-    if (!passFormat.success) throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE)
-    let { password } = passFormat.data
-    password = await hash(password, 10)
-    userData = { ...passFormat.data, password }
-    const personFound = await this.peopleService.findOne({ where: { id: userData.personId } })
-    if (!personFound) throw new HttpException('Person not found', HttpStatus.FOUND)
-    const profileFound = await this.profilesService.findOne({ where: { id: userData.profileId } })
-    if (!profileFound) throw new HttpException('Profile not found', HttpStatus.FOUND)
-    const userFound = await this.usersService.findOne({ where: { personId: userData.personId } })
-    if (userFound) throw new HttpException('User found', HttpStatus.FOUND)
+  async signUp (userData: CreateUserDto) {
+    userData.password = await hash(userData.password, 10)
+    await this.peopleProvider.findOne({ where: { id: userData.personId } })
+    await this.profilesProvider.findOne({ where: { id: userData.profileId } })
+    await this.findOne({ where: { personId: userData.personId } }, false)
     return await this.usersService.insert(userData)
   }
 
-  async updateUser (userId: number, userData: z.infer<typeof UpdateUser>) {
-    const passFormat = UpdateUser.safeParse(userData)
-    if (!passFormat.success) throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE)
-    if (Object.keys(passFormat.data).length == 0) throw new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE)
-    if ('password' in passFormat.data) {
-      let { password } = passFormat.data
-      password = await hash(password, 10)
-      userData = { ...passFormat.data, password }
-    }
-    if ('personId' in userData) {
-      const personFound = await this.peopleService.findOne({ where: { id: userData.personId } })
-      if (!personFound) throw new HttpException('Person not found', HttpStatus.FOUND)
-      const userFound = await this.usersService.findOne({ where: { personId: userData.personId } })
-      if (userFound) throw new HttpException('User found', HttpStatus.FOUND)
-    }
-    if ('profileId' in userData) {
-      const profileFound = await this.profilesService.findOne({ where: { id: userData.profileId } })
-      if (!profileFound) throw new HttpException('Profile not found', HttpStatus.FOUND)
-    }
-    const updateResult = await this.usersService.update(userId, userData)
-    if (updateResult.affected == 0) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
-    return updateResult
+  async updateUser (userId: number, userData: UpdateUserDto) {
+    await this.findOne({ where: { id: userId } })
+    isEmpty(userData)
+    if ('password' in userData) userData.password = await hash(userData.password, 10)
+    if ('personId' in userData) await this.peopleProvider.findOne({ where: { id: userData.personId } })
+    if ('profileId' in userData) await this.profilesProvider.findOne({ where: { id: userData.profileId } })
+    return await this.usersService.update(userId, userData)
   }
 
   async deleteUser (userId: number) {
-    const userFound = await this.usersService.delete(userId)
-    if (userFound.affected == 0) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
-    return userFound
+    await this.findOne({ where: { id: userId } })
+    return await this.usersService.delete(userId)
   }
 }

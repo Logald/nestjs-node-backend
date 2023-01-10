@@ -1,63 +1,50 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
-import { z } from 'zod'
+import { isEmpty } from 'src/utils/empty_object.utils'
+import { matterFoundError, matterNotFoundError } from 'src/utils/errors.utils'
+import { FindOneOptions, Repository } from 'typeorm'
+import { CreateMatterDto } from './dtos/create_matter.dto'
+import { FindMatterDto } from './dtos/find_matter.dto'
+import { UpdateMatterDto } from './dtos/update_matter.dto'
 import { Matter } from './matter.entity'
-import { CreateMatter } from './schemas/create_matter.schema'
-import { UpdateMatter } from './schemas/update_matter.schema'
 @Injectable()
 export class MattersProvider {
   constructor (
     @InjectRepository(Matter) private readonly matterService: Repository<Matter>
   ) {}
 
-  async getMatters (findManyOptions: Matter) {
+  async findOne (findOneOptions: FindOneOptions<Matter>, found: boolean = true) {
+    const matterFound = await this.matterService.findOne(findOneOptions)
+    if (found && !matterFound) matterNotFoundError()
+    else if (!found && matterFound) matterFoundError()
+    else return matterFound
+  }
+
+  async getMatters (findManyOptions: FindMatterDto) {
     return await this.matterService.find({ where: findManyOptions })
   }
 
   async getMatter (matterId: number) {
-    const matter = await this.matterService.findOne({
-      where: { id: matterId }
-    })
-    if (!matter) { throw new HttpException('Matter not found', HttpStatus.NOT_FOUND) }
-    return matter
+    return await this.findOne({ where: { id: matterId } })
   }
 
-  async createMatter (matterData: z.infer<typeof CreateMatter>) {
-    const passFormat = CreateMatter.safeParse(matterData)
-    if (!passFormat.success) { throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE) }
-    matterData = passFormat.data
-    const matterFound = await this.matterService.findOne({
-      where: { name: matterData.name }
-    })
-    if (matterFound) throw new HttpException('Matter found', HttpStatus.FOUND)
+  async createMatter (matterData: CreateMatterDto) {
+    await this.findOne({ where: { name: matterData.name } }, false)
     return await this.matterService.insert(matterData)
   }
 
   async updateMatter (
     matterId: number,
-    matterData: z.infer<typeof UpdateMatter>
+    matterData: UpdateMatterDto
   ) {
-    const passFormat = UpdateMatter.safeParse(matterData)
-    if (!passFormat.success) { throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE) }
-    if (Object.keys(passFormat.data).length == 0) { throw new HttpException('Empty object', HttpStatus.NOT_ACCEPTABLE) }
-    matterData = passFormat.data
-    const matter = await this.matterService.findOne({
-      where: { id: matterId }
-    })
-    if (!matter) { throw new HttpException('Matter not found', HttpStatus.NOT_FOUND) }
-    if ('name' in matterData) {
-      const matterMatchName = await this.matterService.findOne({
-        where: { name: matterData.name }
-      })
-      if (matterMatchName) { throw new HttpException('Bad matter name', HttpStatus.NOT_ACCEPTABLE) }
-    }
+    isEmpty(matterData)
+    await this.findOne({ where: { id: matterId } })
+    if ('name' in matterData) await this.findOne({ where: { name: matterData.name } }, false)
     return await this.matterService.update(matterId, matterData)
   }
 
   async deleteMatter (matterId: number) {
-    const matterFound = await this.matterService.delete(matterId)
-    if (matterFound.affected == 0) { throw new HttpException('Matter not found', HttpStatus.NOT_FOUND) }
-    return matterFound
+    await this.findOne({ where: { id: matterId } })
+    return await this.matterService.delete(matterId)
   }
 }

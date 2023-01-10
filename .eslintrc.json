@@ -16,7 +16,13 @@
       "@typescript-eslint/prefer-nullish-coalescing": "off",
       "@typescript-eslint/strict-boolean-expressions": "off",
       "@typescript-eslint/no-floating-promises": "off",
+      "@typescript-eslint/return-await": "off",
+      "@typescript-eslint/no-invalid-void-type": "off",
+      "@typescript-eslint/semi": "off",
+      "semi": "off",
+      "no-return-await": "off",
       "eqeqeq": "off",
-      "n/no-path-concat": "off"
+      "n/no-path-concat": "off",
+      "curly": ["error", "multi-line"]
     }
 }

@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { PeopleProvider } from 'src/people/people.service'
 import { Person } from 'src/people/person.entity'
 import { Profile } from 'src/profiles/profile.entity'
+import { ProfilesProvider } from 'src/profiles/profiles.service'
 import { AccessTokenStrategy } from './accessToken.strategy'
 import { User } from './user.entity'
 import { UsersController } from './users.controller'
@@ -14,6 +16,6 @@ import { UsersProvider } from './users.service'
     JwtModule.register({})
   ],
   controllers: [UsersController],
-  providers: [UsersProvider, AccessTokenStrategy]
+  providers: [UsersProvider, AccessTokenStrategy, PeopleProvider, ProfilesProvider]
 })
 export class UsersModule {}

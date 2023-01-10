@@ -1,8 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import * as moment from 'moment'
 import { Gmp } from 'src/gmps/gmp.entity'
+import { GmpsProvider } from 'src/gmps/gmps.service'
 import { Turn } from 'src/turns/turn.entity'
+import { TurnsProvider } from 'src/turns/turns.service'
+import { absenceFoundError, absenceNotFoundError, invalidDatesError, startDateError } from 'src/utils/errors.utils'
 import {
   FindManyOptions,
   FindOneOptions,
@@ -10,10 +13,10 @@ import {
   MoreThanOrEqual,
   Repository
 } from 'typeorm'
-import { z } from 'zod'
 import { Absence } from './abcense.entity'
-import { CreateAbsence } from './schemas/create_absence.schema'
-import { UpdateAbsence } from './schemas/update_absence.schema'
+import { CreateAbsenceDto } from './dtos/create_absence.dto'
+import { FindAbsenceDto } from './dtos/find_absence.dto'
+import { UpdateAbsenceDto } from './dtos/update_absence.dto'
 
 @Injectable()
 export class AbsencesProvider {
@@ -21,7 +24,9 @@ export class AbsencesProvider {
   constructor (
     @InjectRepository(Absence) private readonly absencesService: Repository<Absence>,
     @InjectRepository(Gmp) private readonly gmpsService: Repository<Gmp>,
-    @InjectRepository(Turn) private readonly turnsService: Repository<Turn>
+    @InjectRepository(Turn) private readonly turnsService: Repository<Turn>,
+    private readonly gmpsProvider: GmpsProvider,
+    private readonly turnsProvider: TurnsProvider
   ) {
     setInterval(() => {
       this.absencesService
@@ -41,107 +46,67 @@ export class AbsencesProvider {
     return await this.absencesService.find(findManyOptions)
   }
 
-  async getAbsences (findManyOptions: Absence) {
+  async getAbsences (findManyOptions: FindAbsenceDto) {
     return await this.findMany({
       where: findManyOptions
     })
   }
 
-  async getAbsencesWithRelations (findManyOptions: Absence) {
+  async getAbsencesWithRelations (findManyOptions: FindAbsenceDto) {
     return await this.findMany({
       where: findManyOptions,
       relations: ['gmp', 'turn']
     })
   }
 
-  private async findOne (absenceId: number, options: FindOneOptions) {
-    const foundAbsence = await this.absencesService.findOne(options)
-    if (!foundAbsence) { throw new HttpException('Absence not found', HttpStatus.NOT_FOUND) }
-    return foundAbsence
+  async findOne (findOneOptions: FindOneOptions<Absence>, found: boolean = true) {
+    const absenceFound = await this.absencesService.findOne(findOneOptions)
+    if (found && !absenceFound) absenceNotFoundError()
+    else if (!found && absenceFound) absenceFoundError()
+    else return absenceFound
   }
 
   async getAbsence (absenceId: number) {
-    return await this.findOne(absenceId, { where: { id: absenceId } })
+    return await this.findOne({ where: { id: absenceId } })
   }
 
   async getAbsenceWithRelations (absenceId: number) {
-    return await this.findOne(absenceId, {
+    return await this.findOne({
       where: { id: absenceId },
       relations: ['gmp', 'turn']
     })
   }
 
-  async createAbsence (absenceData: z.infer<typeof CreateAbsence>) {
-    absenceData.startDate = moment(absenceData.startDate, this.dateFormat)
-      .utc(true)
-      .format()
-    absenceData.endDate = moment(absenceData.endDate, this.dateFormat)
-      .utc(true)
-      .format()
-    const passFormat = CreateAbsence.safeParse(absenceData)
-    if (!passFormat.success) { throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE) }
-    absenceData = passFormat.data
+  async createAbsence (absenceData: CreateAbsenceDto) {
     if (moment(absenceData.startDate).isAfter(absenceData.endDate)) {
-      throw new HttpException(
-        'StartDate cannot be greater than EndDate',
-        HttpStatus.NOT_ACCEPTABLE
-      )
+      startDateError()
     }
-    const gmpFound = await this.gmpsService.findOne({
-      where: { id: absenceData.gmpId }
-    })
-    if (!gmpFound) { throw new HttpException('Gmp not found', HttpStatus.NOT_ACCEPTABLE) }
-    const turnFound = await this.turnsService.findOne({
-      where: { id: absenceData.turnId }
-    })
-    if (!turnFound) { throw new HttpException('Turn not found', HttpStatus.NOT_ACCEPTABLE) }
+    await this.gmpsProvider.findOne({ where: { id: absenceData.gmpId } })
+    await this.turnsProvider.findOne({ where: { id: absenceData.turnId } })
     return await this.absencesService.insert(absenceData)
   }
 
   async updateAbsense (
     absenceId: number,
-    absenceData: z.infer<typeof UpdateAbsence>
+    absenceData: UpdateAbsenceDto
   ) {
-    if (absenceData?.startDate) {
-      absenceData.startDate = moment(absenceData.startDate, this.dateFormat)
-        .utc(true)
-        .format()
-    }
-    if (absenceData?.endDate) {
-      absenceData.endDate = moment(absenceData.endDate, this.dateFormat)
-        .utc(true)
-        .format()
-    }
-    const passFormat = UpdateAbsence.safeParse(absenceData)
-    if (!passFormat.success) { throw new HttpException('Invalid format', HttpStatus.NOT_ACCEPTABLE) }
-    absenceData = passFormat.data
-    const absenceFound = await this.absencesService.findOne({
-      where: { id: absenceId }
-    })
-    if (!absenceFound) { throw new HttpException('Absence not found', HttpStatus.NOT_FOUND) }
+    const absenceFound = await this.findOne({ where: { id: absenceId } })
     if ('gmpId' in absenceData) {
-      const gmpFound = await this.gmpsService.findOne({
-        where: { id: absenceData.gmpId }
-      })
-      if (!gmpFound) { throw new HttpException('Gmp not found', HttpStatus.NOT_ACCEPTABLE) }
+      await this.gmpsProvider.findOne({ where: { id: absenceData.gmpId } })
     }
     if ('turnId' in absenceData) {
-      const turnFound = await this.turnsService.findOne({
-        where: { id: absenceData.turnId }
-      })
-      if (!turnFound) { throw new HttpException('Turn not found', HttpStatus.NOT_ACCEPTABLE) }
+      await this.turnsProvider.findOne({ where: { id: absenceData.turnId } })
     }
     if (
       moment(absenceData?.startDate ?? absenceFound.startDate).isAfter(
         absenceData?.endDate ?? absenceFound.endDate
       )
-    ) { throw new HttpException('Invalid dates', HttpStatus.NOT_ACCEPTABLE) }
+    ) { invalidDatesError() }
     return await this.absencesService.update(absenceId, absenceData)
   }
 
   async deleteAbsence (absenceId: number) {
-    const absenceFound = await this.absencesService.delete(absenceId)
-    if (absenceFound.affected == 0) { throw new HttpException('Absence not found', HttpStatus.NOT_FOUND) }
-    return absenceFound
+    await this.findOne({ where: { id: absenceId } })
+    return await this.absencesService.delete(absenceId)
   }
 }

@@ -4,58 +4,61 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   UseGuards
 } from '@nestjs/common'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
 import { UpdateResult } from 'typeorm'
-import { z } from 'zod'
-import { Absence } from './abcense.entity'
 import { AbsencesProvider } from './absences.service'
-import { CreateAbsence } from './schemas/create_absence.schema'
-import { UpdateAbsence } from './schemas/update_absence.schema'
+import { CreateAbsenceDto } from './dtos/create_absence.dto'
+import { FindAbsenceDto } from './dtos/find_absence.dto'
+import { UpdateAbsenceDto } from './dtos/update_absence.dto'
 
 @UseGuards(AccessTokenGuard)
+@ApiBearerAuth()
+@ApiTags('absences')
 @Controller('absences')
 export class AbsencesController {
   constructor (private readonly absencesProvider: AbsencesProvider) {}
 
   @Post()
-  async getAbsences (@Body() findManyOptions: Absence) {
+  async getAbsences (@Body() findManyOptions: FindAbsenceDto) {
     return await this.absencesProvider.getAbsences(findManyOptions)
   }
 
   @Post('/all')
-  async getAbsencesWithRelations (@Body() findManyOptions: Absence) {
+  async getAbsencesWithRelations (@Body() findManyOptions: FindAbsenceDto) {
     return await this.absencesProvider.getAbsencesWithRelations(findManyOptions)
   }
 
   @Post('/create')
-  async createAbsence (@Body() absenceData: z.infer<typeof CreateAbsence>) {
+  async createAbsence (@Body() absenceData: CreateAbsenceDto) {
     return await this.absencesProvider.createAbsence(absenceData)
   }
 
   @Get('/:id')
-  async getAbsence (@Param('id') absenceId: number) {
+  async getAbsence (@Param('id', ParseIntPipe) absenceId: number) {
     return await this.absencesProvider.getAbsence(absenceId)
   }
 
   @Get('/:id/all')
-  async getAbsenceWithRelations (@Param('id') absenceId: number) {
+  async getAbsenceWithRelations (@Param('id', ParseIntPipe) absenceId: number) {
     return await this.absencesProvider.getAbsenceWithRelations(absenceId)
   }
 
   @Patch('/:id')
   async updateAbsence (
-    @Param('id') absenceId: number,
-      @Body() absenceData: z.infer<typeof UpdateAbsence>
+    @Param('id', ParseIntPipe) absenceId: number,
+      @Body() absenceData: UpdateAbsenceDto
   ): Promise<UpdateResult> {
     return await this.absencesProvider.updateAbsense(absenceId, absenceData)
   }
 
   @Delete('/:id')
-  async deleteAbsence (@Param('id') absenceId: number) {
+  async deleteAbsence (@Param('id', ParseIntPipe) absenceId: number) {
     return await this.absencesProvider.deleteAbsence(absenceId)
   }
 }
