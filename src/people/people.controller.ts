@@ -9,12 +9,14 @@ import {
   Post,
   UseGuards
 } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
 import { CreatePeopleDto } from './dtos/create_people.dto'
 import { FindPeopleDto } from './dtos/find_people.dto'
 import { UpdatePeopleDto } from './dtos/update_people.dto'
 import { PeopleProvider } from './people.service'
 
+@ApiTags('people')
 @Controller('people')
 export class PeopleController {
   constructor (private readonly peopleProvider: PeopleProvider) {}

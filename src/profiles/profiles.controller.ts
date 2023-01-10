@@ -9,12 +9,13 @@ import {
   Post,
   UseGuards
 } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
 import { CreateProfileDto } from './dtos/create_profile.dto'
 import { FindProfileDto } from './dtos/find_profile.dto'
 import { UpdateProfileDto } from './dtos/update_profile.dto'
 import { ProfilesProvider } from './profiles.service'
-
+@ApiTags('profiles')
 @Controller('profiles')
 export class ProfilesController {
   constructor (private readonly profilesProvider: ProfilesProvider) {}

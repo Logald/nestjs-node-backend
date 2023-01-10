@@ -9,6 +9,7 @@ import {
   Post,
   UseGuards
 } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
 import { CreateMatterDto } from './dtos/create_matter.dto'
 import { FindMatterDto } from './dtos/find_matter.dto'
@@ -16,6 +17,7 @@ import { UpdateMatterDto } from './dtos/update_matter.dto'
 import { MattersProvider } from './matters.service'
 
 @UseGuards(AccessTokenGuard)
+@ApiTags('matters')
 @Controller('matters')
 export class MattersController {
   constructor (private readonly matterProvider: MattersProvider) {}

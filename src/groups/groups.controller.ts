@@ -9,6 +9,7 @@ import {
   Post,
   UseGuards
 } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
 import { CreateGroupDto } from './dtos/create_group.dto'
 import { FindGroupDto } from './dtos/find_group.dto'
@@ -16,6 +17,7 @@ import { UpdateGroupDto } from './dtos/update_group.dto'
 import { GroupsProvider } from './groups.service'
 
 @UseGuards(AccessTokenGuard)
+@ApiTags('groups')
 @Controller('groups')
 export class GroupsController {
   constructor (private readonly groupsProvider: GroupsProvider) {}

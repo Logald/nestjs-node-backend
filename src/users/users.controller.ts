@@ -1,11 +1,12 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from './accessTokenGuard'
 import { CreateUserDto } from './dtos/create_user.dto'
 import { FindUserDto } from './dtos/find_user.dto'
 import { LoginDto } from './dtos/login.dto'
 import { UpdateUserDto } from './dtos/update_user.dto'
 import { UsersProvider } from './users.service'
-
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor (

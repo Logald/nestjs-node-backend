@@ -9,6 +9,7 @@ import {
   Post,
   UseGuards
 } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 import { AccessTokenGuard } from 'src/users/accessTokenGuard'
 import { CreateGmpDto } from './dtos/create_gmp.dto'
 import { FindGmpDto } from './dtos/find_gmp.dto'
@@ -16,6 +17,7 @@ import { UpdateGmpDto } from './dtos/update_gmp.dto'
 import { GmpsProvider } from './gmps.service'
 
 @UseGuards(AccessTokenGuard)
+@ApiTags('gmps')
 @Controller('gmps')
 export class GmpsController {
   constructor (private readonly gmpsProvider: GmpsProvider) {}
