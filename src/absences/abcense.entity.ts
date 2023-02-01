@@ -1,30 +1,40 @@
-import { Gmp } from 'src/gmps/gmp.entity'
-import { Turn } from 'src/turns/turn.entity'
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Gmp } from 'src/gmps/gmp.entity';
+import { Turn } from 'src/turns/turn.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'absence' })
+@ObjectType()
 export class Absence {
   @PrimaryGeneratedColumn()
-    id: number
+  @Field(() => Int)
+  id: number;
 
   @Column()
-    gmpId: number
+  @Field(() => Int)
+  gmpId: number;
 
   @ManyToOne(() => Gmp, { onDelete: 'CASCADE' })
-    gmp: Gmp
+  @Field(() => Gmp)
+  gmp: Gmp;
 
   @Column()
-    turnId: number
+  @Field(() => Int)
+  turnId: number;
 
   @ManyToOne(() => Turn, { onDelete: 'CASCADE' })
-    turn: Turn
+  @Field(() => Turn)
+  turn: Turn;
 
   @Column({ type: 'datetime' })
-    startDate: Date
+  @Field(() => Date)
+  startDate: Date;
 
   @Column({ type: 'datetime' })
-    endDate: Date
+  @Field(() => Date)
+  endDate: Date;
 
   @Column({ type: 'boolean', default: true })
-    active: boolean
+  @Field()
+  active: boolean;
 }

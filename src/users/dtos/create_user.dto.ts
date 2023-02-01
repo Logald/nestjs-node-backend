@@ -1,24 +1,37 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { IsBoolean, IsInt, IsOptional, IsString, Min, MinLength } from 'class-validator'
+import { Field, InputType, Int } from '@nestjs/graphql';
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsBoolean,
+  IsInt,
+  IsOptional,
+  IsString,
+  Min,
+  MinLength,
+} from 'class-validator';
 
+@InputType()
 export class CreateUserDto {
   @IsString()
   @MinLength(4)
   @ApiProperty({ minLength: 4 })
-    password: string
+  @Field()
+  password: string;
 
   @IsInt()
   @Min(1)
   @ApiProperty({ minimum: 1 })
-    personId: number
+  @Field(() => Int)
+  personId: number;
 
   @IsInt()
   @Min(1)
   @ApiProperty({ minimum: 1 })
-    profileId: number
+  @Field(() => Int)
+  profileId: number;
 
   @IsOptional()
   @IsBoolean()
   @ApiProperty({ required: false, default: true })
-    active: boolean
+  @Field({ nullable: true })
+  active: boolean;
 }

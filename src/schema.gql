@@ -1,0 +1,375 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Turn {
+  id: Int!
+  name: String!
+}
+
+type Group {
+  id: Int!
+  grade: Int!
+  name: String!
+  description: String
+  turnId: Int!
+  turn: Turn!
+  active: Boolean!
+}
+
+type Matter {
+  id: Int!
+  name: String!
+  description: String
+}
+
+type MG {
+  id: Int!
+  matterId: Int!
+  matter: Matter!
+  groupId: Int!
+  group: Group!
+}
+
+type Person {
+  id: Int!
+  name: String!
+  lastname: String!
+  ci: Int!
+}
+
+type Proffessor {
+  id: Int!
+  personId: Int!
+  person: Person!
+  active: Boolean!
+}
+
+type Gmp {
+  id: Int!
+  mgId: Int!
+  mg: MG!
+  proffessorId: Int!
+  proffessor: Proffessor!
+  active: Boolean!
+}
+
+type Absence {
+  id: Int!
+  gmpId: Int!
+  gmp: Gmp!
+  turnId: Int!
+  turn: Turn!
+  startDate: DateTime!
+  endDate: DateTime!
+  active: Boolean!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Profile {
+  id: Int!
+  type: String!
+}
+
+type Specialty {
+  id: Int!
+  matterId: Int!
+  matter: Matter!
+  proffessorId: Int!
+  proffessor: Proffessor!
+}
+
+type User {
+  id: Int!
+  personId: Int!
+  person: Person!
+  profileId: Int!
+  profile: Profile!
+  active: Boolean!
+}
+
+type LoginResponseDto {
+  token: String!
+}
+
+type Query {
+  getMatters(findOptions: FindMatterDto): [Matter!]!
+  getMatter(matterId: Int!): Matter!
+  getTurns(findOptions: FindTurnDto): [Turn!]!
+  getTurn(turnId: Int!): Turn!
+  getGroups(findOptions: FindGroupDto): [Group!]!
+  getGroup(groupId: Int!): Group!
+  getPeople(findOptions: FindPeopleDto): [Person!]!
+  getPerson(personId: Int!): Person!
+  getProffessors(findOptions: FindProffessorDto): [Proffessor!]!
+  getProffessor(proffessorId: Int!): Proffessor!
+  getSpecialties(findOptions: FindSpecialtyDto): [Specialty!]!
+  getSpecialty(specialtyId: Int!): Specialty!
+  getMgs(findOptions: FindMgDto): [MG!]!
+  getMg(mgId: Int!): MG!
+  getGmps(findOptions: FindGmpDto): [Gmp!]!
+  getGmp(gmpId: Int!): Gmp!
+  getAbsences(findOptions: FindAbsenceDto): [Absence!]!
+  getAbsence(absenceId: Int!): Absence!
+  getProfiles(findOptions: FindProfileDto): [Profile!]!
+  getProfile(profileId: Int!): Profile!
+  getUsers(findOptions: FindUserDto): [User!]!
+  getUser(userId: Int!): User!
+}
+
+input FindMatterDto {
+  name: String
+  description: String
+  id: Int
+}
+
+input FindTurnDto {
+  name: String
+  id: Int
+}
+
+input FindGroupDto {
+  grade: Int
+  name: String
+  description: String
+  turnId: Int
+  active: Boolean
+  id: Int
+  turn: FindTurnDto
+}
+
+input FindPeopleDto {
+  name: String
+  lastname: String
+  ci: Int
+  id: Int
+}
+
+input FindProffessorDto {
+  personId: Int
+  active: Boolean
+  id: Int
+  person: FindPeopleDto
+}
+
+input FindSpecialtyDto {
+  matterId: Int
+  proffessorId: Int
+  id: Int
+  matter: FindMatterDto
+  proffessor: FindProffessorDto
+}
+
+input FindMgDto {
+  matterId: Int
+  groupId: Int
+  id: Int
+  matter: FindMatterDto
+  group: FindGroupDto
+}
+
+input FindGmpDto {
+  mgId: Int
+  proffessorId: Int
+  active: Boolean
+  id: Int
+  mg: FindMgDto
+  proffessor: FindProffessorDto
+}
+
+input FindAbsenceDto {
+  gmpId: Int
+  turnId: Int
+  startDate: String
+  endDate: String
+  active: Boolean
+  id: Int
+  turn: FindTurnDto
+}
+
+input FindProfileDto {
+  type: String
+  id: Int
+}
+
+input FindUserDto {
+  password: String
+  personId: Int
+  profileId: Int
+  active: Boolean
+  id: Int
+  person: FindPeopleDto
+  profile: FindProfileDto
+}
+
+type Mutation {
+  createMatter(matterData: CreateMatterDto!): Boolean!
+  updateMatter(matterId: Int!, matterData: UpdateMatterDto!): Boolean!
+  deleteMatter(matterId: Int!): Boolean!
+  createTurn(turnData: CreateTurnDto!): Boolean!
+  updateTurn(turnId: Int!, turnData: UpdateTurnDto!): Boolean!
+  deleteTurn(turnId: Int!): Boolean!
+  createGroup(groupData: CreateGroupDto!): Boolean!
+  updateGroup(groupId: Int!, groupData: UpdateGroupDto!): Boolean!
+  deleteGroup(groupId: Int!): Boolean!
+  createPerson(personData: CreatePeopleDto!): Boolean!
+  updatePerson(personId: Int!, personData: UpdatePeopleDto!): Boolean!
+  deletePerson(personId: Int!): Boolean!
+  createProffessor(proffessorData: CreateProffessorDto!): Boolean!
+  updateProffessor(proffessorId: Int!, proffessorData: UpdateProffessorDto!): Boolean!
+  deleteProffessor(proffessorId: Int!): Boolean!
+  createSpecialty(specialtyData: CreateSpecialtyDto!): Boolean!
+  updateSpecialty(specialtyId: Int!, specialtyData: UpdateSpecialtyDto!): Boolean!
+  deleteSpecialty(specialtyId: Int!): Boolean!
+  createMg(mgData: CreateMgDto!): Boolean!
+  updateMg(mgId: Int!, mgData: UpdateMgDto!): Boolean!
+  deleteMg(mgId: Int!): Boolean!
+  createGmp(gmpData: CreateGmpDto!): Boolean!
+  updateGmp(gmpId: Int!, gmpData: UpdateGmpDto!): Boolean!
+  deleteGmp(gmpId: Int!): Boolean!
+  createAbsence(absenceData: CreateAbsenceDto!): Boolean!
+  updateAbsence(absenceId: Int!, absenceData: UpdateAbsenceDto!): Boolean!
+  deleteAbsence(absenceId: Int!): Boolean!
+  createProfile(profileData: CreateProfileDto!): Boolean!
+  updateProfile(profileId: Int!, profileData: UpdateProfileDto!): Boolean!
+  deleteProfile(profileId: Int!): Boolean!
+  signIn(loginData: LoginDto!): LoginResponseDto!
+  signUp(userData: CreateUserDto!): Boolean!
+  updateUser(userId: Int!, userData: UpdateUserDto!): Boolean!
+  deleteUser(userId: Int!): Boolean!
+}
+
+input CreateMatterDto {
+  name: String!
+  description: String
+}
+
+input UpdateMatterDto {
+  name: String
+  description: String
+}
+
+input CreateTurnDto {
+  name: String!
+}
+
+input UpdateTurnDto {
+  name: String
+}
+
+input CreateGroupDto {
+  grade: Int!
+  name: String!
+  description: String
+  turnId: Int!
+  active: Boolean
+}
+
+input UpdateGroupDto {
+  grade: Int
+  name: String
+  description: String
+  turnId: Int
+  active: Boolean
+}
+
+input CreatePeopleDto {
+  name: String!
+  lastname: String!
+  ci: Int!
+}
+
+input UpdatePeopleDto {
+  name: String
+  lastname: String
+  ci: Int
+}
+
+input CreateProffessorDto {
+  personId: Int!
+  active: Boolean
+}
+
+input UpdateProffessorDto {
+  personId: Int
+  active: Boolean
+}
+
+input CreateSpecialtyDto {
+  matterId: Int!
+  proffessorId: Int!
+}
+
+input UpdateSpecialtyDto {
+  matterId: Int
+  proffessorId: Int
+}
+
+input CreateMgDto {
+  matterId: Int!
+  groupId: Int!
+}
+
+input UpdateMgDto {
+  matterId: Int
+  groupId: Int
+}
+
+input CreateGmpDto {
+  mgId: Int!
+  proffessorId: Int!
+  active: Boolean
+}
+
+input UpdateGmpDto {
+  mgId: Int
+  proffessorId: Int
+  active: Boolean
+}
+
+input CreateAbsenceDto {
+  gmpId: Int!
+  turnId: Int!
+  startDate: String!
+  endDate: String!
+  active: Boolean
+}
+
+input UpdateAbsenceDto {
+  gmpId: Int
+  turnId: Int
+  startDate: String
+  endDate: String
+  active: Boolean
+}
+
+input CreateProfileDto {
+  type: String!
+}
+
+input UpdateProfileDto {
+  type: String
+}
+
+input LoginDto {
+  ci: Int!
+  password: String!
+}
+
+input CreateUserDto {
+  password: String!
+  personId: Int!
+  profileId: Int!
+  active: Boolean
+}
+
+input UpdateUserDto {
+  password: String
+  personId: Int
+  profileId: Int
+  active: Boolean
+}

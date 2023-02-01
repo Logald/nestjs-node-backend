@@ -7,57 +7,57 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  UseGuards
-} from '@nestjs/common'
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
-import { AccessTokenGuard } from 'src/users/accessTokenGuard'
-import { CreateMgDto } from './dtos/create_mg.dto'
-import { FindMgDto } from './dtos/find_mg.dto'
-import { UpdateMgDto } from './dtos/update_mg.dto'
-import { MGProvider } from './mgs.service'
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AccessTokenGuard } from 'src/users/accessTokenGuard';
+import { CreateMgDto } from './dtos/create_mg.dto';
+import { FindMgDto } from './dtos/find_mg.dto';
+import { UpdateMgDto } from './dtos/update_mg.dto';
+import { MGProvider } from './mgs.service';
 
 @UseGuards(AccessTokenGuard)
 @ApiBearerAuth()
 @ApiTags('mgs')
 @Controller('mgs')
 export class MGController {
-  constructor (private readonly mgProvider: MGProvider) {}
+  constructor(private readonly mgProvider: MGProvider) {}
 
   @Post()
-  async getMgs (@Body() mgsFindManyOptions: FindMgDto) {
-    return await this.mgProvider.getMgs(mgsFindManyOptions)
+  async getMgs(@Body() mgsFindManyOptions: FindMgDto) {
+    return await this.mgProvider.getMgs(mgsFindManyOptions);
   }
 
   @Post('/all')
-  async getMgsWithRelations (@Body() mgsFindManyOptions: FindMgDto) {
-    return await this.mgProvider.getMgsWithRelations(mgsFindManyOptions)
+  async getMgsWithRelations(@Body() mgsFindManyOptions: FindMgDto) {
+    return await this.mgProvider.getMgsWithRelations(mgsFindManyOptions);
   }
 
   @Post('/create')
-  async createMg (@Body() mgData: CreateMgDto) {
-    return await this.mgProvider.createMg(mgData)
+  async createMg(@Body() mgData: CreateMgDto) {
+    return await this.mgProvider.createMg(mgData);
   }
 
   @Get('/:id')
-  async getMg (@Param('id', ParseIntPipe) mgId: number) {
-    return await this.mgProvider.getMg(mgId)
+  async getMg(@Param('id', ParseIntPipe) mgId: number) {
+    return await this.mgProvider.getMg(mgId);
   }
 
   @Get('/:id/all')
-  async getMgWithRelations (@Param('id', ParseIntPipe) mgId: number) {
-    return await this.mgProvider.getMgWithRelations(mgId)
+  async getMgWithRelations(@Param('id', ParseIntPipe) mgId: number) {
+    return await this.mgProvider.getMgWithRelations(mgId);
   }
 
   @Patch('/:id')
-  async updateMg (
-  @Param('id', ParseIntPipe) mgId: number,
-    @Body() mgData: UpdateMgDto
+  async updateMg(
+    @Param('id', ParseIntPipe) mgId: number,
+    @Body() mgData: UpdateMgDto,
   ) {
-    return await this.mgProvider.updateMg(mgId, mgData)
+    return await this.mgProvider.updateMg(mgId, mgData);
   }
 
   @Delete('/:id')
-  async deleteMg (@Param('id', ParseIntPipe) mgId: number) {
-    return await this.mgProvider.deleteMg(mgId)
+  async deleteMg(@Param('id', ParseIntPipe) mgId: number) {
+    return await this.mgProvider.deleteMg(mgId);
   }
 }

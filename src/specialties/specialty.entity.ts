@@ -1,5 +1,6 @@
-import { Matter } from 'src/matters/matter.entity'
-import { Proffessor } from 'src/proffessors/proffessor.entity'
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Matter } from 'src/matters/matter.entity';
+import { Proffessor } from 'src/proffessors/proffessor.entity';
 import {
   Column,
   Entity,
@@ -7,24 +8,31 @@ import {
   JoinTable,
   ManyToOne,
   PrimaryGeneratedColumn
-} from 'typeorm'
+} from 'typeorm';
+
 @Entity({ name: 'specialty' })
 @Index(['matterId', 'proffessorId'], { unique: true })
+@ObjectType()
 export class Specialty {
   @PrimaryGeneratedColumn()
-    id: number
+  @Field(() => Int)
+  id: number;
 
   @Column({ unique: false })
-    matterId: number
+  @Field(() => Int)
+  matterId: number;
 
   @ManyToOne(() => Matter, { onDelete: 'CASCADE' })
   @JoinTable()
-    matter: Matter
+  @Field(() => Matter)
+  matter: Matter;
 
   @Column({ unique: false })
-    proffessorId: number
+  @Field(() => Int)
+  proffessorId: number;
 
   @ManyToOne(() => Proffessor, { onDelete: 'CASCADE' })
   @JoinTable()
-    proffessor: Proffessor
+  @Field(() => Proffessor)
+  proffessor: Proffessor;
 }

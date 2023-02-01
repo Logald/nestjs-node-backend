@@ -1,24 +1,30 @@
-import { Person } from 'src/people/person.entity'
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Person } from 'src/people/person.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn
-} from 'typeorm'
+} from 'typeorm';
 
+@ObjectType()
 @Entity({ name: 'proffessor' })
 export class Proffessor {
   @PrimaryGeneratedColumn()
-    id: number
+  @Field(() => Int)
+  id: number;
 
   @Column({ unique: true })
-    personId: number
+  @Field(() => Int)
+  personId: number;
 
   @OneToOne(() => Person, { onDelete: 'CASCADE' })
   @JoinColumn()
-    person: Person
+  @Field(() => Person)
+  person: Person;
 
   @Column({ default: true })
-    active: boolean
+  @Field()
+  active: boolean;
 }

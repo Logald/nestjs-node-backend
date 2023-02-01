@@ -1,0 +1,31 @@
+{
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    },
+    "ignore": [
+      "./node_modules/**/*.*",
+      "./dist/**/*.*",
+      "./.pnpm-store/**/*.*"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentSize": 2,
+    "indentStyle": "space",
+    "lineWidth": 80,
+    "ignore": [
+      "./node_modules/**/*.*",
+      "./dist/**/*.*",
+      "./.pnpm-store/**/*.*"
+    ],
+    "formatWithErrors": true
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "semicolons": "always"
+    }
+  }
+}

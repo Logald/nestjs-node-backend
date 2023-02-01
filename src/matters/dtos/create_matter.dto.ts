@@ -1,14 +1,18 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { IsOptional, IsString, MinLength } from 'class-validator'
+import { Field, InputType } from '@nestjs/graphql';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional, IsString, MinLength } from 'class-validator';
 
+@InputType()
 export class CreateMatterDto {
   @IsString()
   @MinLength(1)
   @ApiProperty({ minLength: 1 })
-    name: string
+  @Field()
+  name: string;
 
   @IsOptional()
   @IsString()
   @ApiProperty({ required: false })
-    description: string
+  @Field({ nullable: true })
+  description: string;
 }
