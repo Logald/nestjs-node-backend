@@ -1,10 +1,10 @@
-import { ValidationPipe } from '@nestjs/common'
-import { NestFactory } from '@nestjs/core'
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import { AppModule } from './app.module'
+import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AppModule } from './app.module';
 
-async function bootstrap () {
-  const app = await NestFactory.create(AppModule)
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
   const config = new DocumentBuilder()
     .setTitle('Tecnicatura 2022 Backend Node')
     .setDescription('Backend')
@@ -21,19 +21,22 @@ async function bootstrap () {
     .addTag('profiles')
     .addTag('specialities')
     .addTag('turns')
-    .build()
-  const document = SwaggerModule.createDocument(app, config)
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, {
     explorer: true,
     swaggerOptions: {
-      filter: true
-    }
-  })
-  app.useGlobalPipes(new ValidationPipe({
-    transform: true,
-    whitelist: true,
-    forbidNonWhitelisted: true
-  }))
-  await app.listen(3000)
+      filter: true,
+    },
+  });
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
+  app.enableCors();
+  await app.listen(3000);
 }
-bootstrap()
+bootstrap();

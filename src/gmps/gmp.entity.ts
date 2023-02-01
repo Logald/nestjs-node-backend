@@ -1,5 +1,6 @@
-import { MG } from 'src/mgs/mg.entity'
-import { Proffessor } from 'src/proffessors/proffessor.entity'
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { MG } from 'src/mgs/mg.entity';
+import { Proffessor } from 'src/proffessors/proffessor.entity';
 import {
   Column,
   Entity,
@@ -7,28 +8,35 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn
-} from 'typeorm'
+} from 'typeorm';
 
 @Entity({ name: 'gmp' })
 @Index(['mgId', 'proffessorId'], { unique: true })
+@ObjectType()
 export class Gmp {
   @PrimaryGeneratedColumn()
-    id: number
+  @Field(() => Int)
+  id: number;
 
   @Column()
-    mgId: number
+  @Field(() => Int)
+  mgId: number;
 
   @ManyToOne(() => MG, { onDelete: 'CASCADE' })
   @JoinColumn()
-    mg: MG
+  @Field(() => MG)
+  mg: MG;
 
   @Column()
-    proffessorId: number
+  @Field(() => Int)
+  proffessorId: number;
 
   @ManyToOne(() => Proffessor, { orphanedRowAction: 'nullify' })
   @JoinColumn()
-    proffessor: Proffessor
+  @Field(() => Proffessor)
+  proffessor: Proffessor;
 
   @Column({ type: 'boolean', default: true })
-    active: boolean
+  @Field()
+  active: boolean;
 }

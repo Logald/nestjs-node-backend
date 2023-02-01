@@ -1,27 +1,37 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { IsBoolean, IsDateString, IsInt, IsOptional, Min } from 'class-validator'
+import { Field, InputType, Int } from '@nestjs/graphql';
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsBoolean, IsDateString, IsInt, IsOptional,
+  Min
+} from 'class-validator';
 
+@InputType()
 export class CreateAbsenceDto {
   @IsInt()
   @Min(1)
   @ApiProperty({ minimum: 1 })
-    gmpId: number
+  @Field(() => Int)
+  gmpId: number;
 
   @IsInt()
   @Min(1)
   @ApiProperty({ minimum: 1 })
-    turnId: number
+  @Field(() => Int)
+  turnId: number;
 
   @IsDateString({ strictSeparator: true })
   @ApiProperty()
-    startDate: Date
+  @Field(() => String)
+  startDate: Date;
 
   @IsDateString({ strictSeparator: true })
   @ApiProperty()
-    endDate: Date
+  @Field(() => String)
+  endDate: Date;
 
   @IsOptional()
   @IsBoolean()
   @ApiProperty({ required: false })
-    active: boolean
+  @Field({ nullable: true })
+  active: boolean;
 }

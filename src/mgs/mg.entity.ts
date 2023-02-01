@@ -1,5 +1,6 @@
-import { Group } from 'src/groups/group.entity'
-import { Matter } from 'src/matters/matter.entity'
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Group } from 'src/groups/group.entity';
+import { Matter } from 'src/matters/matter.entity';
 import {
   Column,
   Entity,
@@ -7,25 +8,31 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn
-} from 'typeorm'
+} from 'typeorm';
 
 @Entity({ name: 'mg' })
 @Index(['matterId', 'groupId'], { unique: true })
+@ObjectType()
 export class MG {
   @PrimaryGeneratedColumn()
-    id: number
+  @Field(() => Int)
+  id: number;
 
   @Column()
-    matterId: number
+  @Field(() => Int)
+  matterId: number;
 
   @ManyToOne(() => Matter, { onDelete: 'CASCADE' })
   @JoinColumn()
-    matter: Matter
+  @Field(() => Matter)
+  matter: Matter;
 
   @Column()
-    groupId: number
+  @Field(() => Int)
+  groupId: number;
 
   @ManyToOne(() => Group, { onDelete: 'CASCADE' })
   @JoinColumn()
-    group: Group
+  @Field(() => Group)
+  group: Group;
 }

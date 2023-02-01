@@ -1,27 +1,36 @@
-import { Person } from 'src/people/person.entity'
-import { Profile } from 'src/profiles/profile.entity'
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Person } from 'src/people/person.entity';
+import { Profile } from 'src/profiles/profile.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'user' })
+@ObjectType()
 export class User {
   @PrimaryGeneratedColumn()
-    id: number
+  @Field((type) => Int)
+  id: number;
 
   @Column()
-    password: string
+  // @Field()
+  password: string;
 
   @Column({ unique: true })
-    personId: number
+  @Field(() => Int)
+  personId: number;
 
   @ManyToOne(() => Person)
-    person: Person
+  @Field(() => Person)
+  person: Person;
 
   @Column()
-    profileId: number
+  @Field(() => Int)
+  profileId: number;
 
   @ManyToOne(() => Profile)
-    profile: Profile
+  @Field(() => Profile)
+  profile: Profile;
 
   @Column({ type: 'boolean', default: true })
-    active: boolean
+  @Field({ defaultValue: true })
+  active: boolean;
 }

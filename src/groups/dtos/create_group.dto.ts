@@ -1,29 +1,43 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { IsBoolean, IsInt, IsOptional, IsString, Min, MinLength } from 'class-validator'
+import { Field, InputType, Int } from '@nestjs/graphql';
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsBoolean,
+  IsInt,
+  IsOptional,
+  IsString,
+  Min,
+  MinLength
+} from 'class-validator';
 
+@InputType()
 export class CreateGroupDto {
   @IsInt()
   @Min(1)
   @ApiProperty({ minimum: 1 })
-    grade: number
+  @Field(() => Int)
+  grade: number;
 
   @IsString()
   @MinLength(1)
   @ApiProperty({ minimum: 1 })
-    name: string
+  @Field()
+  name: string;
 
   @IsOptional()
   @IsString()
   @ApiProperty({ required: false })
-    description: string
+  @Field({ nullable: true })
+  description: string;
 
   @IsInt()
   @Min(1)
   @ApiProperty({ minimum: 1 })
-    turnId: number
+  @Field(() => Int)
+  turnId: number;
 
   @IsOptional()
   @IsBoolean()
   @ApiProperty({ required: false })
-    active: boolean
+  @Field({ nullable: true })
+  active: boolean;
 }

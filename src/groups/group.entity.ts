@@ -1,33 +1,42 @@
-import { Turn } from 'src/turns/turn.entity'
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Turn } from 'src/turns/turn.entity';
 import {
   Column,
   Entity,
   Index,
   ManyToOne,
   PrimaryGeneratedColumn
-} from 'typeorm'
+} from 'typeorm';
 
 @Entity({ name: 'group' })
 @Index(['grade', 'name'], { unique: true })
+@ObjectType()
 export class Group {
   @PrimaryGeneratedColumn()
-    id: number
+  @Field(() => Int)
+  id: number;
 
   @Column({ type: 'int' })
-    grade: number
+  @Field(() => Int)
+  grade: number;
 
   @Column({ type: 'varchar' })
-    name: string
+  @Field()
+  name: string;
 
   @Column({ type: 'varchar', nullable: true })
-    description: string
+  @Field({ nullable: true })
+  description: string;
 
   @Column()
-    turnId: number
+  @Field(() => Int)
+  turnId: number;
 
   @ManyToOne(() => Turn, { onDelete: 'CASCADE' })
-    turn: Turn
+  @Field(() => Turn)
+  turn: Turn;
 
   @Column({ default: true })
-    active: boolean
+  @Field({ defaultValue: true })
+  active: boolean;
 }
