@@ -2,6 +2,7 @@ import { Field, InputType, Int } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean, IsDateString, IsInt, IsOptional,
+  IsString,
   Min
 } from 'class-validator';
 
@@ -28,6 +29,11 @@ export class CreateAbsenceDto {
   @ApiProperty()
   @Field(() => String)
   endDate: Date;
+
+  @IsOptional()
+  @IsString()
+  @Field()
+  reason: string;
 
   @IsOptional()
   @IsBoolean()
