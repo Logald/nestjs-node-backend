@@ -34,6 +34,10 @@ export class Absence {
   @Field(() => Date)
   endDate: Date;
 
+  @Column()
+  @Field()
+  reason: string;
+
   @Column({ type: 'boolean', default: true })
   @Field()
   active: boolean;
