@@ -31,17 +31,11 @@ type MG {
   group: Group!
 }
 
-type Person {
+type Proffessor {
   id: Int!
   name: String!
   lastname: String!
   ci: Int!
-}
-
-type Proffessor {
-  id: Int!
-  personId: Int!
-  person: Person!
   active: Boolean!
 }
 
@@ -71,11 +65,6 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Profile {
-  id: Int!
-  type: String!
-}
-
 type Specialty {
   id: Int!
   matterId: Int!
@@ -86,10 +75,7 @@ type Specialty {
 
 type User {
   id: Int!
-  personId: Int!
-  person: Person!
-  profileId: Int!
-  profile: Profile!
+  name: String!
   active: Boolean!
 }
 
@@ -104,8 +90,6 @@ type Query {
   getTurn(turnId: Int!): Turn!
   getGroups(findOptions: FindGroupDto): [Group!]!
   getGroup(groupId: Int!): Group!
-  getPeople(findOptions: FindPeopleDto): [Person!]!
-  getPerson(personId: Int!): Person!
   getProffessors(findOptions: FindProffessorDto): [Proffessor!]!
   getProffessor(proffessorId: Int!): Proffessor!
   getSpecialties(findOptions: FindSpecialtyDto): [Specialty!]!
@@ -116,8 +100,6 @@ type Query {
   getGmp(gmpId: Int!): Gmp!
   getAbsences(findOptions: FindAbsenceDto): [Absence!]!
   getAbsence(absenceId: Int!): Absence!
-  getProfiles(findOptions: FindProfileDto): [Profile!]!
-  getProfile(profileId: Int!): Profile!
   getUsers(findOptions: FindUserDto): [User!]!
   getUser(userId: Int!): User!
 }
@@ -143,18 +125,12 @@ input FindGroupDto {
   turn: FindTurnDto
 }
 
-input FindPeopleDto {
+input FindProffessorDto {
   name: String
   lastname: String
   ci: Int
-  id: Int
-}
-
-input FindProffessorDto {
-  personId: Int
   active: Boolean
   id: Int
-  person: FindPeopleDto
 }
 
 input FindSpecialtyDto {
@@ -193,19 +169,11 @@ input FindAbsenceDto {
   turn: FindTurnDto
 }
 
-input FindProfileDto {
-  type: String
-  id: Int
-}
-
 input FindUserDto {
+  name: String
   password: String
-  personId: Int
-  profileId: Int
   active: Boolean
   id: Int
-  person: FindPeopleDto
-  profile: FindProfileDto
 }
 
 type Mutation {
@@ -218,9 +186,6 @@ type Mutation {
   createGroup(groupData: CreateGroupDto!): Boolean!
   updateGroup(groupId: Int!, groupData: UpdateGroupDto!): Boolean!
   deleteGroup(groupId: Int!): Boolean!
-  createPerson(personData: CreatePeopleDto!): Boolean!
-  updatePerson(personId: Int!, personData: UpdatePeopleDto!): Boolean!
-  deletePerson(personId: Int!): Boolean!
   createProffessor(proffessorData: CreateProffessorDto!): Boolean!
   updateProffessor(proffessorId: Int!, proffessorData: UpdateProffessorDto!): Boolean!
   deleteProffessor(proffessorId: Int!): Boolean!
@@ -236,9 +201,6 @@ type Mutation {
   createAbsence(absenceData: CreateAbsenceDto!): Boolean!
   updateAbsence(absenceId: Int!, absenceData: UpdateAbsenceDto!): Boolean!
   deleteAbsence(absenceId: Int!): Boolean!
-  createProfile(profileData: CreateProfileDto!): Boolean!
-  updateProfile(profileId: Int!, profileData: UpdateProfileDto!): Boolean!
-  deleteProfile(profileId: Int!): Boolean!
   signIn(loginData: LoginDto!): LoginResponseDto!
   signUp(userData: CreateUserDto!): Boolean!
   updateUser(userId: Int!, userData: UpdateUserDto!): Boolean!
@@ -279,25 +241,17 @@ input UpdateGroupDto {
   active: Boolean
 }
 
-input CreatePeopleDto {
+input CreateProffessorDto {
   name: String!
   lastname: String!
   ci: Int!
-}
-
-input UpdatePeopleDto {
-  name: String
-  lastname: String
-  ci: Int
-}
-
-input CreateProffessorDto {
-  personId: Int!
   active: Boolean
 }
 
 input UpdateProffessorDto {
-  personId: Int
+  name: String
+  lastname: String
+  ci: Int
   active: Boolean
 }
 
@@ -351,29 +305,19 @@ input UpdateAbsenceDto {
   active: Boolean
 }
 
-input CreateProfileDto {
-  type: String!
-}
-
-input UpdateProfileDto {
-  type: String
-}
-
 input LoginDto {
-  ci: Int!
+  name: String!
   password: String!
 }
 
 input CreateUserDto {
+  name: String!
   password: String!
-  personId: Int!
-  profileId: Int!
   active: Boolean
 }
 
 input UpdateUserDto {
+  name: String
   password: String
-  personId: Int
-  profileId: Int
   active: Boolean
 }

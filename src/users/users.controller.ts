@@ -7,7 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  UseGuards,
+  UseGuards
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from './accessTokenGuard';
@@ -19,20 +19,13 @@ import { UsersProvider } from './users.service';
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersProvider: UsersProvider) {}
+  constructor(private readonly usersProvider: UsersProvider) { }
 
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
   @Post()
   async getUsers(@Body() findManyOptions: FindUserDto) {
     return await this.usersProvider.getUsers(findManyOptions);
-  }
-
-  @UseGuards(AccessTokenGuard)
-  @ApiBearerAuth()
-  @Post('/all')
-  async getUsersWithRelations(@Body() findManyOptions: FindUserDto) {
-    return await this.usersProvider.getUsersWithRelations(findManyOptions);
   }
 
   @Post('/signin')
@@ -50,13 +43,6 @@ export class UsersController {
   @Get('/:id')
   async getUser(@Param('id', ParseIntPipe) userId: number) {
     return await this.usersProvider.getUser(userId);
-  }
-
-  @UseGuards(AccessTokenGuard)
-  @ApiBearerAuth()
-  @Get('/:id/all')
-  async getUserWithRelations(@Param('id', ParseIntPipe) userId: number) {
-    return await this.usersProvider.getUserWithRelations(userId);
   }
 
   @UseGuards(AccessTokenGuard)

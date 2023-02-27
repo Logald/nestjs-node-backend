@@ -6,8 +6,6 @@ import { Matter } from 'src/matters/matter.entity';
 import { MattersProvider } from 'src/matters/matters.service';
 import { MG } from 'src/mgs/mg.entity';
 import { MGProvider } from 'src/mgs/mgs.service';
-import { PeopleProvider } from 'src/people/people.service';
-import { Person } from 'src/people/person.entity';
 import { Proffessor } from 'src/proffessors/proffessor.entity';
 import { ProffessorsProvider } from 'src/proffessors/proffessors.service';
 import { Turn } from 'src/turns/turn.entity';
@@ -18,9 +16,9 @@ import { GmpsResolver } from './gmps.resolver';
 import { GmpsProvider } from './gmps.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Gmp, MG, Proffessor, Matter, Group, Person, Turn])],
+  imports: [TypeOrmModule.forFeature([Gmp, MG, Proffessor, Matter, Group, Turn])],
   controllers: [GmpsController],
-  providers: [GmpsProvider, MGProvider, ProffessorsProvider, MattersProvider, GroupsProvider, PeopleProvider,
+  providers: [GmpsProvider, MGProvider, ProffessorsProvider, MattersProvider, GroupsProvider,
     TurnsProvider, GmpsResolver]
 })
 export class GmpsModule { }

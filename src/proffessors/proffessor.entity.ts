@@ -1,11 +1,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Person } from 'src/people/person.entity';
 import {
   Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn
+  Entity, PrimaryGeneratedColumn
 } from 'typeorm';
 
 @ObjectType()
@@ -15,14 +11,17 @@ export class Proffessor {
   @Field(() => Int)
   id: number;
 
+  @Column()
+  @Field()
+  name: string;
+
+  @Column()
+  @Field()
+  lastname: string;
+
   @Column({ unique: true })
   @Field(() => Int)
-  personId: number;
-
-  @OneToOne(() => Person, { onDelete: 'CASCADE' })
-  @JoinColumn()
-  @Field(() => Person)
-  person: Person;
+  ci: number;
 
   @Column({ default: true })
   @Field()

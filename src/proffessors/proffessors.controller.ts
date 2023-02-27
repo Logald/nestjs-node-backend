@@ -7,7 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  UseGuards,
+  UseGuards
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from 'src/users/accessTokenGuard';
@@ -21,18 +21,11 @@ import { ProffessorsProvider } from './proffessors.service';
 @ApiTags('proffessors')
 @Controller('proffessors')
 export class ProffessorsController {
-  constructor(private readonly proffessorsProvider: ProffessorsProvider) {}
+  constructor(private readonly proffessorsProvider: ProffessorsProvider) { }
 
   @Post()
   async getProffessors(@Body() proffessorData: FindProffessorDto) {
     return await this.proffessorsProvider.getProffessors(proffessorData);
-  }
-
-  @Post('/all')
-  async getProffessorsWithRelations(@Body() proffessorData: FindProffessorDto) {
-    return await this.proffessorsProvider.getProffessorsWithRelations(
-      proffessorData,
-    );
   }
 
   @Post('/create')
@@ -43,15 +36,6 @@ export class ProffessorsController {
   @Get('/:id')
   async getProffessor(@Param('id', ParseIntPipe) proffessorId: number) {
     return await this.proffessorsProvider.getProffessor(proffessorId);
-  }
-
-  @Get('/:id/all')
-  async getProffessorWithPerson(
-    @Param('id', ParseIntPipe) proffessorId: number,
-  ) {
-    return await this.proffessorsProvider.getProffessorWithRelations(
-      proffessorId,
-    );
   }
 
   @Patch('/:id')

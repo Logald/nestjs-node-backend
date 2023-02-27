@@ -1,6 +1,5 @@
 import { UseGuards } from "@nestjs/common";
-import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
-import { PeopleProvider } from "src/people/people.service";
+import { Args, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { GraphAuthGuard } from "src/users/graphAuthguard";
 import { CreateProffessorDto } from "./dtos/create_proffessor.dto";
 import { FindProffessorDto } from "./dtos/find_proffessor.dto";
@@ -11,14 +10,8 @@ import { ProffessorsProvider } from "./proffessors.service";
 @Resolver(of => Proffessor)
 export class ProffessorsResolver {
   constructor(
-    private peopleProvider: PeopleProvider,
     private proffessorsProvider: ProffessorsProvider
   ) { }
-
-  @ResolveField()
-  async person(@Parent() proffessor: Proffessor) {
-    return await this.peopleProvider.getPerson(proffessor.personId)
-  }
 
   @UseGuards(GraphAuthGuard)
   @Query(() => [Proffessor])

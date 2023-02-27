@@ -10,9 +10,7 @@ import { GmpsModule } from './gmps/gmps.module';
 import { GroupsModule } from './groups/groups.module';
 import { MattersModule } from './matters/matters.module';
 import { MGModule } from './mgs/mgs.module';
-import { PeopleModule } from './people/people.module';
 import { ProffessorsModule } from './proffessors/proffessors.module';
-import { ProfilesModule } from './profiles/profiles.module';
 import { SpecialtiesModule } from './specialties/specialties.module';
 import { TurnsModule } from './turns/turns.module';
 import { UsersModule } from './users/users.module';
@@ -22,13 +20,11 @@ import { UsersModule } from './users/users.module';
     MattersModule,
     TurnsModule,
     GroupsModule,
-    PeopleModule,
     ProffessorsModule,
     SpecialtiesModule,
     MGModule,
     GmpsModule,
     AbsencesModule,
-    ProfilesModule,
     UsersModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({

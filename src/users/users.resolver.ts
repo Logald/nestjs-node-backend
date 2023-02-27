@@ -2,14 +2,8 @@ import { UseGuards } from '@nestjs/common';
 import {
   Args,
   Int,
-  Mutation,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver
+  Mutation, Query, Resolver
 } from '@nestjs/graphql';
-import { PeopleProvider } from 'src/people/people.service';
-import { ProfilesProvider } from 'src/profiles/profiles.service';
 import { CreateUserDto } from './dtos/create_user.dto';
 import { FindUserDto } from './dtos/find_user.dto';
 import { LoginDto } from './dtos/login.dto';
@@ -22,22 +16,8 @@ import { UsersProvider } from './users.service';
 @Resolver(of => User)
 export class UsersResolver {
   constructor(
-    private readonly usersProvider: UsersProvider,
-    private readonly peoplePrivider: PeopleProvider,
-    private readonly profilesProvider: ProfilesProvider,
+    private readonly usersProvider: UsersProvider
   ) { }
-
-  @ResolveField()
-  async person(@Parent() user: User) {
-    return await this.peoplePrivider.findOne({ where: { id: user.personId } });
-  }
-
-  @ResolveField()
-  async profile(@Parent() user: User) {
-    return await this.profilesProvider.findOne({
-      where: { id: user.profileId },
-    });
-  }
 
   @UseGuards(GraphAuthGuard)
   @Query(() => [User])
