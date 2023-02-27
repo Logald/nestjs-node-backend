@@ -34,7 +34,7 @@ export class Absence {
   @Field(() => Date)
   endDate: Date;
 
-  @Column()
+  @Column({ nullable: true })
   @Field()
   reason: string;
 

@@ -9,14 +9,14 @@ import {
   absenceFoundError,
   absenceNotFoundError,
   invalidDatesError,
-  startDateError,
+  startDateError
 } from 'src/utils/errors.utils';
 import {
   FindManyOptions,
   FindOneOptions,
   LessThanOrEqual,
   MoreThanOrEqual,
-  Repository,
+  Repository
 } from 'typeorm';
 import { Absence } from './abcense.entity';
 import { CreateAbsenceDto } from './dtos/create_absence.dto';
@@ -37,8 +37,10 @@ export class AbsencesProvider {
       this.absencesService
         .createQueryBuilder()
         .update()
+        .where('endDate < :endDate and active = true', {
+          endDate: new Date()
+        })
         .set({ active: false })
-        .where('endDate < :endDate and active = true', { endDate: new Date() })
         .execute();
     }, 10000);
   }
@@ -52,7 +54,13 @@ export class AbsencesProvider {
       options.endDate = LessThanOrEqual(new Date(options.endDate));
     }
     findManyOptions.where = options;
-    return await this.absencesService.find(findManyOptions);
+    let absences = await this.absencesService.find(findManyOptions)
+    absences = absences.map((abcence) => {
+      abcence.startDate = new Date(moment(abcence.startDate).subtract(3, 'hour').format(this.dateFormat));
+      abcence.endDate = new Date(moment(abcence.endDate).subtract(3, 'hour').format(this.dateFormat));
+      return abcence;
+    });
+    return absences;
   }
 
   async getAbsences(findManyOptions: FindAbsenceDto) {
@@ -75,7 +83,11 @@ export class AbsencesProvider {
     const absenceFound = await this.absencesService.findOne(findOneOptions);
     if (found && !absenceFound) absenceNotFoundError();
     else if (!found && absenceFound) absenceFoundError();
-    else return absenceFound;
+    else {
+      absenceFound.startDate = new Date(moment(absenceFound.startDate).subtract(3, 'hour').format(this.dateFormat));
+      absenceFound.endDate = new Date(moment(absenceFound.endDate).subtract(3, 'hour').format(this.dateFormat));
+      return absenceFound
+    };
   }
 
   async getAbsence(absenceId: number) {
@@ -112,6 +124,13 @@ export class AbsencesProvider {
       )
     ) {
       invalidDatesError();
+    } else {
+      if ('startDate' in absenceData) {
+        absenceData.startDate = new Date(moment(absenceData.startDate).add(3, 'hour').format(this.dateFormat));
+      }
+      if ('endDate' in absenceData) {
+        absenceData.endDate = new Date(moment(absenceData.endDate).add(3, 'hour').format(this.dateFormat));
+      }
     }
     return await this.absencesService.update(absenceId, absenceData);
   }

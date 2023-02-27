@@ -163,7 +163,7 @@ input FindAbsenceDto {
   turnId: Int
   startDate: String
   endDate: String
-  reason: String!
+  reason: String
   active: Boolean
   id: Int
   turn: FindTurnDto
@@ -292,7 +292,7 @@ input CreateAbsenceDto {
   turnId: Int!
   startDate: String!
   endDate: String!
-  reason: String!
+  reason: String
   active: Boolean
 }
 
@@ -301,7 +301,7 @@ input UpdateAbsenceDto {
   turnId: Int
   startDate: String
   endDate: String
-  reason: String!
+  reason: String
   active: Boolean
 }
 

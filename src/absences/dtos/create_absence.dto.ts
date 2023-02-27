@@ -33,7 +33,7 @@ export class CreateAbsenceDto {
   @IsOptional()
   @IsString()
   @ApiProperty()
-  @Field()
+  @Field({ nullable: true })
   reason: string;
 
   @IsOptional()
