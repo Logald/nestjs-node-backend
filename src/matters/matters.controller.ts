@@ -7,7 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  UseGuards,
+  UseGuards
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from 'src/users/accessTokenGuard';
@@ -21,7 +21,7 @@ import { MattersProvider } from './matters.service';
 @ApiTags('matters')
 @Controller('matters')
 export class MattersController {
-  constructor(private readonly matterProvider: MattersProvider) {}
+  constructor(private readonly matterProvider: MattersProvider) { }
 
   @Post()
   async getMatters(@Body() findMatterOptions: FindMatterDto) {
@@ -30,7 +30,8 @@ export class MattersController {
 
   @Post('/create')
   async createMatter(@Body() matterData: CreateMatterDto) {
-    return await this.matterProvider.createMatter(matterData);
+    await this.matterProvider.createMatter(matterData);
+    return true;
   }
 
   @Get('/:id')
@@ -43,11 +44,13 @@ export class MattersController {
     @Param('id', ParseIntPipe) matterId: number,
     @Body() matterData: UpdateMatterDto,
   ) {
-    return await this.matterProvider.updateMatter(matterId, matterData);
+    await this.matterProvider.updateMatter(matterId, matterData);
+    return true;
   }
 
   @Delete('/:id')
   async deleteMatter(@Param('id', ParseIntPipe) matterId: number) {
-    return await this.matterProvider.deleteMatter(matterId);
+    await this.matterProvider.deleteMatter(matterId);
+    return true;
   }
 }

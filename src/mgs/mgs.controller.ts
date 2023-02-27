@@ -7,7 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  UseGuards,
+  UseGuards
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from 'src/users/accessTokenGuard';
@@ -21,7 +21,7 @@ import { MGProvider } from './mgs.service';
 @ApiTags('mgs')
 @Controller('mgs')
 export class MGController {
-  constructor(private readonly mgProvider: MGProvider) {}
+  constructor(private readonly mgProvider: MGProvider) { }
 
   @Post()
   async getMgs(@Body() mgsFindManyOptions: FindMgDto) {
@@ -35,7 +35,8 @@ export class MGController {
 
   @Post('/create')
   async createMg(@Body() mgData: CreateMgDto) {
-    return await this.mgProvider.createMg(mgData);
+    await this.mgProvider.createMg(mgData);
+    return true;
   }
 
   @Get('/:id')
@@ -53,11 +54,13 @@ export class MGController {
     @Param('id', ParseIntPipe) mgId: number,
     @Body() mgData: UpdateMgDto,
   ) {
-    return await this.mgProvider.updateMg(mgId, mgData);
+    await this.mgProvider.updateMg(mgId, mgData);
+    return true;
   }
 
   @Delete('/:id')
   async deleteMg(@Param('id', ParseIntPipe) mgId: number) {
-    return await this.mgProvider.deleteMg(mgId);
+    await this.mgProvider.deleteMg(mgId);
+    return true;
   }
 }

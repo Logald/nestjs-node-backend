@@ -52,13 +52,15 @@ export class UsersController {
     @Param('id', ParseIntPipe) userId: number,
     @Body() userData: UpdateUserDto,
   ) {
-    return await this.usersProvider.updateUser(userId, userData);
+    await this.usersProvider.updateUser(userId, userData);
+    return true;
   }
 
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
   @Delete('/:id')
   async deleteUser(@Param('id', ParseIntPipe) userId: number) {
-    return await this.usersProvider.deleteUser(userId);
+    await this.usersProvider.deleteUser(userId);
+    return true;
   }
 }

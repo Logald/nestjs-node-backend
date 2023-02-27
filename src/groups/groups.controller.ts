@@ -7,7 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  UseGuards,
+  UseGuards
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from 'src/users/accessTokenGuard';
@@ -21,7 +21,7 @@ import { GroupsProvider } from './groups.service';
 @ApiTags('groups')
 @Controller('groups')
 export class GroupsController {
-  constructor(private readonly groupsProvider: GroupsProvider) {}
+  constructor(private readonly groupsProvider: GroupsProvider) { }
 
   @Post()
   async getGroups(@Body() findManyOptions: FindGroupDto) {
@@ -35,7 +35,8 @@ export class GroupsController {
 
   @Post('/create')
   async createGroup(@Body() groupDate: CreateGroupDto) {
-    return await this.groupsProvider.createGroup(groupDate);
+    await this.groupsProvider.createGroup(groupDate);
+    return true;
   }
 
   @Get('/:id')
@@ -53,11 +54,13 @@ export class GroupsController {
     @Param('id', ParseIntPipe) groupId: number,
     @Body() groupData: UpdateGroupDto,
   ) {
-    return await this.groupsProvider.updateGroup(groupId, groupData);
+    await this.groupsProvider.updateGroup(groupId, groupData);
+    return true;
   }
 
   @Delete('/:id')
   async deleteGroup(@Param('id', ParseIntPipe) groupId: number) {
-    return await this.groupsProvider.deleteGroup(groupId);
+    await this.groupsProvider.deleteGroup(groupId);
+    return true;
   }
 }

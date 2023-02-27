@@ -30,7 +30,8 @@ export class ProffessorsController {
 
   @Post('/create')
   async createProffessor(@Body() proffessorData: CreateProffessorDto) {
-    return await this.proffessorsProvider.createProffessor(proffessorData);
+    await this.proffessorsProvider.createProffessor(proffessorData);
+    return true;
   }
 
   @Get('/:id')
@@ -43,14 +44,16 @@ export class ProffessorsController {
     @Param('id', ParseIntPipe) proffessorId: number,
     @Body() proffessorData: UpdateProffessorDto,
   ) {
-    return await this.proffessorsProvider.updateProffessor(
+    await this.proffessorsProvider.updateProffessor(
       proffessorId,
       proffessorData,
     );
+    return true;
   }
 
   @Delete('/:id')
   async deleteProffessor(@Param('id', ParseIntPipe) proffessorId: number) {
-    return await this.proffessorsProvider.deleteProffessor(proffessorId);
+    await this.proffessorsProvider.deleteProffessor(proffessorId);
+    return true;
   }
 }
