@@ -5,8 +5,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
+  Put,
   UseGuards
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -18,8 +18,8 @@ import { SpecialtiesProvider } from './specialties.service';
 
 @UseGuards(AccessTokenGuard)
 @ApiBearerAuth()
-@ApiTags('specialties')
-@Controller('specialties')
+@ApiTags('api/specialties')
+@Controller('api/specialties')
 export class SpecialitiesController {
   constructor(private readonly specialitiesProvider: SpecialtiesProvider) { }
 
@@ -39,8 +39,7 @@ export class SpecialitiesController {
 
   @Post('/create')
   async createspecialty(@Body() specialtyData: CreateSpecialtyDto) {
-    await this.specialitiesProvider.createSpecialty(specialtyData);
-    return true;
+    return await this.specialitiesProvider.createSpecialty(specialtyData);
   }
 
   @Get('/:id')
@@ -57,21 +56,19 @@ export class SpecialitiesController {
     );
   }
 
-  @Patch('/:id')
+  @Put('/:id')
   async updatespecialty(
     @Param('id', ParseIntPipe) specialtyId,
     @Body() specialtyData: UpdateSpecialtyDto,
   ) {
-    await this.specialitiesProvider.updateSpecialty(
+    return await this.specialitiesProvider.updateSpecialty(
       specialtyId,
       specialtyData,
     );
-    return true;
   }
 
   @Delete('/:id')
   async deletespecialty(@Param('id', ParseIntPipe) specialtyId: number) {
-    await this.specialitiesProvider.deletespecialty(specialtyId);
-    return true;
+    return await this.specialitiesProvider.deletespecialty(specialtyId);
   }
 }

@@ -44,8 +44,7 @@ export class UsersResolver {
   async signUp(
     @Args({ name: 'userData', type: () => CreateUserDto }) userData: CreateUserDto,
   ) {
-    await this.usersProvider.signUp(userData);
-    return true;
+    return await this.usersProvider.signUp(userData);
   }
 
   @UseGuards(GraphAuthGuard)
@@ -54,14 +53,12 @@ export class UsersResolver {
     @Args({ name: "userId", type: () => Int }) userId: number,
     @Args({ name: 'userData', type: () => UpdateUserDto }) userData: UpdateUserDto,
   ) {
-    await this.usersProvider.updateUser(userId, userData);
-    return true;
+    return await this.usersProvider.updateUser(userId, userData);
   }
 
   @UseGuards(GraphAuthGuard)
   @Mutation(() => Boolean)
   async deleteUser(@Args({ name: "userId", type: () => Int }) userId: number) {
-    await this.usersProvider.deleteUser(userId);
-    return true;
+    return await this.usersProvider.deleteUser(userId);
   }
 }

@@ -25,7 +25,7 @@ export class SpecialtiesProvider {
     private readonly proffessorsService: Repository<Proffessor>,
     private readonly mattersProvider: MattersProvider,
     private readonly proffessorsProvider: ProffessorsProvider,
-  ) {}
+  ) { }
 
   async getSpecialties(findManyOptions: FindSpecialtyDto) {
     return await this.specialtiesService.find({ where: findManyOptions });
@@ -77,7 +77,8 @@ export class SpecialtiesProvider {
     await this.proffessorsProvider.findOne({
       where: { id: specialtyData.proffessorId },
     });
-    return await this.specialtiesService.insert(specialtyData);
+    await this.specialtiesService.insert(specialtyData);
+    return true;
   }
 
   async updateSpecialty(
@@ -96,15 +97,17 @@ export class SpecialtiesProvider {
         where: { id: specialtyData.proffessorId },
       });
     }
-    return await this.specialtiesService
+    await this.specialtiesService
       .update(specialtyId, specialtyData)
       .catch(() => {
         specialtyFoundError();
       });
+    return true;
   }
 
   async deletespecialty(specialtyId: number) {
     await this.findOne({ where: { id: specialtyId } });
-    return await this.specialtiesService.delete(specialtyId);
+    await this.specialtiesService.delete(specialtyId);
+    return true;
   }
 }

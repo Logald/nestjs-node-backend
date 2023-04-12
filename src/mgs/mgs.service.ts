@@ -20,7 +20,7 @@ export class MGProvider {
     @InjectRepository(Group) private readonly groupService: Repository<Group>,
     private readonly matterProvider: MattersProvider,
     private readonly groupProvider: GroupsProvider,
-  ) {}
+  ) { }
 
   async getMgs(mgsFindManyOptions: FindMgDto) {
     return await this.mgService.find({ where: mgsFindManyOptions });
@@ -58,7 +58,8 @@ export class MGProvider {
     );
     await this.matterProvider.findOne({ where: { id: mgData.matterId } });
     await this.groupProvider.findOne({ where: { id: mgData.groupId } });
-    return await this.mgService.insert(mgData);
+    await this.mgService.insert(mgData);
+    return true;
   }
 
   async updateMg(mgId: number, mgData: UpdateMgDto) {
@@ -68,13 +69,15 @@ export class MGProvider {
       await this.matterProvider.findOne({ where: { id: mgData.matterId } });
     if ('groupId' in mgData)
       await this.groupProvider.findOne({ where: { id: mgData.groupId } });
-    return await this.mgService.update(mgId, mgData).catch(() => {
+    await this.mgService.update(mgId, mgData).catch(() => {
       mgFoundError();
     });
+    return true;
   }
 
   async deleteMg(mgId: number) {
     await this.findOne({ where: { id: mgId } });
-    return await this.mgService.delete(mgId);
+    await this.mgService.delete(mgId);
+    return true;
   }
 }

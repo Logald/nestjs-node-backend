@@ -11,7 +11,7 @@ import { Matter } from './matter.entity';
 export class MattersProvider {
   constructor(
     @InjectRepository(Matter) private readonly matterService: Repository<Matter>,
-  ) {}
+  ) { }
 
   async findOne(findOneOptions: FindOneOptions<Matter>, found: boolean = true) {
     const matterFound = await this.matterService.findOne(findOneOptions);
@@ -30,7 +30,8 @@ export class MattersProvider {
 
   async createMatter(matterData: CreateMatterDto) {
     await this.findOne({ where: { name: matterData.name } }, false);
-    return await this.matterService.insert(matterData);
+    await this.matterService.insert(matterData);
+    return true;
   }
 
   async updateMatter(matterId: number, matterData: UpdateMatterDto) {
@@ -38,11 +39,13 @@ export class MattersProvider {
     await this.findOne({ where: { id: matterId } });
     if ('name' in matterData)
       await this.findOne({ where: { name: matterData.name } }, false);
-    return await this.matterService.update(matterId, matterData);
+    await this.matterService.update(matterId, matterData);
+    return true;
   }
 
   async deleteMatter(matterId: number) {
     await this.findOne({ where: { id: matterId } });
-    return await this.matterService.delete(matterId);
+    await this.matterService.delete(matterId);
+    return true;
   }
 }

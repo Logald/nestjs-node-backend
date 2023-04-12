@@ -107,7 +107,8 @@ export class AbsencesProvider {
     }
     await this.gmpsProvider.findOne({ where: { id: absenceData.gmpId } });
     await this.turnsProvider.findOne({ where: { id: absenceData.turnId } });
-    return await this.absencesService.insert(absenceData);
+    await this.absencesService.insert(absenceData);
+    return true;
   }
 
   async updateAbsense(absenceId: number, absenceData: UpdateAbsenceDto) {
@@ -132,11 +133,13 @@ export class AbsencesProvider {
         absenceData.endDate = new Date(moment(absenceData.endDate).add(3, 'hour').format(this.dateFormat));
       }
     }
-    return await this.absencesService.update(absenceId, absenceData);
+    await this.absencesService.update(absenceId, absenceData);
+    return true;
   }
 
   async deleteAbsence(absenceId: number) {
     await this.findOne({ where: { id: absenceId } });
-    return await this.absencesService.delete(absenceId);
+    await this.absencesService.delete(absenceId);
+    return true;
   }
 }

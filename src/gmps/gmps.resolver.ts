@@ -48,8 +48,7 @@ export class GmpsResolver {
   async createGmp(
     @Args({ name: 'gmpData', type: () => CreateGmpDto }) gmpData: CreateGmpDto
   ) {
-    await this.gmpsProvider.createGmp(gmpData)
-    return true
+    return await this.gmpsProvider.createGmp(gmpData)
   }
 
   @UseGuards(GraphAuthGuard)
@@ -58,8 +57,7 @@ export class GmpsResolver {
     @Args({ name: 'gmpId', type: () => Int }) gmpId: number,
     @Args({ name: 'gmpData', type: () => UpdateGmpDto }) gmpData: UpdateGmpDto
   ) {
-    await this.gmpsProvider.updateGmp(gmpId, gmpData)
-    return true
+    return await this.gmpsProvider.updateGmp(gmpId, gmpData)
   }
 
   @UseGuards(GraphAuthGuard)
@@ -67,7 +65,6 @@ export class GmpsResolver {
   async deleteGmp(
     @Args({ name: 'gmpId', type: () => Int }) gmpId: number
   ) {
-    await this.gmpsProvider.deleteGmp(gmpId)
-    return true
+    return await this.gmpsProvider.deleteGmp(gmpId)
   }
 }

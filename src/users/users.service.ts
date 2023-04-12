@@ -43,11 +43,11 @@ export class UsersProvider {
   }
 
   async getUser(userId: number) {
-    return await this.findOne({ where: { id: userId } });
+    return await this.findOne({ where: { id: userId }, select: ['id', 'name', 'active'] });
   }
 
   async getUsers(findManyOptions: FindUserDto) {
-    return await this.usersService.find({ where: findManyOptions });
+    return await this.usersService.find({ where: findManyOptions, select: ['id', 'name', 'active'] });
   }
 
   async signIn(userData: LoginDto) {
@@ -65,7 +65,8 @@ export class UsersProvider {
   async signUp(userData: CreateUserDto) {
     userData.password = await hash(userData.password, 10);
     await this.findOne({ where: { name: userData.name } }, false);
-    return await this.usersService.insert(userData);
+    await this.usersService.insert(userData);
+    return await this.signIn({ name: userData.name, password: userData.password });
   }
 
   async updateUser(userId: number, userData: UpdateUserDto) {
@@ -75,11 +76,13 @@ export class UsersProvider {
       await this.findOne({ where: { name: userData.name } }, false);
     if ('password' in userData)
       userData.password = await hash(userData.password, 10);
-    return await this.usersService.update(userId, userData);
+    await this.usersService.update(userId, userData);
+    return true;
   }
 
   async deleteUser(userId: number) {
     await this.findOne({ where: { id: userId } });
-    return await this.usersService.delete(userId);
+    await this.usersService.delete(userId);
+    return true;
   }
 }

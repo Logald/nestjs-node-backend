@@ -34,8 +34,7 @@ export class ProffessorsResolver {
   async createProffessor(
     @Args({ name: 'proffessorData', type: () => CreateProffessorDto }) proffessorData: CreateProffessorDto
   ) {
-    await this.proffessorsProvider.createProffessor(proffessorData)
-    return true
+    return await this.proffessorsProvider.createProffessor(proffessorData)
   }
 
   @UseGuards(GraphAuthGuard)
@@ -44,8 +43,7 @@ export class ProffessorsResolver {
     @Args({ name: 'proffessorId', type: () => Int }) proffessorId: number,
     @Args({ name: 'proffessorData', type: () => UpdateProffessorDto }) proffessorData: UpdateProffessorDto
   ) {
-    await this.proffessorsProvider.updateProffessor(proffessorId, proffessorData)
-    return true
+    return await this.proffessorsProvider.updateProffessor(proffessorId, proffessorData)
   }
 
   @UseGuards(GraphAuthGuard)
@@ -53,7 +51,6 @@ export class ProffessorsResolver {
   async deleteProffessor(
     @Args({ name: 'proffessorId', type: () => Int }) proffessorId: number
   ) {
-    await this.proffessorsProvider.deleteProffessor(proffessorId)
-    return true
+    return await this.proffessorsProvider.deleteProffessor(proffessorId)
   }
 }

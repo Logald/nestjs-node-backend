@@ -5,8 +5,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
+  Put,
   UseGuards
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -18,8 +18,8 @@ import { GmpsProvider } from './gmps.service';
 
 @UseGuards(AccessTokenGuard)
 @ApiBearerAuth()
-@ApiTags('gmps')
-@Controller('gmps')
+@ApiTags('api/gmps')
+@Controller('api/gmps')
 export class GmpsController {
   constructor(private readonly gmpsProvider: GmpsProvider) { }
 
@@ -35,8 +35,7 @@ export class GmpsController {
 
   @Post('/create')
   async createGmp(@Body() gmpData: CreateGmpDto) {
-    await this.gmpsProvider.createGmp(gmpData);
-    return true;
+    return await this.gmpsProvider.createGmp(gmpData);
   }
 
   @Get('/:id')
@@ -49,18 +48,16 @@ export class GmpsController {
     return await this.gmpsProvider.getGmpWithRelations(gmpId);
   }
 
-  @Patch('/:gmpId')
+  @Put('/:gmpId')
   async updateGmp(
     @Param('gmpId') gmpId: number,
     @Body() gmpData: UpdateGmpDto,
   ) {
-    await this.gmpsProvider.updateGmp(gmpId, gmpData);
-    return true;
+    return await this.gmpsProvider.updateGmp(gmpId, gmpData);
   }
 
   @Delete('/:gmpId')
   async deleteGmp(@Param('gmpId') gmpId: number) {
-    await this.gmpsProvider.deleteGmp(gmpId);
-    return true;
+    return await this.gmpsProvider.deleteGmp(gmpId);
   }
 }

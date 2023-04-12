@@ -48,8 +48,7 @@ export class SpecialtiesResolver {
   async createSpecialty(
     @Args({ name: 'specialtyData', type: () => CreateSpecialtyDto }) specialtyData: CreateSpecialtyDto
   ) {
-    await this.specialtiesProvider.createSpecialty(specialtyData)
-    return true
+    return await this.specialtiesProvider.createSpecialty(specialtyData)
   }
 
   @UseGuards(GraphAuthGuard)
@@ -58,8 +57,7 @@ export class SpecialtiesResolver {
     @Args({ name: 'specialtyId', type: () => Int }) specialtyId: number,
     @Args({ name: 'specialtyData', type: () => UpdateSpecialtyDto }) specialtyData: UpdateSpecialtyDto
   ) {
-    await this.specialtiesProvider.updateSpecialty(specialtyId, specialtyData)
-    return true
+    return await this.specialtiesProvider.updateSpecialty(specialtyId, specialtyData)
   }
 
   @UseGuards(GraphAuthGuard)
@@ -67,7 +65,6 @@ export class SpecialtiesResolver {
   async deleteSpecialty(
     @Args({ name: 'specialtyId', type: () => Int }) specialtyId: number
   ) {
-    await this.specialtiesProvider.deletespecialty(specialtyId)
-    return true
+    return await this.specialtiesProvider.deletespecialty(specialtyId)
   }
 }

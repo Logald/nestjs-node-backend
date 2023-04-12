@@ -40,7 +40,8 @@ export class ProffessorsProvider {
 
   async createProffessor(proffessorData: CreateProffessorDto) {
     await this.findOne({ where: { ci: proffessorData.ci } }, false);
-    return await this.proffessorsService.insert(proffessorData);
+    await this.proffessorsService.insert(proffessorData);
+    return true;
   }
 
   async updateProffessor(
@@ -51,11 +52,13 @@ export class ProffessorsProvider {
     if ('ci' in proffessorData)
       await this.findOne({ where: { ci: proffessorData.ci } }, false);
     await this.findOne({ where: { id: proffessorId } });
-    return await this.proffessorsService.update(proffessorId, proffessorData);
+    await this.proffessorsService.update(proffessorId, proffessorData);
+    return true;
   }
 
   async deleteProffessor(proffessorId: number) {
     await this.findOne({ where: { id: proffessorId } });
-    return await this.proffessorsService.delete(proffessorId);
+    await this.proffessorsService.delete(proffessorId);
+    return true;
   }
 }

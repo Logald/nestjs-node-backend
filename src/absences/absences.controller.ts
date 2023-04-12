@@ -5,8 +5,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
+  Put,
   UseGuards
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -18,8 +18,8 @@ import { UpdateAbsenceDto } from './dtos/update_absence.dto';
 
 @UseGuards(AccessTokenGuard)
 @ApiBearerAuth()
-@ApiTags('absences')
-@Controller('absences')
+@ApiTags('api/absences')
+@Controller('api/absences')
 export class AbsencesController {
   constructor(private readonly absencesProvider: AbsencesProvider) { }
 
@@ -37,8 +37,7 @@ export class AbsencesController {
 
   @Post('/create')
   async createAbsence(@Body() absenceData: CreateAbsenceDto) {
-    await this.absencesProvider.createAbsence(absenceData);
-    return true;
+    return await this.absencesProvider.createAbsence(absenceData);
   }
 
   @Get('/:id')
@@ -51,18 +50,16 @@ export class AbsencesController {
     return await this.absencesProvider.getAbsenceWithRelations(absenceId);
   }
 
-  @Patch('/:id')
+  @Put('/:id')
   async updateAbsence(
     @Param('id', ParseIntPipe) absenceId: number,
     @Body() absenceData: UpdateAbsenceDto,
   ) {
-    await this.absencesProvider.updateAbsense(absenceId, absenceData);
-    return true;
+    return await this.absencesProvider.updateAbsense(absenceId, absenceData);
   }
 
   @Delete('/:id')
   async deleteAbsence(@Param('id', ParseIntPipe) absenceId: number) {
-    await this.absencesProvider.deleteAbsence(absenceId);
-    return true;
+    return await this.absencesProvider.deleteAbsence(absenceId);
   }
 }

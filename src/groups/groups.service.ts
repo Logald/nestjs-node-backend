@@ -16,7 +16,7 @@ export class GroupsProvider {
     @InjectRepository(Group) private readonly groupService: Repository<Group>,
     @InjectRepository(Turn) private readonly turnService: Repository<Turn>,
     private readonly turnProvider: TurnsProvider,
-  ) {}
+  ) { }
 
   async getGroups(findManyOptions: FindGroupDto) {
     return await this.groupService.find({ where: findManyOptions });
@@ -53,7 +53,8 @@ export class GroupsProvider {
       false,
     );
     await this.turnProvider.findOne({ where: { id: groupData.turnId } });
-    return await this.groupService.insert(groupData);
+    await this.groupService.insert(groupData);
+    return true;
   }
 
   async updateGroup(groupId: number, groupData: UpdateGroupDto) {
@@ -61,13 +62,15 @@ export class GroupsProvider {
     await this.findOne({ where: { id: groupId } });
     if ('turnId' in groupData)
       await this.turnProvider.findOne({ where: { id: groupData.turnId } });
-    return await this.groupService.update(groupId, groupData).catch(() => {
+    await this.groupService.update(groupId, groupData).catch(() => {
       groupFoundError();
     });
+    return true;
   }
 
   async deleteGroup(groupId: number) {
     await this.findOne({ where: { id: groupId } });
-    return await this.groupService.delete(groupId);
+    await this.groupService.delete(groupId);
+    return true;
   }
 }

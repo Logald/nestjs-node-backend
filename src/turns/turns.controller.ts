@@ -5,8 +5,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
+  Put,
   UseGuards
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -18,8 +18,8 @@ import { TurnsProvider } from './turns.service';
 
 @UseGuards(AccessTokenGuard)
 @ApiBearerAuth()
-@ApiTags('turns')
-@Controller('turns')
+@ApiTags('api/turns')
+@Controller('api/turns')
 export class TurnsController {
   constructor(private readonly turnsProvider: TurnsProvider) { }
 
@@ -30,8 +30,7 @@ export class TurnsController {
 
   @Post('/create')
   async createTurn(@Body() turnData: CreateTurnDto) {
-    await this.turnsProvider.createTurn(turnData);
-    return true;
+    return await this.turnsProvider.createTurn(turnData);
   }
 
   @Get('/:id')
@@ -39,18 +38,16 @@ export class TurnsController {
     return await this.turnsProvider.getTurn(turnId);
   }
 
-  @Patch('/:id')
+  @Put('/:id')
   async updateTurn(
     @Param('id', ParseIntPipe) turnId: number,
     @Body() turnData: UpdateTurnDto,
   ) {
-    await this.turnsProvider.updateTurn(turnId, turnData);
-    return true;
+    return await this.turnsProvider.updateTurn(turnId, turnData);
   }
 
   @Delete('/:id')
   async deleteTurn(@Param('id', ParseIntPipe) turnId: number) {
-    await this.turnsProvider.deleteTurn(turnId);
-    return true;
+    return await this.turnsProvider.deleteTurn(turnId);
   }
 }

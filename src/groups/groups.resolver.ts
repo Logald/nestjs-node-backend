@@ -41,8 +41,7 @@ export class GroupsResolver {
   async createGroup(
     @Args({ name: 'groupData', type: () => CreateGroupDto }) groupData: CreateGroupDto
   ) {
-    await this.groupsProvider.createGroup(groupData)
-    return true
+    return await this.groupsProvider.createGroup(groupData)
   }
 
   @UseGuards(GraphAuthGuard)
@@ -51,8 +50,7 @@ export class GroupsResolver {
     @Args({ name: 'groupId', type: () => Int }) groupId: number,
     @Args({ name: 'groupData', type: () => UpdateGroupDto }) groupData: UpdateGroupDto
   ) {
-    await this.groupsProvider.updateGroup(groupId, groupData)
-    return true
+    return await this.groupsProvider.updateGroup(groupId, groupData)
   }
 
   @UseGuards(GraphAuthGuard)
@@ -60,7 +58,6 @@ export class GroupsResolver {
   async deleteGroup(
     @Args({ name: 'groupId', type: () => Int }) groupId: number
   ) {
-    await this.groupsProvider.deleteGroup(groupId)
-    return true
+    return await this.groupsProvider.deleteGroup(groupId)
   }
 }

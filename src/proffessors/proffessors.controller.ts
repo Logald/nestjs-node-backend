@@ -5,8 +5,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
+  Put,
   UseGuards
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -18,8 +18,8 @@ import { ProffessorsProvider } from './proffessors.service';
 
 @UseGuards(AccessTokenGuard)
 @ApiBearerAuth()
-@ApiTags('proffessors')
-@Controller('proffessors')
+@ApiTags('api/proffessors')
+@Controller('api/proffessors')
 export class ProffessorsController {
   constructor(private readonly proffessorsProvider: ProffessorsProvider) { }
 
@@ -30,8 +30,7 @@ export class ProffessorsController {
 
   @Post('/create')
   async createProffessor(@Body() proffessorData: CreateProffessorDto) {
-    await this.proffessorsProvider.createProffessor(proffessorData);
-    return true;
+    return await this.proffessorsProvider.createProffessor(proffessorData);
   }
 
   @Get('/:id')
@@ -39,21 +38,19 @@ export class ProffessorsController {
     return await this.proffessorsProvider.getProffessor(proffessorId);
   }
 
-  @Patch('/:id')
+  @Put('/:id')
   async updateProffessor(
     @Param('id', ParseIntPipe) proffessorId: number,
     @Body() proffessorData: UpdateProffessorDto,
   ) {
-    await this.proffessorsProvider.updateProffessor(
+    return await this.proffessorsProvider.updateProffessor(
       proffessorId,
       proffessorData,
     );
-    return true;
   }
 
   @Delete('/:id')
   async deleteProffessor(@Param('id', ParseIntPipe) proffessorId: number) {
-    await this.proffessorsProvider.deleteProffessor(proffessorId);
-    return true;
+    return await this.proffessorsProvider.deleteProffessor(proffessorId);
   }
 }

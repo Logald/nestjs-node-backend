@@ -21,7 +21,7 @@ export class GmpsProvider {
     private readonly proffessorsService: Repository<Proffessor>,
     private readonly mgsProvider: MGProvider,
     private readonly proffessorsProvider: ProffessorsProvider,
-  ) {}
+  ) { }
 
   async getGmps(findManyOptions: FindGmpDto) {
     return await this.gmpsService.find({ where: findManyOptions });
@@ -69,7 +69,8 @@ export class GmpsProvider {
       },
       false,
     );
-    return await this.gmpsService.insert(gmpData);
+    await this.gmpsService.insert(gmpData);
+    return true;
   }
 
   async updateGmp(gmpId: number, gmpData: UpdateGmpDto) {
@@ -82,13 +83,15 @@ export class GmpsProvider {
         where: { id: gmpData.proffessorId },
       });
     }
-    return await this.gmpsService.update({ id: gmpId }, gmpData).catch(() => {
+    await this.gmpsService.update({ id: gmpId }, gmpData).catch(() => {
       gmpFoundError();
     });
+    return true;
   }
 
   async deleteGmp(gmpId: number) {
     await this.findOne({ where: { id: gmpId } });
-    return await this.gmpsService.delete(gmpId);
+    await this.gmpsService.delete(gmpId);
+    return true;
   }
 }

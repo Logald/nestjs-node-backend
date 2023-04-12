@@ -29,8 +29,7 @@ export class MattersResolver {
   async createMatter(
     @Args({ name: 'matterData', type: () => CreateMatterDto }) matterData: CreateMatterDto
   ) {
-    await this.mattersProvider.createMatter(matterData)
-    return true
+    return await this.mattersProvider.createMatter(matterData)
   }
 
   @Mutation(() => Boolean)
@@ -38,15 +37,13 @@ export class MattersResolver {
     @Args({ name: 'matterId', type: () => Int }) matterId: number,
     @Args({ name: 'matterData', type: () => UpdateMatterDto }) matterData: UpdateMatterDto
   ) {
-    await this.mattersProvider.updateMatter(matterId, matterData)
-    return true
+    return await this.mattersProvider.updateMatter(matterId, matterData)
   }
 
   @Mutation(() => Boolean)
   async deleteMatter(
     @Args({ name: 'matterId', type: () => Int }) matterId: number
   ) {
-    await this.mattersProvider.deleteMatter(matterId)
-    return true
+    return await this.mattersProvider.deleteMatter(matterId)
   }
 }

@@ -48,8 +48,7 @@ export class AbsencesResolver {
   async createAbsence(
     @Args({ name: 'absenceData', type: () => CreateAbsenceDto }) absenceData: CreateAbsenceDto
   ) {
-    await this.absencesProvider.createAbsence(absenceData)
-    return true
+    return await this.absencesProvider.createAbsence(absenceData)
   }
 
   @UseGuards(GraphAuthGuard)
@@ -58,8 +57,7 @@ export class AbsencesResolver {
     @Args({ name: 'absenceId', type: () => Int }) absenceId: number,
     @Args({ name: 'absenceData', type: () => UpdateAbsenceDto }) absenceData: UpdateAbsenceDto
   ) {
-    await this.absencesProvider.updateAbsense(absenceId, absenceData)
-    return true
+    return await this.absencesProvider.updateAbsense(absenceId, absenceData)
   }
 
   @UseGuards(GraphAuthGuard)
@@ -67,7 +65,6 @@ export class AbsencesResolver {
   async deleteAbsence(
     @Args({ name: 'absenceId', type: () => Int }) absenceId: number
   ) {
-    await this.absencesProvider.deleteAbsence(absenceId)
-    return true
+    return await this.absencesProvider.deleteAbsence(absenceId)
   }
 }

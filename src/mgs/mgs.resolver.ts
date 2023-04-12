@@ -48,8 +48,7 @@ export class MGResolver {
   async createMg(
     @Args({ name: 'mgData', type: () => CreateMgDto }) mgData: CreateMgDto
   ) {
-    await this.mgsProvider.createMg(mgData)
-    return true
+    return await this.mgsProvider.createMg(mgData)
   }
 
   @UseGuards(GraphAuthGuard)
@@ -58,8 +57,7 @@ export class MGResolver {
     @Args({ name: 'mgId', type: () => Int }) mgId: number,
     @Args({ name: 'mgData', type: () => UpdateMgDto }) mgData: UpdateMgDto
   ) {
-    await this.mgsProvider.updateMg(mgId, mgData)
-    return true
+    return await this.mgsProvider.updateMg(mgId, mgData)
   }
 
   @UseGuards(GraphAuthGuard)
@@ -67,7 +65,6 @@ export class MGResolver {
   async deleteMg(
     @Args({ name: 'mgId', type: () => Int }) mgId: number
   ) {
-    await this.mgsProvider.deleteMg(mgId)
-    return true
+    return await this.mgsProvider.deleteMg(mgId)
   }
 }

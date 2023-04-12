@@ -5,8 +5,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
+  Put,
   UseGuards
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -16,8 +16,8 @@ import { FindUserDto } from './dtos/find_user.dto';
 import { LoginDto } from './dtos/login.dto';
 import { UpdateUserDto } from './dtos/update_user.dto';
 import { UsersProvider } from './users.service';
-@ApiTags('users')
-@Controller('users')
+@ApiTags('api/users')
+@Controller('api/users')
 export class UsersController {
   constructor(private readonly usersProvider: UsersProvider) { }
 
@@ -47,20 +47,18 @@ export class UsersController {
 
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
-  @Patch('/:id')
+  @Put('/:id')
   async updateUser(
     @Param('id', ParseIntPipe) userId: number,
     @Body() userData: UpdateUserDto,
   ) {
-    await this.usersProvider.updateUser(userId, userData);
-    return true;
+    return await this.usersProvider.updateUser(userId, userData);
   }
 
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
   @Delete('/:id')
   async deleteUser(@Param('id', ParseIntPipe) userId: number) {
-    await this.usersProvider.deleteUser(userId);
-    return true;
+    return await this.usersProvider.deleteUser(userId);
   }
 }

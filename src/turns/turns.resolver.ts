@@ -32,8 +32,7 @@ export class TurnsResolver {
   async createTurn(
     @Args({ name: "turnData", type: () => CreateTurnDto }) turnData: CreateTurnDto
   ) {
-    await this.turnsProvider.createTurn(turnData)
-    return true
+    return await this.turnsProvider.createTurn(turnData)
   }
 
   @UseGuards(GraphAuthGuard)
@@ -42,8 +41,7 @@ export class TurnsResolver {
     @Args({ name: "turnId", type: () => Int }) turnId: number,
     @Args({ name: "turnData", type: () => UpdateTurnDto }) turnData: UpdateTurnDto
   ) {
-    await this.turnsProvider.updateTurn(turnId, turnData)
-    return true
+    return await this.turnsProvider.updateTurn(turnId, turnData)
   }
 
   @UseGuards(GraphAuthGuard)
@@ -51,8 +49,7 @@ export class TurnsResolver {
   async deleteTurn(
     @Args({ name: "turnId", type: () => Int }) turnId: number
   ) {
-    await this.turnsProvider.deleteTurn(turnId)
-    return true
+    return await this.turnsProvider.deleteTurn(turnId)
   }
 
 }

@@ -12,7 +12,7 @@ import { Turn } from './turn.entity';
 export class TurnsProvider {
   constructor(
     @InjectRepository(Turn) private readonly turnService: Repository<Turn>,
-  ) {}
+  ) { }
 
   async findOne(findOneOptions: FindOneOptions<Turn>, found: boolean = true) {
     const turnFound = await this.turnService.findOne(findOneOptions);
@@ -31,18 +31,21 @@ export class TurnsProvider {
 
   async createTurn(turnData: CreateTurnDto) {
     await this.findOne({ where: { name: turnData.name } }, false);
-    return await this.turnService.insert(turnData);
+    await this.turnService.insert(turnData);
+    return true;
   }
 
   async updateTurn(turnId: number, turnData: UpdateTurnDto) {
     isEmpty(turnData);
     await this.findOne({ where: { id: turnId } });
     await this.findOne({ where: { name: turnData.name } }, false);
-    return await this.turnService.update(turnId, turnData);
+    await this.turnService.update(turnId, turnData);
+    return true;
   }
 
   async deleteTurn(turnId: number) {
     await this.findOne({ where: { id: turnId } });
-    return await this.turnService.delete(turnId);
+    await this.turnService.delete(turnId);
+    return true;
   }
 }
