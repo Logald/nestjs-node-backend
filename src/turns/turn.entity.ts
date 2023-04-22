@@ -6,9 +6,9 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class Turn {
   @PrimaryGeneratedColumn()
   @Field(() => Int)
-  id: number;
+    id: number;
 
   @Column({ type: 'varchar', unique: true })
   @Field()
-  name: string;
+    name: string;
 }

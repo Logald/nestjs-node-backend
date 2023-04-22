@@ -8,10 +8,10 @@ export class UpdateGmpDto extends CreateGmpDto {
   @IsOptional()
   @ApiProperty({ required: false })
   @Field(() => Int, { nullable: true })
-  mgId: number;
+    mgId: number;
 
   @IsOptional()
   @ApiProperty({ required: false })
   @Field(() => Int, { nullable: true })
-  proffessorId: number;
+    proffessorId: number;
 }

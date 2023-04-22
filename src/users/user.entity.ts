@@ -6,17 +6,17 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class User {
   @PrimaryGeneratedColumn()
   @Field((type) => Int)
-  id: number;
+    id: number;
 
   @Column({ unique: true })
   @Field()
-  name: string;
+    name: string;
 
   @Column()
   // @Field()
-  password: string;
+    password: string;
 
   @Column({ type: 'boolean', default: true })
   @Field({ defaultValue: true })
-  active: boolean;
+    active: boolean;
 }

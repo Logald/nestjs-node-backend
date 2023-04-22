@@ -13,17 +13,17 @@ export class FindMgDto extends UpdateMgDto {
   @Min(1)
   @ApiProperty({ required: false, minimum: 1 })
   @Field(() => Int, { nullable: true })
-  id: number;
+    id: number;
 
   @IsOptional()
   @ApiProperty({ required: false })
   @Type(() => FindMatterDto)
   @Field(() => FindMatterDto, { nullable: true })
-  matter: FindMatterDto;
+    matter: FindMatterDto;
 
   @IsOptional()
   @ApiProperty({ required: false })
   @Type(() => FindGroupDto)
   @Field(() => FindGroupDto, { nullable: true })
-  group: FindGroupDto;
+    group: FindGroupDto;
 }

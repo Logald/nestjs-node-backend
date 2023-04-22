@@ -12,33 +12,33 @@ export class CreateAbsenceDto {
   @Min(1)
   @ApiProperty({ minimum: 1 })
   @Field(() => Int)
-  gmpId: number;
+    gmpId: number;
 
   @IsInt()
   @Min(1)
   @ApiProperty({ minimum: 1 })
   @Field(() => Int)
-  turnId: number;
+    turnId: number;
 
   @IsDateString({ strictSeparator: true })
   @ApiProperty()
   @Field(() => String)
-  startDate: Date;
+    startDate: Date;
 
   @IsDateString({ strictSeparator: true })
   @ApiProperty()
   @Field(() => String)
-  endDate: Date;
+    endDate: Date;
 
   @IsOptional()
   @IsString()
   @ApiProperty()
   @Field({ nullable: true })
-  reason: string;
+    reason: string;
 
   @IsOptional()
   @IsBoolean()
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  active: boolean;
+    active: boolean;
 }

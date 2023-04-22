@@ -16,23 +16,23 @@ import {
 export class Specialty {
   @PrimaryGeneratedColumn()
   @Field(() => Int)
-  id: number;
+    id: number;
 
   @Column({ unique: false })
   @Field(() => Int)
-  matterId: number;
+    matterId: number;
 
   @ManyToOne(() => Matter, { onDelete: 'CASCADE' })
   @JoinTable()
   @Field(() => Matter)
-  matter: Matter;
+    matter: Matter;
 
   @Column({ unique: false })
   @Field(() => Int)
-  proffessorId: number;
+    proffessorId: number;
 
   @ManyToOne(() => Proffessor, { onDelete: 'CASCADE' })
   @JoinTable()
   @Field(() => Proffessor)
-  proffessor: Proffessor;
+    proffessor: Proffessor;
 }

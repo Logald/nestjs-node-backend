@@ -8,20 +8,20 @@ export class UpdateAbsenceDto extends CreateAbsenceDto {
   @IsOptional()
   @ApiProperty({ required: false })
   @Field(() => Int, { nullable: true })
-  gmpId: number;
+    gmpId: number;
 
   @IsOptional()
   @ApiProperty({ required: false })
   @Field(() => Int, { nullable: true })
-  turnId: number;
+    turnId: number;
 
   @IsOptional()
   @ApiProperty({ required: false })
   @Field(() => String, { nullable: true })
-  startDate: Date;
+    startDate: Date;
 
   @IsOptional()
   @ApiProperty({ required: false })
   @Field(() => String, { nullable: true })
-  endDate: Date;
+    endDate: Date;
 }

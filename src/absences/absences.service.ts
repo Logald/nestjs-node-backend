@@ -26,12 +26,12 @@ import { UpdateAbsenceDto } from './dtos/update_absence.dto';
 @Injectable()
 export class AbsencesProvider {
   private readonly dateFormat = 'YYYY-MM-DD HH:mm:ss.SSS';
-  constructor(
+  constructor (
     @InjectRepository(Absence) private readonly absencesService: Repository<Absence>,
     @InjectRepository(Gmp) private readonly gmpsService: Repository<Gmp>,
     @InjectRepository(Turn) private readonly turnsService: Repository<Turn>,
     private readonly gmpsProvider: GmpsProvider,
-    private readonly turnsProvider: TurnsProvider,
+    private readonly turnsProvider: TurnsProvider
   ) {
     setInterval(() => {
       this.absencesService
@@ -45,7 +45,7 @@ export class AbsencesProvider {
     }, 10000);
   }
 
-  private async findMany(findManyOptions: FindManyOptions) {
+  private async findMany (findManyOptions: FindManyOptions) {
     const options = findManyOptions.where;
     if ('startDate' in options) {
       options.startDate = MoreThanOrEqual(new Date(options.startDate));
@@ -63,22 +63,22 @@ export class AbsencesProvider {
     return absences;
   }
 
-  async getAbsences(findManyOptions: FindAbsenceDto) {
+  async getAbsences (findManyOptions: FindAbsenceDto) {
     return await this.findMany({
-      where: findManyOptions,
+      where: findManyOptions
     });
   }
 
-  async getAbsencesWithRelations(findManyOptions: FindAbsenceDto) {
+  async getAbsencesWithRelations (findManyOptions: FindAbsenceDto) {
     return await this.findMany({
       where: findManyOptions,
-      relations: ['gmp', 'turn'],
+      relations: ['gmp', 'turn']
     });
   }
 
-  async findOne(
+  async findOne (
     findOneOptions: FindOneOptions<Absence>,
-    found: boolean = true,
+    found: boolean = true
   ) {
     const absenceFound = await this.absencesService.findOne(findOneOptions);
     if (found && !absenceFound) absenceNotFoundError();
@@ -90,18 +90,18 @@ export class AbsencesProvider {
     };
   }
 
-  async getAbsence(absenceId: number) {
+  async getAbsence (absenceId: number) {
     return await this.findOne({ where: { id: absenceId } });
   }
 
-  async getAbsenceWithRelations(absenceId: number) {
+  async getAbsenceWithRelations (absenceId: number) {
     return await this.findOne({
       where: { id: absenceId },
-      relations: ['gmp', 'turn'],
+      relations: ['gmp', 'turn']
     });
   }
 
-  async createAbsence(absenceData: CreateAbsenceDto) {
+  async createAbsence (absenceData: CreateAbsenceDto) {
     if (moment(absenceData.startDate).isAfter(absenceData.endDate)) {
       startDateError();
     }
@@ -111,7 +111,7 @@ export class AbsencesProvider {
     return true;
   }
 
-  async updateAbsense(absenceId: number, absenceData: UpdateAbsenceDto) {
+  async updateAbsense (absenceId: number, absenceData: UpdateAbsenceDto) {
     const absenceFound = await this.findOne({ where: { id: absenceId } });
     if ('gmpId' in absenceData) {
       await this.gmpsProvider.findOne({ where: { id: absenceData.gmpId } });
@@ -121,7 +121,7 @@ export class AbsencesProvider {
     }
     if (
       moment(absenceData?.startDate ?? absenceFound.startDate).isAfter(
-        absenceData?.endDate ?? absenceFound.endDate,
+        absenceData?.endDate ?? absenceFound.endDate
       )
     ) {
       invalidDatesError();
@@ -137,7 +137,7 @@ export class AbsencesProvider {
     return true;
   }
 
-  async deleteAbsence(absenceId: number) {
+  async deleteAbsence (absenceId: number) {
     await this.findOne({ where: { id: absenceId } });
     await this.absencesService.delete(absenceId);
     return true;

@@ -13,50 +13,49 @@ import { Proffessor } from './proffessor.entity';
 
 @Injectable()
 export class ProffessorsProvider {
-  constructor(
+  constructor (
     @InjectRepository(Proffessor)
     private readonly proffessorsService: Repository<Proffessor>
   ) { }
 
-  async getProffessors(findManyOptions: FindProffessorDto) {
+  async getProffessors (findManyOptions: FindProffessorDto) {
     return await this.proffessorsService.find({ where: findManyOptions });
   }
 
-  async findOne(
+  async findOne (
     findOneOptions: FindOneOptions<Proffessor>,
-    found: boolean = true,
+    found: boolean = true
   ) {
     const proffessorFound = await this.proffessorsService.findOne(
-      findOneOptions,
+      findOneOptions
     );
     if (found && !proffessorFound) proffessorNotFoundError();
     else if (!found && proffessorFound) proffessorFoundError();
     else return proffessorFound;
   }
 
-  async getProffessor(proffessorId: number) {
+  async getProffessor (proffessorId: number) {
     return await this.findOne({ where: { id: proffessorId } });
   }
 
-  async createProffessor(proffessorData: CreateProffessorDto) {
+  async createProffessor (proffessorData: CreateProffessorDto) {
     await this.findOne({ where: { ci: proffessorData.ci } }, false);
     await this.proffessorsService.insert(proffessorData);
     return true;
   }
 
-  async updateProffessor(
+  async updateProffessor (
     proffessorId: number,
-    proffessorData: UpdateProffessorDto,
+    proffessorData: UpdateProffessorDto
   ) {
     isEmpty(proffessorData);
-    if ('ci' in proffessorData)
-      await this.findOne({ where: { ci: proffessorData.ci } }, false);
+    if ('ci' in proffessorData) { await this.findOne({ where: { ci: proffessorData.ci } }, false); }
     await this.findOne({ where: { id: proffessorId } });
     await this.proffessorsService.update(proffessorId, proffessorData);
     return true;
   }
 
-  async deleteProffessor(proffessorId: number) {
+  async deleteProffessor (proffessorId: number) {
     await this.findOne({ where: { id: proffessorId } });
     await this.proffessorsService.delete(proffessorId);
     return true;

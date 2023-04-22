@@ -16,23 +16,23 @@ import {
 export class MG {
   @PrimaryGeneratedColumn()
   @Field(() => Int)
-  id: number;
+    id: number;
 
   @Column()
   @Field(() => Int)
-  matterId: number;
+    matterId: number;
 
   @ManyToOne(() => Matter, { onDelete: 'CASCADE' })
   @JoinColumn()
   @Field(() => Matter)
-  matter: Matter;
+    matter: Matter;
 
   @Column()
   @Field(() => Int)
-  groupId: number;
+    groupId: number;
 
   @ManyToOne(() => Group, { onDelete: 'CASCADE' })
   @JoinColumn()
   @Field(() => Group)
-  group: Group;
+    group: Group;
 }

@@ -8,24 +8,24 @@ export class CreateProffessorDto {
   @MinLength(1)
   @ApiProperty({ minLength: 1 })
   @Field()
-  name: string;
+    name: string;
 
   @IsString()
   @MinLength(1)
   @ApiProperty({ minLength: 1 })
   @Field()
-  lastname: string;
+    lastname: string;
 
   @IsInt()
   @Min(10000000)
   @Max(99999999)
   @ApiProperty({ minimum: 10000000, maximum: 99999999 })
   @Field(() => Int)
-  ci: number;
+    ci: number;
 
   @IsBoolean()
   @IsOptional()
   @ApiProperty({ required: false, default: true })
   @Field({ nullable: true })
-  active: boolean;
+    active: boolean;
 }

@@ -13,17 +13,17 @@ export class FindGmpDto extends UpdateGmpDto {
   @Min(1)
   @ApiProperty({ required: false, minimum: 1 })
   @Field(() => Int, { nullable: true })
-  id: number;
+    id: number;
 
   @IsOptional()
   @ApiProperty({ required: false })
   @Type(() => FindMgDto)
   @Field(() => FindMgDto, { nullable: true })
-  mg: FindMgDto;
+    mg: FindMgDto;
 
   @IsOptional()
   @ApiProperty({ required: false })
   @Type(() => FindProffessorDto)
   @Field(() => FindProffessorDto, { nullable: true })
-  proffessor: FindProffessorDto;
+    proffessor: FindProffessorDto;
 }

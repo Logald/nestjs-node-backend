@@ -9,21 +9,21 @@ import {
 export class Proffessor {
   @PrimaryGeneratedColumn()
   @Field(() => Int)
-  id: number;
+    id: number;
 
   @Column()
   @Field()
-  name: string;
+    name: string;
 
   @Column()
   @Field()
-  lastname: string;
+    lastname: string;
 
   @Column({ unique: true })
   @Field(() => Int)
-  ci: number;
+    ci: number;
 
   @Column({ default: true })
   @Field()
-  active: boolean;
+    active: boolean;
 }

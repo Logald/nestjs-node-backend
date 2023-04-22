@@ -15,29 +15,29 @@ export class CreateGroupDto {
   @Min(1)
   @ApiProperty({ minimum: 1 })
   @Field(() => Int)
-  grade: number;
+    grade: number;
 
   @IsString()
   @MinLength(1)
   @ApiProperty({ minimum: 1 })
   @Field()
-  name: string;
+    name: string;
 
   @IsOptional()
   @IsString()
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  description: string;
+    description: string;
 
   @IsInt()
   @Min(1)
   @ApiProperty({ minimum: 1 })
   @Field(() => Int)
-  turnId: number;
+    turnId: number;
 
   @IsOptional()
   @IsBoolean()
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  active: boolean;
+    active: boolean;
 }

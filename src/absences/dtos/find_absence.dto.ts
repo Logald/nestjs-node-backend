@@ -12,11 +12,11 @@ export class FindAbsenceDto extends UpdateAbsenceDto {
   @Min(1)
   @ApiProperty({ required: false, minimum: 1 })
   @Field(() => Int, { nullable: true })
-  id: number;
+    id: number;
 
   @IsOptional()
   @Type(() => FindTurnDto)
   @ApiProperty({ required: false })
   @Field(() => FindTurnDto, { nullable: true })
-  turn: FindTurnDto;
+    turn: FindTurnDto;
 }

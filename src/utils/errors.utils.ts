@@ -1,90 +1,90 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 // User Errors
-export function userFoundError() {
+export function userFoundError () {
   throw new HttpException('User found', HttpStatus.FOUND);
 }
-export function userNotFoundError() {
+export function userNotFoundError () {
   throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 }
-export function invalidPasswordError() {
+export function invalidPasswordError () {
   throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
 }
 // Turn Errors
-export function turnFoundError() {
+export function turnFoundError () {
   throw new HttpException('Turn found', HttpStatus.FOUND);
 }
-export function turnNotFoundError() {
+export function turnNotFoundError () {
   throw new HttpException('Turn not found', HttpStatus.NOT_FOUND);
 }
 // Specialty Errors
-export function specialtyFoundError() {
+export function specialtyFoundError () {
   throw new HttpException('Specialty found', HttpStatus.FOUND);
 }
-export function specialtyNotFoundError() {
+export function specialtyNotFoundError () {
   throw new HttpException('Specialty not found', HttpStatus.NOT_FOUND);
 }
 // Proffessor Errors
-export function proffessorFoundError() {
+export function proffessorFoundError () {
   throw new HttpException('Proffessor found', HttpStatus.FOUND);
 }
-export function proffessorNotFoundError() {
+export function proffessorNotFoundError () {
   throw new HttpException('Proffessor not found', HttpStatus.NOT_FOUND);
 }
 // Matter Errors
-export function matterFoundError() {
+export function matterFoundError () {
   throw new HttpException('Matter found', HttpStatus.FOUND);
 }
-export function matterNotFoundError() {
+export function matterNotFoundError () {
   throw new HttpException('Matter not found', HttpStatus.NOT_FOUND);
 }
 // Profile Errors
-export function profileFoundError() {
+export function profileFoundError () {
   throw new HttpException('Profile found', HttpStatus.FOUND);
 }
-export function profileNotFoundError() {
+export function profileNotFoundError () {
   throw new HttpException('Profile not found', HttpStatus.NOT_FOUND);
 }
 // Person Errors
-export function personFoundError() {
+export function personFoundError () {
   throw new HttpException('Person found', HttpStatus.FOUND);
 }
-export function personNotFoundError() {
+export function personNotFoundError () {
   throw new HttpException('Person not found', HttpStatus.NOT_FOUND);
 }
 // Group Errors
-export function groupFoundError() {
+export function groupFoundError () {
   throw new HttpException('Group found', HttpStatus.FOUND);
 }
-export function groupNotFoundError() {
+export function groupNotFoundError () {
   throw new HttpException('Group not found', HttpStatus.NOT_FOUND);
 }
 // MG Errors
-export function mgFoundError() {
+export function mgFoundError () {
   throw new HttpException('MG found', HttpStatus.FOUND);
 }
-export function mgNotFoundError() {
+export function mgNotFoundError () {
   throw new HttpException('MG not found', HttpStatus.NOT_FOUND);
 }
 // GMP Errors
-export function gmpFoundError() {
+export function gmpFoundError () {
   throw new HttpException('GMP found', HttpStatus.FOUND);
 }
-export function gmpNotFoundError() {
+export function gmpNotFoundError () {
   throw new HttpException('GMP not found', HttpStatus.NOT_FOUND);
 }
 // Absence Errors
-export function absenceFoundError() {
+export function absenceFoundError () {
   throw new HttpException('Absence found', HttpStatus.FOUND);
 }
-export function absenceNotFoundError() {
+export function absenceNotFoundError () {
   throw new HttpException('Absence not found', HttpStatus.NOT_FOUND);
 }
-export function startDateError() {
+export function startDateError () {
   throw new HttpException(
     'StartDate cannot be greater than EndDate',
-    HttpStatus.BAD_REQUEST,
+    HttpStatus.BAD_REQUEST
   );
 }
-export function invalidDatesError() {
+export function invalidDatesError () {
   throw new HttpException('Invalid dates', HttpStatus.BAD_REQUEST);
 }

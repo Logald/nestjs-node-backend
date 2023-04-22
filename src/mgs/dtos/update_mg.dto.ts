@@ -8,10 +8,10 @@ export class UpdateMgDto extends CreateMgDto {
   @IsOptional()
   @ApiProperty({ required: false })
   @Field(() => Int, { nullable: true })
-  matterId: number;
+    matterId: number;
 
   @IsOptional()
   @ApiProperty({ required: false })
   @Field(() => Int, { nullable: true })
-  groupId: number;
+    groupId: number;
 }

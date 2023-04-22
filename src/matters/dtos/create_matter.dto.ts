@@ -8,11 +8,11 @@ export class CreateMatterDto {
   @MinLength(1)
   @ApiProperty({ minLength: 1 })
   @Field()
-  name: string;
+    name: string;
 
   @IsOptional()
   @IsString()
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  description: string;
+    description: string;
 }

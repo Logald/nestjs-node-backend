@@ -8,17 +8,17 @@ export class CreateGmpDto {
   @Min(1)
   @ApiProperty({ minimum: 1 })
   @Field(() => Int)
-  mgId: number;
+    mgId: number;
 
   @IsInt()
   @Min(1)
   @ApiProperty({ minimum: 1 })
   @Field(() => Int)
-  proffessorId: number;
+    proffessorId: number;
 
   @IsOptional()
   @IsBoolean()
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  active: boolean;
+    active: boolean;
 }

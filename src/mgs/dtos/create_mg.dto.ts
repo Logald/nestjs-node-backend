@@ -8,11 +8,11 @@ export class CreateMgDto {
   @Min(1)
   @ApiProperty({ minimum: 1 })
   @Field(() => Int)
-  matterId: number;
+    matterId: number;
 
   @IsInt()
   @Min(1)
   @ApiProperty({ minimum: 1 })
   @Field(() => Int)
-  groupId: number;
+    groupId: number;
 }

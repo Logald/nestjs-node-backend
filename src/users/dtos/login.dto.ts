@@ -8,11 +8,11 @@ export class LoginDto {
   @MinLength(4)
   @ApiProperty()
   @Field()
-  name: string;
+    name: string;
 
   @IsString()
   @MinLength(4)
   @ApiProperty()
   @Field()
-  password: string;
+    password: string;
 }

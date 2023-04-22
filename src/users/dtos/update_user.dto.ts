@@ -8,10 +8,10 @@ export class UpdateUserDto extends CreateUserDto {
   @IsOptional()
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  name: string;
+    name: string;
 
   @IsOptional()
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  password: string;
+    password: string;
 }

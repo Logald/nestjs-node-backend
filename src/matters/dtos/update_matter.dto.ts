@@ -8,5 +8,5 @@ export class UpdateMatterDto extends CreateMatterDto {
   @IsOptional()
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  name: string;
+    name: string;
 }

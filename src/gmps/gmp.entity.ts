@@ -16,27 +16,27 @@ import {
 export class Gmp {
   @PrimaryGeneratedColumn()
   @Field(() => Int)
-  id: number;
+    id: number;
 
   @Column()
   @Field(() => Int)
-  mgId: number;
+    mgId: number;
 
   @ManyToOne(() => MG, { onDelete: 'CASCADE' })
   @JoinColumn()
   @Field(() => MG)
-  mg: MG;
+    mg: MG;
 
   @Column()
   @Field(() => Int)
-  proffessorId: number;
+    proffessorId: number;
 
   @ManyToOne(() => Proffessor, { orphanedRowAction: 'nullify' })
   @JoinColumn()
   @Field(() => Proffessor)
-  proffessor: Proffessor;
+    proffessor: Proffessor;
 
   @Column({ type: 'boolean', default: true })
   @Field()
-  active: boolean;
+    active: boolean;
 }

@@ -7,5 +7,5 @@ export class CreateTurnDto {
   @MinLength(4)
   @ApiProperty({ minLength: 4 })
   @Field()
-  name: string;
+    name: string;
 }

@@ -7,5 +7,5 @@ export class UpdateTurnDto extends CreateTurnDto {
   @IsOptional()
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  name: string;
+    name: string;
 }

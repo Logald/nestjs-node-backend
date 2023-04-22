@@ -13,17 +13,17 @@ export class FindSpecialtyDto extends UpdateSpecialtyDto {
   @Min(1)
   @ApiProperty({ required: false, minimum: 1 })
   @Field(() => Int, { nullable: true })
-  id: number;
+    id: number;
 
   @IsOptional()
   @Type(() => FindMatterDto)
   @ApiProperty({ required: false })
   @Field(() => FindMatterDto, { nullable: true })
-  matter: FindMatterDto;
+    matter: FindMatterDto;
 
   @IsOptional()
   @Type(() => FindProffessorDto)
   @ApiProperty({ required: false })
   @Field(() => FindProffessorDto, { nullable: true })
-  proffessor: FindProffessorDto;
+    proffessor: FindProffessorDto;
 }

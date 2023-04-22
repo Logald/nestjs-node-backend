@@ -6,13 +6,13 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class Matter {
   @PrimaryGeneratedColumn()
   @Field(() => Int)
-  id: number;
+    id: number;
 
   @Column({ type: 'varchar', unique: true })
   @Field()
-  name: string;
+    name: string;
 
   @Column({ type: 'varchar', nullable: true })
   @Field({ nullable: true })
-  description: string;
+    description: string;
 }

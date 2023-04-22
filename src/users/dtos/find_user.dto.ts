@@ -10,5 +10,5 @@ export class FindUserDto extends UpdateUserDto {
   @Min(1)
   @ApiProperty({ required: false, minimum: 1 })
   @Field((type) => Int, { nullable: true })
-  id: number;
+    id: number;
 }

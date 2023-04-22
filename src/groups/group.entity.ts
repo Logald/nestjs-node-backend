@@ -14,29 +14,29 @@ import {
 export class Group {
   @PrimaryGeneratedColumn()
   @Field(() => Int)
-  id: number;
+    id: number;
 
   @Column({ type: 'int' })
   @Field(() => Int)
-  grade: number;
+    grade: number;
 
   @Column({ type: 'varchar' })
   @Field()
-  name: string;
+    name: string;
 
   @Column({ type: 'varchar', nullable: true })
   @Field({ nullable: true })
-  description: string;
+    description: string;
 
   @Column()
   @Field(() => Int)
-  turnId: number;
+    turnId: number;
 
   @ManyToOne(() => Turn, { onDelete: 'CASCADE' })
   @Field(() => Turn)
-  turn: Turn;
+    turn: Turn;
 
   @Column({ default: true })
   @Field({ defaultValue: true })
-  active: boolean;
+    active: boolean;
 }

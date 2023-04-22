@@ -10,48 +10,50 @@ import { Turn } from './turn.entity';
 
 @Injectable()
 export class TurnsProvider {
-  constructor(
-    @InjectRepository(Turn) private readonly turnService: Repository<Turn>,
+  constructor (
+    @InjectRepository(Turn) private readonly turnService: Repository<Turn>
   ) { }
 
-  public async createTurnsIfNotExists() {
+  public async createTurnsIfNotExists () {
     const turns: CreateTurnDto[] = [
       { name: 'Matutino' },
       { name: 'Vespertino' },
       { name: 'Nocturno' }
     ];
-    const turnsFoundPromise = await Promise.all(turns.map((turn) => {
+    const turnsFoundPromise = await Promise.all(turns.map(async (turn) => {
       return this.turnService.findOne({ where: { name: turn.name } })
     }))
     const turnsFound = turnsFoundPromise.filter((turn) => !turn).length;
-    if (turnsFound !== 0)
+    if (turnsFound !== 0) {
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       turns.forEach(async (turn) => {
         await this.turnService.insert(turn);
       })
+    }
   }
 
-  async findOne(findOneOptions: FindOneOptions<Turn>, found: boolean = true) {
+  async findOne (findOneOptions: FindOneOptions<Turn>, found: boolean = true) {
     const turnFound = await this.turnService.findOne(findOneOptions);
     if (found && !turnFound) turnNotFoundError();
     else if (!found && turnFound) turnFoundError();
     else return turnFound;
   }
 
-  async getTurns(findManyOptions: FindTurnDto) {
+  async getTurns (findManyOptions: FindTurnDto) {
     return await this.turnService.find({ where: findManyOptions });
   }
 
-  async getTurn(turnId: number) {
+  async getTurn (turnId: number) {
     return await this.findOne({ where: { id: turnId } });
   }
 
-  async createTurn(turnData: CreateTurnDto) {
+  async createTurn (turnData: CreateTurnDto) {
     await this.findOne({ where: { name: turnData.name } }, false);
     await this.turnService.insert(turnData);
     return true;
   }
 
-  async updateTurn(turnId: number, turnData: UpdateTurnDto) {
+  async updateTurn (turnId: number, turnData: UpdateTurnDto) {
     isEmpty(turnData);
     await this.findOne({ where: { id: turnId } });
     await this.findOne({ where: { name: turnData.name } }, false);
@@ -59,7 +61,7 @@ export class TurnsProvider {
     return true;
   }
 
-  async deleteTurn(turnId: number) {
+  async deleteTurn (turnId: number) {
     await this.findOne({ where: { id: turnId } });
     await this.turnService.delete(turnId);
     return true;

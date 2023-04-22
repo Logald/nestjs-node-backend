@@ -8,10 +8,10 @@ export class UpdateSpecialtyDto extends CreateSpecialtyDto {
   @IsOptional()
   @ApiProperty({ required: false })
   @Field(() => Int, { nullable: true })
-  proffessorId: number;
+    proffessorId: number;
 
   @IsOptional()
   @ApiProperty({ required: false })
   @Field(() => Int, { nullable: true })
-  matterId: number;
+    matterId: number;
 }

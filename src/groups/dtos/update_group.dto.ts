@@ -8,15 +8,15 @@ export class UpdateGroupDto extends CreateGroupDto {
   @IsOptional()
   @ApiProperty({ required: false })
   @Field(() => Int, { nullable: true })
-  grade: number;
+    grade: number;
 
   @IsOptional()
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  name: string;
+    name: string;
 
   @IsOptional()
   @ApiProperty({ required: false })
   @Field(() => Int, { nullable: true })
-  turnId: number;
+    turnId: number;
 }

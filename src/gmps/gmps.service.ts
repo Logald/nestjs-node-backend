@@ -14,73 +14,72 @@ import { Gmp } from './gmp.entity';
 
 @Injectable()
 export class GmpsProvider {
-  constructor(
+  constructor (
     @InjectRepository(Gmp) private readonly gmpsService: Repository<Gmp>,
     @InjectRepository(MG) private readonly mgService: Repository<MG>,
     @InjectRepository(Proffessor)
     private readonly proffessorsService: Repository<Proffessor>,
     private readonly mgsProvider: MGProvider,
-    private readonly proffessorsProvider: ProffessorsProvider,
+    private readonly proffessorsProvider: ProffessorsProvider
   ) { }
 
-  async getGmps(findManyOptions: FindGmpDto) {
+  async getGmps (findManyOptions: FindGmpDto) {
     return await this.gmpsService.find({ where: findManyOptions });
   }
 
-  async getGmpsWithRelations(findManyOptions: FindGmpDto) {
+  async getGmpsWithRelations (findManyOptions: FindGmpDto) {
     return await this.gmpsService.find({
       where: findManyOptions,
-      relations: ['mg', 'proffessor'],
+      relations: ['mg', 'proffessor']
     });
   }
 
-  async findOne(findOneOptions: FindOneOptions<Gmp>, found: boolean = true) {
+  async findOne (findOneOptions: FindOneOptions<Gmp>, found: boolean = true) {
     const gmpFound = await this.gmpsService.findOne(findOneOptions);
     if (found && !gmpFound) gmpNotFoundError();
     else if (!found && gmpFound) gmpFoundError();
     else return gmpFound;
   }
 
-  async getGmp(gmpId: number) {
+  async getGmp (gmpId: number) {
     return await this.findOne({ where: { id: gmpId } });
   }
 
-  async getGmpWithRelations(gmpId: number) {
+  async getGmpWithRelations (gmpId: number) {
     return await this.findOne({
       where: { id: gmpId },
-      relations: ['mg', 'proffessor'],
+      relations: ['mg', 'proffessor']
     });
   }
 
-  async createGmp(gmpData: CreateGmpDto) {
+  async createGmp (gmpData: CreateGmpDto) {
     await this.mgsProvider.findOne({ where: { id: gmpData.mgId } });
     await this.proffessorsProvider.findOne({
-      where: { id: gmpData.proffessorId },
+      where: { id: gmpData.proffessorId }
     });
     await this.findOne(
       {
         where: [
           {
             mgId: gmpData.mgId,
-            proffessorId: gmpData.proffessorId,
+            proffessorId: gmpData.proffessorId
           },
-          { mgId: gmpData.mgId, active: true },
-        ],
+          { mgId: gmpData.mgId, active: true }
+        ]
       },
-      false,
+      false
     );
     await this.gmpsService.insert(gmpData);
     return true;
   }
 
-  async updateGmp(gmpId: number, gmpData: UpdateGmpDto) {
+  async updateGmp (gmpId: number, gmpData: UpdateGmpDto) {
     isEmpty(gmpData);
     await this.findOne({ where: { id: gmpId } });
-    if ('mgId' in gmpData)
-      await this.mgsProvider.findOne({ where: { id: gmpData.mgId } });
+    if ('mgId' in gmpData) { await this.mgsProvider.findOne({ where: { id: gmpData.mgId } }); }
     if ('proffessorId' in gmpData) {
       await this.proffessorsProvider.findOne({
-        where: { id: gmpData.proffessorId },
+        where: { id: gmpData.proffessorId }
       });
     }
     await this.gmpsService.update({ id: gmpId }, gmpData).catch(() => {
@@ -89,7 +88,7 @@ export class GmpsProvider {
     return true;
   }
 
-  async deleteGmp(gmpId: number) {
+  async deleteGmp (gmpId: number) {
     await this.findOne({ where: { id: gmpId } });
     await this.gmpsService.delete(gmpId);
     return true;

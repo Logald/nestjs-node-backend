@@ -9,47 +9,46 @@ import { TurnsProvider } from './turns.service';
 
 @Resolver()
 export class TurnsResolver {
-  constructor(private turnsProvider: TurnsProvider) { }
+  constructor (private readonly turnsProvider: TurnsProvider) { }
 
   @UseGuards(GraphAuthGuard)
   @Query(() => [Turn])
-  async getTurns(
-    @Args({ name: 'findOptions', nullable: true, type: () => FindTurnDto }) findOptions?: FindTurnDto,
+  async getTurns (
+  @Args({ name: 'findOptions', nullable: true, type: () => FindTurnDto }) findOptions?: FindTurnDto
   ) {
     return await this.turnsProvider.getTurns(findOptions);
   }
 
   @UseGuards(GraphAuthGuard)
   @Query(() => Turn)
-  async getTurn(
-    @Args({ name: "turnId", type: () => Int }) turnId: number
+  async getTurn (
+  @Args({ name: 'turnId', type: () => Int }) turnId: number
   ) {
     return await this.turnsProvider.getTurn(turnId)
   }
 
   @UseGuards(GraphAuthGuard)
   @Mutation(() => Boolean)
-  async createTurn(
-    @Args({ name: "turnData", type: () => CreateTurnDto }) turnData: CreateTurnDto
+  async createTurn (
+  @Args({ name: 'turnData', type: () => CreateTurnDto }) turnData: CreateTurnDto
   ) {
     return await this.turnsProvider.createTurn(turnData)
   }
 
   @UseGuards(GraphAuthGuard)
   @Mutation(() => Boolean)
-  async updateTurn(
-    @Args({ name: "turnId", type: () => Int }) turnId: number,
-    @Args({ name: "turnData", type: () => UpdateTurnDto }) turnData: UpdateTurnDto
+  async updateTurn (
+  @Args({ name: 'turnId', type: () => Int }) turnId: number,
+    @Args({ name: 'turnData', type: () => UpdateTurnDto }) turnData: UpdateTurnDto
   ) {
     return await this.turnsProvider.updateTurn(turnId, turnData)
   }
 
   @UseGuards(GraphAuthGuard)
   @Mutation(() => Boolean)
-  async deleteTurn(
-    @Args({ name: "turnId", type: () => Int }) turnId: number
+  async deleteTurn (
+  @Args({ name: 'turnId', type: () => Int }) turnId: number
   ) {
     return await this.turnsProvider.deleteTurn(turnId)
   }
-
 }

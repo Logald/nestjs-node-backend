@@ -11,17 +11,17 @@ export class CreateUserDto {
   @MinLength(4)
   @ApiProperty({ minLength: 4 })
   @Field()
-  name: string;
+    name: string;
 
   @IsString()
   @MinLength(4)
   @ApiProperty({ minLength: 4 })
   @Field()
-  password: string;
+    password: string;
 
   @IsOptional()
   @IsBoolean()
   @ApiProperty({ required: false, default: true })
   @Field({ nullable: true })
-  active: boolean;
+    active: boolean;
 }

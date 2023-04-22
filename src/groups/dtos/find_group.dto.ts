@@ -12,11 +12,11 @@ export class FindGroupDto extends UpdateGroupDto {
   @Min(1)
   @ApiProperty({ required: false, minimum: 1 })
   @Field(() => Int, { nullable: true })
-  id: number;
+    id: number;
 
   @IsOptional()
   @ApiProperty({ required: false })
   @Type(() => FindTurnDto)
   @Field(() => FindTurnDto, { nullable: true })
-  turn: FindTurnDto;
+    turn: FindTurnDto;
 }

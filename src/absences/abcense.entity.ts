@@ -8,37 +8,37 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 export class Absence {
   @PrimaryGeneratedColumn()
   @Field(() => Int)
-  id: number;
+    id: number;
 
   @Column()
   @Field(() => Int)
-  gmpId: number;
+    gmpId: number;
 
   @ManyToOne(() => Gmp, { onDelete: 'CASCADE' })
   @Field(() => Gmp)
-  gmp: Gmp;
+    gmp: Gmp;
 
   @Column()
   @Field(() => Int)
-  turnId: number;
+    turnId: number;
 
   @ManyToOne(() => Turn, { onDelete: 'CASCADE' })
   @Field(() => Turn)
-  turn: Turn;
+    turn: Turn;
 
   @Column({ type: 'datetime' })
   @Field(() => Date)
-  startDate: Date;
+    startDate: Date;
 
   @Column({ type: 'datetime' })
   @Field(() => Date)
-  endDate: Date;
+    endDate: Date;
 
   @Column({ nullable: true })
   @Field()
-  reason: string;
+    reason: string;
 
   @Column({ type: 'boolean', default: true })
   @Field()
-  active: boolean;
+    active: boolean;
 }

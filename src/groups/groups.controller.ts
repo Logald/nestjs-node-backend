@@ -7,9 +7,11 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Res,
   UseGuards
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 import { AccessTokenGuard } from 'src/users/accessTokenGuard';
 import { CreateGroupDto } from './dtos/create_group.dto';
 import { FindGroupDto } from './dtos/find_group.dto';
@@ -21,43 +23,44 @@ import { GroupsProvider } from './groups.service';
 @ApiTags('api/groups')
 @Controller('api/groups')
 export class GroupsController {
-  constructor(private readonly groupsProvider: GroupsProvider) { }
+  constructor (private readonly groupsProvider: GroupsProvider) { }
 
   @Post()
-  async getGroups(@Body() findManyOptions: FindGroupDto) {
+  async getGroups (@Body() findManyOptions: FindGroupDto) {
     return await this.groupsProvider.getGroups(findManyOptions);
   }
 
   @Post('/all')
-  async getGroupsWithRelations(@Body() findManyOptions: FindGroupDto) {
+  async getGroupsWithRelations (@Body() findManyOptions: FindGroupDto) {
     return await this.groupsProvider.getGroupsWithRelations(findManyOptions);
   }
 
   @Post('/create')
-  async createGroup(@Body() groupDate: CreateGroupDto) {
-    return await this.groupsProvider.createGroup(groupDate);
+  async createGroup (@Body() groupDate: CreateGroupDto, @Res() res: Response) {
+    return res.json(await this.groupsProvider.createGroup(groupDate));
   }
 
   @Get('/:id')
-  async getGroup(@Param('id', ParseIntPipe) groupId: number) {
+  async getGroup (@Param('id', ParseIntPipe) groupId: number) {
     return await this.groupsProvider.getGroup(groupId);
   }
 
   @Get('/:id/all')
-  async getGroupWithRelations(@Param('id', ParseIntPipe) groupId: number) {
+  async getGroupWithRelations (@Param('id', ParseIntPipe) groupId: number) {
     return await this.groupsProvider.getGroupWithRelations(groupId);
   }
 
   @Put('/:id')
-  async updateGroup(
-    @Param('id', ParseIntPipe) groupId: number,
+  async updateGroup (
+  @Param('id', ParseIntPipe) groupId: number,
     @Body() groupData: UpdateGroupDto,
+    @Res() res: Response
   ) {
-    return await this.groupsProvider.updateGroup(groupId, groupData);
+    return res.json(await this.groupsProvider.updateGroup(groupId, groupData));
   }
 
   @Delete('/:id')
-  async deleteGroup(@Param('id', ParseIntPipe) groupId: number) {
-    return await this.groupsProvider.deleteGroup(groupId);
+  async deleteGroup (@Param('id', ParseIntPipe) groupId: number, @Res() res: Response) {
+    return res.json(await this.groupsProvider.deleteGroup(groupId));
   }
 }
