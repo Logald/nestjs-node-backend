@@ -23,6 +23,16 @@ export class UsersProvider {
     private readonly JwtService: JwtService
   ) { }
 
+  public async createUserAdminIfNotExist() {
+    const admin = {
+      name: 'admin',
+      password: await hash('admin2023', 10)
+    }
+    const user = await this.usersService.findOne({ where: { name: admin.name } });
+    if (!user)
+      this.usersService.insert(admin);
+  }
+
   private async checkPassword(password: string, encryptPassword: string) {
     const checkPassword = await compare(password, encryptPassword);
     if (!checkPassword) invalidPasswordError();

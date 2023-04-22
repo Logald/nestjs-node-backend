@@ -14,6 +14,22 @@ export class TurnsProvider {
     @InjectRepository(Turn) private readonly turnService: Repository<Turn>,
   ) { }
 
+  public async createTurnsIfNotExists() {
+    const turns: CreateTurnDto[] = [
+      { name: 'Matutino' },
+      { name: 'Vespertino' },
+      { name: 'Nocturno' }
+    ];
+    const turnsFoundPromise = await Promise.all(turns.map((turn) => {
+      return this.turnService.findOne({ where: { name: turn.name } })
+    }))
+    const turnsFound = turnsFoundPromise.filter((turn) => !turn).length;
+    if (turnsFound !== 0)
+      turns.forEach(async (turn) => {
+        await this.turnService.insert(turn);
+      })
+  }
+
   async findOne(findOneOptions: FindOneOptions<Turn>, found: boolean = true) {
     const turnFound = await this.turnService.findOne(findOneOptions);
     if (found && !turnFound) turnNotFoundError();

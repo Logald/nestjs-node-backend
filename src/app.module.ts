@@ -14,6 +14,12 @@ import { ProffessorsModule } from './proffessors/proffessors.module';
 import { SpecialtiesModule } from './specialties/specialties.module';
 import { TurnsModule } from './turns/turns.module';
 import { UsersModule } from './users/users.module';
+import { AppController } from './app.controller';
+import { UsersProvider } from './users/users.service';
+import { TurnsProvider } from './turns/turns.service';
+import { Turn } from './turns/turn.entity';
+import { User } from './users/user.entity';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -44,9 +50,11 @@ import { UsersModule } from './users/users.module';
       debug: true,
       // buildSchemaOptions: { dateScalarMode: "isoDate" },
       plugins: [ApolloServerPluginLandingPageLocalDefault()]
-    })
+    }),
+    TypeOrmModule.forFeature([Turn, User]),
+    JwtModule.register({})
   ],
-  controllers: [],
-  providers: []
+  controllers: [AppController],
+  providers: [UsersProvider, TurnsProvider]
 })
 export class AppModule { }
