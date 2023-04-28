@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { userType } from './dtos/create_user.dto';
 
 @Entity({ name: 'user' })
 @ObjectType()
@@ -15,6 +16,9 @@ export class User {
   @Column()
   // @Field()
     password: string;
+
+  @Column({ default: 'Adscrito', enum: userType })
+    type: string;
 
   @Column({ type: 'boolean', default: true })
   @Field({ defaultValue: true })

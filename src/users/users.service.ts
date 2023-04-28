@@ -14,10 +14,12 @@ import {
   userFoundError,
   userNotFoundError
 } from 'src/utils/errors.utils';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions, FindOptionsSelect, Repository } from 'typeorm';
 
 @Injectable()
 export class UsersProvider {
+  private readonly userAttributes: FindOptionsSelect<User> = { id: true, name: true, type: true, active: true }
+
   constructor (
     @InjectRepository(User) private readonly usersService: Repository<User>,
     private readonly JwtService: JwtService
@@ -25,8 +27,9 @@ export class UsersProvider {
 
   public async createUserAdminIfNotExist () {
     const admin = {
-      name: 'admin',
-      password: await hash('admin2023', 10)
+      name: 'Administrador',
+      password: await hash('admin2023', 10),
+      type: 'Director'
     }
     const user = await this.usersService.findOne({ where: { name: admin.name } });
     if (!user) { this.usersService.insert(admin); }
@@ -52,11 +55,11 @@ export class UsersProvider {
   }
 
   async getUser (userId: number) {
-    return await this.findOne({ where: { id: userId }, select: ['id', 'name', 'active'] });
+    return await this.findOne({ where: { id: userId }, select: this.userAttributes });
   }
 
   async getUsers (findManyOptions: FindUserDto) {
-    return await this.usersService.find({ where: findManyOptions, select: ['id', 'name', 'active'] });
+    return await this.usersService.find({ where: findManyOptions, select: this.userAttributes });
   }
 
   async signIn (userData: LoginDto) {
@@ -68,7 +71,7 @@ export class UsersProvider {
       id: userFound.id,
       name: userFound.name
     };
-    return { token: this.createToken(payload) };
+    return { token: this.createToken(payload), type: userFound.type };
   }
 
   async signUp (userData: CreateUserDto) {

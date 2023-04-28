@@ -81,6 +81,7 @@ type User {
 
 type LoginResponseDto {
   token: String!
+  type: String!
 }
 
 type Query {
@@ -172,6 +173,7 @@ input FindAbsenceDto {
 input FindUserDto {
   name: String
   password: String
+  type: String = "Adscrito"
   active: Boolean
   id: Int
 }
@@ -313,11 +315,13 @@ input LoginDto {
 input CreateUserDto {
   name: String!
   password: String!
+  type: String = "Adscrito"
   active: Boolean
 }
 
 input UpdateUserDto {
   name: String
   password: String
+  type: String = "Adscrito"
   active: Boolean
 }

@@ -1,9 +1,11 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsBoolean, IsOptional,
+  IsBoolean, IsEnum, IsOptional,
   IsString, MinLength
 } from 'class-validator';
+
+export const userType = ['Director', 'Administrativo', 'Adscrito']
 
 @InputType()
 export class CreateUserDto {
@@ -18,6 +20,12 @@ export class CreateUserDto {
   @ApiProperty({ minLength: 4 })
   @Field()
     password: string;
+
+  @IsOptional()
+  @IsEnum(userType)
+  @ApiProperty({ required: false, default: 'Adscrito', enum: userType })
+  @Field({ nullable: true, defaultValue: 'Adscrito' })
+    type: 'Director' | 'Administrativo' | 'Adscrito'
 
   @IsOptional()
   @IsBoolean()
