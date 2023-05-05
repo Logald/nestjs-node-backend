@@ -76,6 +76,9 @@ type Specialty {
 type User {
   id: Int!
   name: String!
+  firstname: String!
+  lastname: String!
+  type: String!
   active: Boolean!
 }
 
@@ -173,6 +176,8 @@ input FindAbsenceDto {
 input FindUserDto {
   name: String
   password: String
+  firstname: String
+  lastname: String
   type: String = "Adscrito"
   active: Boolean
   id: Int
@@ -315,6 +320,8 @@ input LoginDto {
 input CreateUserDto {
   name: String!
   password: String!
+  firstname: String!
+  lastname: String!
   type: String = "Adscrito"
   active: Boolean
 }
@@ -322,6 +329,8 @@ input CreateUserDto {
 input UpdateUserDto {
   name: String
   password: String
+  firstname: String
+  lastname: String
   type: String = "Adscrito"
   active: Boolean
 }

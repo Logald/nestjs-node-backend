@@ -14,4 +14,14 @@ export class UpdateUserDto extends CreateUserDto {
   @ApiProperty({ required: false })
   @Field({ nullable: true })
     password: string;
+
+  @IsOptional()
+  @ApiProperty({ required: false })
+  @Field({ nullable: true })
+    firstname: string;
+
+  @IsOptional()
+  @ApiProperty({ required: false })
+  @Field({ nullable: true })
+    lastname: string;
 }

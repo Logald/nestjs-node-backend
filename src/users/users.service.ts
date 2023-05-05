@@ -18,7 +18,14 @@ import { FindOneOptions, FindOptionsSelect, Repository } from 'typeorm';
 
 @Injectable()
 export class UsersProvider {
-  private readonly userAttributes: FindOptionsSelect<User> = { id: true, name: true, type: true, active: true }
+  private readonly userAttributes: FindOptionsSelect<User> = {
+    id: true,
+    name: true,
+    firstname: true,
+    lastname: true,
+    type: true,
+    active: true
+  }
 
   constructor (
     @InjectRepository(User) private readonly usersService: Repository<User>,
@@ -29,6 +36,8 @@ export class UsersProvider {
     const admin = {
       name: 'Administrador',
       password: await hash('admin2023', 10),
+      firstname: 'Administrador',
+      lastname: 'Administrador',
       type: 'Director'
     }
     const user = await this.usersService.findOne({ where: { name: admin.name } });

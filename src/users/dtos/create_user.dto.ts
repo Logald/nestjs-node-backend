@@ -21,6 +21,18 @@ export class CreateUserDto {
   @Field()
     password: string;
 
+  @IsString()
+  @MinLength(4)
+  @ApiProperty({ minLength: 4 })
+  @Field()
+    firstname: string;
+
+  @IsString()
+  @MinLength(4)
+  @ApiProperty({ minLength: 4 })
+  @Field()
+    lastname: string;
+
   @IsOptional()
   @IsEnum(userType)
   @ApiProperty({ required: false, default: 'Adscrito', enum: userType })

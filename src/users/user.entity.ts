@@ -17,7 +17,16 @@ export class User {
   // @Field()
     password: string;
 
+  @Column()
+  @Field()
+    firstname: string;
+
+  @Column()
+  @Field()
+    lastname: string;
+
   @Column({ default: 'Adscrito', enum: userType })
+  @Field({ defaultValue: 'Adscrito' })
     type: string;
 
   @Column({ type: 'boolean', default: true })
