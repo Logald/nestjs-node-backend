@@ -76,11 +76,12 @@ export class UsersProvider {
       where: { name: userData.name }
     });
     await this.checkPassword(userData.password, userFound.password);
+    delete userFound.password;
     const payload = {
       id: userFound.id,
       name: userFound.name
     };
-    return { token: this.createToken(payload), type: userFound.type };
+    return { token: this.createToken(payload), user: userFound };
   }
 
   async signUp (userData: CreateUserDto) {
