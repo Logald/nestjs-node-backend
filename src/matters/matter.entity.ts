@@ -10,6 +10,10 @@ export class Matter {
 
   @Column({ type: 'varchar', unique: true })
   @Field()
+    code: string;
+
+  @Column({ type: 'varchar' })
+  @Field()
     name: string;
 
   @Column({ type: 'varchar', nullable: true })

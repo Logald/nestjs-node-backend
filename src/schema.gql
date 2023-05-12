@@ -19,6 +19,7 @@ type Group {
 
 type Matter {
   id: Int!
+  code: String!
   name: String!
   description: String
 }
@@ -84,7 +85,7 @@ type User {
 
 type LoginResponseDto {
   token: String!
-  type: String!
+  user: User!
 }
 
 type Query {
@@ -109,6 +110,7 @@ type Query {
 }
 
 input FindMatterDto {
+  code: String
   name: String
   description: String
   id: Int
@@ -215,11 +217,13 @@ type Mutation {
 }
 
 input CreateMatterDto {
+  code: String!
   name: String!
   description: String
 }
 
 input UpdateMatterDto {
+  code: String
   name: String
   description: String
 }

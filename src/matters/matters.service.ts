@@ -29,7 +29,7 @@ export class MattersProvider {
   }
 
   async createMatter (matterData: CreateMatterDto) {
-    await this.findOne({ where: { name: matterData.name } }, false);
+    await this.findOne({ where: { code: matterData.code } }, false);
     await this.matterService.insert(matterData);
     return true;
   }
@@ -37,7 +37,7 @@ export class MattersProvider {
   async updateMatter (matterId: number, matterData: UpdateMatterDto) {
     isEmpty(matterData);
     await this.findOne({ where: { id: matterId } });
-    if ('name' in matterData) { await this.findOne({ where: { name: matterData.name } }, false); }
+    if ('code' in matterData) { await this.findOne({ where: { code: matterData.code } }, false); }
     await this.matterService.update(matterId, matterData);
     return true;
   }
